@@ -325,6 +325,7 @@ public class MainActivity extends AppCompatActivity
                     .setInterval(5000);
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,  this);
         } else {
+            //
             Log.v("xxxxxx","qwrqwrwerwer");
             // Do something when location provider not available
         }
