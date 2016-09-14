@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity
     public void onLocationChanged(Location location) {
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setText("Latitude : " + location.getLatitude() + "\n" +
-                "Longistudesm : " + location.getLongitude());
+                "Longistudesmd : " + location.getLongitude());
     }
 
     @Override
