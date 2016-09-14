@@ -146,12 +146,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*@Override
-    public void onLocationChanged(Location location) {
-        TextView txtLat = (TextView) findViewById(R.id.textView);
-        txtLat.setText("Latitude:" + location.getLatitude() + ", Longitude:" + location.getLongitude());
-    }*/
-
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
