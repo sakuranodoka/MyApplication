@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 //import android.location.Location;
 
 //import android.location.LocationListener;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,6 +74,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        //drawer.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#330000ff")));
+        //drawer.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#550000ff")));
+
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -328,8 +334,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) {
         TextView textView = (TextView) findViewById(R.id.textView);
-      //  textView.setText("Latitude : " + location.getLatitude() + "\n" +
-        //        "Longistudesmd : " + location.getLongitude());
+        textView.setText("Latitude : " + location.getLatitude() + "\n" +
+                "Longistudesmd : " + location.getLongitude());
     }
 
     @Override

@@ -59,7 +59,8 @@
                 android:id="@+id/textView"
                 android:text="XXX"
                 android:gravity="center"
-                android:layout_weight="3"/>
+                android:layout_weight="3"
+                android:freezesText="true"/>
 
         </LinearLayout>
 
