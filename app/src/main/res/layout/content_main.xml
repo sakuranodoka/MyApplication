@@ -80,5 +80,25 @@
                 android:freezesText="true"
                 android:textSize="20sp"/>
         </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            >
+
+            <Button
+
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Open Map"
+                android:id="@+id/openMapBtn"
+                android:layout_weight="2"
+                style="?android:attr/borderlessButtonStyle"
+                android:background="@color/colorPrimary"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>
