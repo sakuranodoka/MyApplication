@@ -1,61 +1,74 @@
 package com.example.administrator.myapplication;
 
-import android.Manifest;
-import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-//import android.location.Location;
-
-//import android.location.LocationListener;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
+import com.squareup.otto.ThreadEnforcer;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+//import android.location.Location;
+//import android.location.LocationListener;
+
+
 
 public class MainActivity extends FragmentActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
+
+
+    public SharedPreferences sp;
+    public SharedPreferences.Editor editor;
+
+    final String _PREF_MODE = "_0x66fd";
 
     private static final int CONTENT_REQUEST = 1337;
 
@@ -65,10 +78,34 @@ public class MainActivity extends FragmentActivity
     public double la = 0.00;
     public double lo = 0.00;
 
+    public static Bus bus;
+    public class TestData {
+        public String message;
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
+        //int user_id = sp.getInt("userId", -1);
+
+        if(isOnline()) {
+            Toast.makeText(this, "Internet available", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "System Stop !!!", Toast.LENGTH_LONG).show();
+        }
+
+        bus = new Bus(ThreadEnforcer.MAIN);
+        bus.register(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -140,35 +177,36 @@ public class MainActivity extends FragmentActivity
             @Override
             public void onClick(View v) {
                 Intent t = new Intent(MainActivity.this, MapsActivity.class);
-                //t.putExtra("la", la);
-               // t.putExtra("lo", lo);
+
+                TestData ts = new TestData();
+                ts.message = "Hello from the activity";
+                bus.post(ts);
+
                 startActivity(t);
-                //setContentView(R.layout.activity_maps);
-                // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-                /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.maps);
-                mapFragment.getMapAsync(MainActivity.this);*/
             }
 
         });
     }
 
+    //@Subscribe
+    //public void getMessage(String s) {
+     //   Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+    //}
+
     @Override
     protected void onPause() {
         super.onPause();
-        BusProvider.getInstance().register(this);
+ //       BusProvider.getInstance().register(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        BusProvider.getInstance().unregister(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         googleApiClient.connect();
     }
 
@@ -176,9 +214,9 @@ public class MainActivity extends FragmentActivity
     protected void onStop() {
         super.onStop();
 
-        if (googleApiClient != null && googleApiClient.isConnected()) {
+        /*if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
-        }
+        }*/
     }
 
     @Override
@@ -354,18 +392,16 @@ public class MainActivity extends FragmentActivity
 
     }
 
-
     @Override
     public void onConnected(Bundle bundle) {
         LocationAvailability locationAvailability = LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
         if(locationAvailability.isLocationAvailable()) {
             LocationRequest locationRequest = new LocationRequest()
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(5000);
+                    .setInterval(10000);
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,  this);
         } else {
-            //
-            Log.v("xxxxxx","qwrqwrwerwer");
+            Toast.makeText(this, "Location provider no longer available.", Toast.LENGTH_LONG).show();
             // Do something when location provider not available
         }
     }
@@ -377,6 +413,16 @@ public class MainActivity extends FragmentActivity
         TextView textView = (TextView) findViewById(R.id.textView2);
         textView.setText("Latitude : " + location.getLatitude() + "\n" +
                 "Longistudesmd : " + location.getLongitude());
+        //ArrayList<ArrayList<String>> arrayList = new ArrayList<ArrayList<String>>();
+        ArrayList<String> temp = new ArrayList<String>();
+        temp.add(String.valueOf(la));
+        temp.add(String.valueOf(lo));
+
+        if(isOnline()) {
+            new serviceProgress(temp).execute();
+        } else {
+            Toast.makeText(this, "Internet not available. ", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -393,5 +439,102 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+    }
+
+    private class serviceProgress extends AsyncTask<Void, Integer, Void> {
+        ProgressDialog pd;
+
+        OkHttpClient client;
+
+        ArrayList<String> arrayList;
+
+        public serviceProgress(ArrayList<String> temp) {
+            this.arrayList = temp;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+//            pd = new ProgressDialog(MainActivity.this);
+//            pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            pd.setTitle("Loading...");
+//            pd.setMessage("Loading images...");
+//            pd.setCancelable(false);
+//            pd.setIndeterminate(false);
+//            pd.setMax(100);
+//            pd.setProgress(0);
+//            pd.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void result)  {
+//            pd.dismiss();
+        }
+
+        protected void onProgressUpdate(Integer... values) {
+            pd.setProgress(values[0]);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params)   {
+            client = new OkHttpClient();
+
+            String url = "http://angsila.informatics.buu.ac.th/~55160509/android/update.php";
+
+            RequestBody formBody = new FormBody.Builder()
+                    .add("usr_id", "7")
+                    .add("lat", this.arrayList.get(0))
+                    .add("lng", this.arrayList.get(1))
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(formBody)
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            RequestBody formBody = new FormBody.Builder()
+//                    .add("message", "Your message")
+//                    .build();
+
+            //Request.Builder builder = new Request.Builder();
+            //Request request = builder.url("http://date.jsontest.com/").build();
+
+            //Response response = okHttpClient.newCall(request).execute();
+//            okHttpClient.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Request request, IOException e) {
+//                    updateView("Error - " + e.getMessage());
+//                }
+//
+//                @Override
+//                public void onResponse(Response response) {
+//                    if (response.isSuccessful()) {
+//                        try {
+//                            updateView(response.body().string());
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                            updateView("Error - " + e.getMessage());
+//                        }
+//                    } else {
+//                        updateView("Not Success - code : " + response.code());
+//                    }
+//                }
+//
+//                public void updateView(final String strResult) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //Toast.makeText(MainActivity.this, strResult, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }
+//            });
+            return null;
+        }
     }
 }
