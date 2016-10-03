@@ -1,5 +1,6 @@
 package com.example.administrator.myapplication;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -40,25 +42,26 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
 import com.squareup.otto.ThreadEnforcer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-//import android.location.Location;
-//import android.location.LocationListener;
-
 
 
 public class MainActivity extends FragmentActivity
@@ -79,6 +82,14 @@ public class MainActivity extends FragmentActivity
     public double lo = 0.00;
 
     public static Bus bus;
+
+    private JSONObject JsonObject = null;
+    private JSONArray JsonArray = null;
+    private JSONObject TempJson = null;
+
+    public static final MediaType JSON
+            = MediaType.parse("application/json; charset=utf-8");
+
     public class TestData {
         public String message;
     }
@@ -95,10 +106,10 @@ public class MainActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SharedPreferences sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
-        //int user_id = sp.getInt("userId", -1);
+        sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
+        //sp.edit().clear().commit();
 
-        if(isOnline()) {
+        if (isOnline()) {
             Toast.makeText(this, "Internet available", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, "System Stop !!!", Toast.LENGTH_LONG).show();
@@ -188,35 +199,39 @@ public class MainActivity extends FragmentActivity
         });
     }
 
-    //@Subscribe
-    //public void getMessage(String s) {
-     //   Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-    //}
-
     @Override
     protected void onPause() {
         super.onPause();
- //       BusProvider.getInstance().register(this);
+        //       BusProvider.getInstance().register(this);
     }
 
     @Override
     protected void onResume() {
+
         super.onResume();
+        googleApiClient.connect();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        googleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        /*if (googleApiClient != null && googleApiClient.isConnected()) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
-        }*/
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (googleApiClient != null && googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
+        }
     }
 
     @Override
@@ -312,80 +327,30 @@ public class MainActivity extends FragmentActivity
 
         if (scanningResult != null) {
             //we have a result
-            Log.v("xxxxxx",  " |NNNN.msn");
+
 
             String scanContent = scanningResult.getContents();
             String scanFormat = scanningResult.getFormatName();
 
             TextView textView = (TextView) findViewById(R.id.textView);
             //String contents = data.getStringExtra("SCAN_RESULT");
-            textView.setText(scanContent+" "+scanFormat);
+            textView.setText(scanContent + " " + scanFormat);
             Toast toast = Toast.makeText(getApplicationContext(),
-                    scanContent+" "+scanFormat, Toast.LENGTH_SHORT);
+                    scanContent + " " + scanFormat, Toast.LENGTH_SHORT);
             toast.show();
         }
 
         if (resultCode == RESULT_OK) {
             if (requestCode == CONTENT_REQUEST) {
 
-                /*Intent i=new Intent(Intent.ACTION_VIEW);
-
-                i.setDataAndType(Uri.fromFile(output), "image/jpeg");
-                startActivity(i);
-                finish();*/
-
-                // Save a file: path for use with ACTION_VIEW intents
-                //mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-
-                /*Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                File f = new File(mCurrentPhotoPath);
-                Uri contentUri = Uri.fromFile(f);
-                mediaScanIntent.setData(contentUri);
-                this.sendBroadcast(mediaScanIntent);*/
 
 
 
-                Log.v("xxxxxx",  " |NNNN.msn");
-                //data.putExtra(MediaStore.EXTRA_OUTPUT, "android.jpg");
-                //use imageUri here to access the image
-
-                //Bundle extras = data.getExtras();
-
-                //Log.e("URI",imageUri.toString());
-
-                //Bitmap bmp = (Bitmap) extras.get("data");
-
-                // here you will get the image as bitmap
-
-                /*File outFile = new File(Environment.getExternalStorageDirectory(), "myname.jpeg");
-                FileOutputStream fos = null;
-                try {
-                    fos = new FileOutputStream(outFile);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                photo.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.flush();
-                fos.close();*/
-
-
-            }
-            else if (resultCode == RESULT_CANCELED) {
+            } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT);
-            } else if (resultCode == 2)
-            {
-                Log.v("xxxxxx", "tttttttttt");
-
-                //TextView textView = (TextView) findViewById(R.id.textView);
+            } else if (resultCode == 2) {
                 String contents = data.getStringExtra("SCAN_RESULT");
-                //textView.setText(contents);
-                /*if (resultCode == RESULT_OK)
-                {
-                    TextView textView = (TextView) findViewById(R.id.textView);
-                    String contents = data.getStringExtra("SCAN_RESULT");
-                    String format = data.getStringExtra("SCAN_RESULT_FORMAT");
-                    textView.setText("Result : " + contents);
-                }*/
+
             }
         }
 
@@ -395,16 +360,30 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onConnected(Bundle bundle) {
         LocationAvailability locationAvailability = LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
-        if(locationAvailability.isLocationAvailable()) {
-            LocationRequest locationRequest = new LocationRequest()
-                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(10000);
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest,  this);
-        } else {
-            Toast.makeText(this, "Location provider no longer available.", Toast.LENGTH_LONG).show();
-            // Do something when location provider not available
+        //if(locationAvailability.isLocationAvailable()) {
+        LocationRequest locationRequest = new LocationRequest()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10000);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+            Toast.makeText(this, "Location provider no longer available !!!", Toast.LENGTH_SHORT).show();
+            return;
         }
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+//        } else {
+//            Toast.makeText(this, "Location provider no longer available !!!", Toast.LENGTH_LONG).show();
+//            // Do something when location provider not available
+//        }
     }
+
+
 
     @Override
     public void onLocationChanged(Location location) {
@@ -413,15 +392,112 @@ public class MainActivity extends FragmentActivity
         TextView textView = (TextView) findViewById(R.id.textView2);
         textView.setText("Latitude : " + location.getLatitude() + "\n" +
                 "Longistudesmd : " + location.getLongitude());
-        //ArrayList<ArrayList<String>> arrayList = new ArrayList<ArrayList<String>>();
-        ArrayList<String> temp = new ArrayList<String>();
-        temp.add(String.valueOf(la));
-        temp.add(String.valueOf(lo));
 
+        ArrayList<String> temp;
+
+        sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
         if(isOnline()) {
-            new serviceProgress(temp).execute();
+            if(sp.getString("data", "[]").equals("[]")) {
+                temp = new ArrayList<String>();
+                temp.add(String.valueOf(la));
+                temp.add(String.valueOf(lo));
+                temp.add("NOW()");
+
+                //Toast.makeText(this, "send to server as normally", Toast.LENGTH_LONG).show();
+                new serviceProgress(temp).execute();
+
+
+//                Toast.makeText(this, "online + clear text.", Toast.LENGTH_SHORT).show();
+//                // android new asyntask
+//                temp = new ArrayList<String>();
+//                temp.add(sp.getString("and_lat", "0.00"));
+//                temp.add(sp.getString("and_lng", "0.00"));
+//                temp.add(sp.getString("and_date", "0000-00-00 00:00:00"));
+//
+//                new serviceProgress(temp).execute();
+//                sp.edit().clear().commit();
+            } else {
+                temp = new ArrayList<String>();
+//                temp.add(sp.getString("and_lat", "0.00"));
+//                temp.add(sp.getString("and_lng", "0.00"));
+//                temp.add(sp.getString("and_date", "0000-00-00 00:00:00"));
+
+
+                // ถึงตรงนี้
+                temp.add(sp.getString("data", "[]"));
+
+                new serviceProgress(temp).execute();
+                sp.edit().clear().commit();
+                Toast.makeText(this, "online + clear text.", Toast.LENGTH_SHORT).show();
+            }
         } else {
-            Toast.makeText(this, "Internet not available. ", Toast.LENGTH_LONG).show();
+            java.util.Date dt = new java.util.Date();
+
+            java.text.SimpleDateFormat sdf =
+                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            String currentTime = sdf.format(dt);
+
+            editor = sp.edit();
+            //JsonObject = new JSONObject();
+            JsonArray = new JSONArray();
+
+            //Log.v("XWV" , sp.getString("data", "[]"));
+
+            try {
+
+                TempJson = new JSONObject();
+                TempJson.put("usr_id", "7");
+                TempJson.put("lat",  String.valueOf(la));
+                TempJson.put("lng",  String.valueOf(lo));
+                TempJson.put("time", currentTime);
+
+                JsonArray.put(TempJson);
+
+                String json = "";   // [] = default value.
+
+                if( sp.getString("data", "[]").equals("[]") ) {
+
+                    json = "";
+                    JsonObject = new JSONObject();
+                    editor.putString("data", JsonArray.toString());
+
+                    //Log.v("vvvvvv", json);
+                    //Log.v("vvvvvv", json + "," + JsonObject.toString());
+                } else {
+                    json = sp.getString("data", "[]");
+                    json = json.substring(1);
+                    json = json.substring(0, json.length()-1);
+
+                    //JsonObject = new JSONObject(json);
+                    editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
+
+                }
+
+                //editor.putString("data", JsonArray.toString());
+                editor.commit();
+
+                Log.v("dataTest", sp.getString("data", "[]"));
+                //JsonObject = new JSONObject(sp.getString("data", "[]"));
+                //Log.v("dataTest2", JsonObject.toString());
+                //JsonObject
+            } catch (JSONException e) {
+                e.printStackTrace();
+                //editor.putString("data", "");
+                //editor.commit();
+
+                Log.v("vvvvvv", "Error");
+            }
+
+
+//            editor.putString("and_lat", String.valueOf(la));
+//            editor.putString("and_lng", String.valueOf(lo));
+//            editor.putString("and_date", currentTime);
+//            editor.putBoolean("and_status", false);
+
+            //editor.commit();
+
+            Toast.makeText(this,currentTime, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -441,15 +517,40 @@ public class MainActivity extends FragmentActivity
 
     }
 
-    private class serviceProgress extends AsyncTask<Void, Integer, Void> {
-        ProgressDialog pd;
+    private class serviceProgress extends AsyncTask<String, Integer, String> {
+        private ProgressDialog pd;
 
-        OkHttpClient client;
+        private OkHttpClient client;
 
-        ArrayList<String> arrayList;
+        private ArrayList<String> arrayList;
+
+        private final String url = "http://angsila.informatics.buu.ac.th/~55160509/android/update.php";
+
+        private String res;
+
+        private RequestBody body;
+        private Request request;
+
+        private String jsonData;
+
+        private JSONObject jsonObject;
+
+        JSONArray jsonArray;
+
+        JSONObject tempJson;
 
         public serviceProgress(ArrayList<String> temp) {
             this.arrayList = temp;
+            this.body = null;
+            this.request = null;
+            this.res = "";
+        }
+
+        public serviceProgress(ArrayList<String> temp, boolean status) {
+            this.arrayList = temp;
+            this.body = null;
+            this.request = null;
+            this.res = "";
         }
 
         @Override
@@ -467,8 +568,11 @@ public class MainActivity extends FragmentActivity
         }
 
         @Override
-        protected void onPostExecute(Void result)  {
+        protected void onPostExecute(String result)  {
 //            pd.dismiss();
+           // TextView textViews = (TextView) findViewById(R.id.textView);
+            //textViews.setText(result);
+            //Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
         }
 
         protected void onProgressUpdate(Integer... values) {
@@ -476,30 +580,70 @@ public class MainActivity extends FragmentActivity
         }
 
         @Override
-        protected Void doInBackground(Void... params)   {
+        protected String doInBackground(String... params)   {
+            this.res = "";
+
             client = new OkHttpClient();
 
-            String url = "http://angsila.informatics.buu.ac.th/~55160509/android/update.php";
-
-            RequestBody formBody = new FormBody.Builder()
-                    .add("usr_id", "7")
-                    .add("lat", this.arrayList.get(0))
-                    .add("lng", this.arrayList.get(1))
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(url)
-                    .post(formBody)
-                    .build();
-
             try {
-                Response response = client.newCall(request).execute();
-            } catch (IOException e) {
+                jsonObject = new JSONObject();
+
+                jsonArray = new JSONArray();
+
+                tempJson = new JSONObject();
+                tempJson.put("usr_id", "7");
+                tempJson.put("lat", this.arrayList.get(0));
+                tempJson.put("lng", this.arrayList.get(1));
+                jsonArray.put(tempJson);
+
+                tempJson = new JSONObject();
+                tempJson.put("usr_id", "7");
+                tempJson.put("lat", "9.53435");
+                tempJson.put("lng", "-13.559");
+                jsonArray.put(tempJson);
+
+                jsonObject.put("data", jsonArray);
+
+                Log.v("vvvvvv",jsonObject.toString());
+
+//                body = RequestBody.create(JSON, jsonObject.toString());
+//                request = new Request.Builder()
+//                        .url(url)
+//                        .post(body)
+//                        .build();
+
+                //Log.v("vvvvvv", "5555555");
+
+//                RequestBody formBody = new FormBody.Builder()
+//                        .add("usr_id", "7")
+//                        .add("lat", this.arrayList.get(0))
+//                        .add("lng", this.arrayList.get(1))
+//                        .add("date", this.arrayList.get(2))
+//                        .build();
+
+//                Request request = new Request.Builder()
+//                        .url(url)
+//                        .post(formBody)
+//                        .build();
+
+//                try {
+//                    Response response = client.newCall(request).execute();
+//
+//                    //this.res = response.body().toString();
+//                    //textViews.setText("3456");
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
+//                RequestBody formBody = new FormBody.Builder()
+//                        .add("message", "Your message")
+//                        .build();
+
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-//            RequestBody formBody = new FormBody.Builder()
-//                    .add("message", "Your message")
-//                    .build();
+
 
             //Request.Builder builder = new Request.Builder();
             //Request request = builder.url("http://date.jsontest.com/").build();
@@ -534,7 +678,7 @@ public class MainActivity extends FragmentActivity
 //                    });
 //                }
 //            });
-            return null;
+            return this.res;
         }
     }
 }
