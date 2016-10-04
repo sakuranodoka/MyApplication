@@ -107,7 +107,7 @@ public class MainActivity extends FragmentActivity
         setContentView(R.layout.activity_main);
 
         sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
-        //sp.edit().clear().commit();
+        sp.edit().clear().commit();
 
         if (isOnline()) {
             Toast.makeText(this, "Internet available", Toast.LENGTH_LONG).show();
@@ -383,8 +383,6 @@ public class MainActivity extends FragmentActivity
 //        }
     }
 
-
-
     @Override
     public void onLocationChanged(Location location) {
         la = location.getLatitude();
@@ -399,13 +397,11 @@ public class MainActivity extends FragmentActivity
         if(isOnline()) {
             if(sp.getString("data", "[]").equals("[]")) {
                 temp = new ArrayList<String>();
-                temp.add(String.valueOf(la));
-                temp.add(String.valueOf(lo));
-                temp.add("NOW()");
+                // add ปกติ
+                //temp.add(String.valueOf(la));
 
                 //Toast.makeText(this, "send to server as normally", Toast.LENGTH_LONG).show();
                 new serviceProgress(temp).execute();
-
 
 //                Toast.makeText(this, "online + clear text.", Toast.LENGTH_SHORT).show();
 //                // android new asyntask
@@ -422,17 +418,15 @@ public class MainActivity extends FragmentActivity
 //                temp.add(sp.getString("and_lng", "0.00"));
 //                temp.add(sp.getString("and_date", "0000-00-00 00:00:00"));
 
-
                 // ถึงตรงนี้
                 temp.add(sp.getString("data", "[]"));
 
                 new serviceProgress(temp).execute();
-                sp.edit().clear().commit();
+                //sp.edit().clear().commit();
                 Toast.makeText(this, "online + clear text.", Toast.LENGTH_SHORT).show();
             }
         } else {
             java.util.Date dt = new java.util.Date();
-
             java.text.SimpleDateFormat sdf =
                     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -584,65 +578,80 @@ public class MainActivity extends FragmentActivity
             this.res = "";
 
             client = new OkHttpClient();
+            //Log.v("NNNNN", this.arrayList.get(0));
+
+            this.res = "{\"data\":" + this.arrayList.get(0) + "}";
+
+            body = RequestBody.create(JSON, this.res);
+            request = new Request.Builder()
+                        .url(url)
+                        .post(body)
+                        .build();
 
             try {
-                jsonObject = new JSONObject();
-
-                jsonArray = new JSONArray();
-
-                tempJson = new JSONObject();
-                tempJson.put("usr_id", "7");
-                tempJson.put("lat", this.arrayList.get(0));
-                tempJson.put("lng", this.arrayList.get(1));
-                jsonArray.put(tempJson);
-
-                tempJson = new JSONObject();
-                tempJson.put("usr_id", "7");
-                tempJson.put("lat", "9.53435");
-                tempJson.put("lng", "-13.559");
-                jsonArray.put(tempJson);
-
-                jsonObject.put("data", jsonArray);
-
-                Log.v("vvvvvv",jsonObject.toString());
-
-//                body = RequestBody.create(JSON, jsonObject.toString());
-//                request = new Request.Builder()
-//                        .url(url)
-//                        .post(body)
-//                        .build();
-
-                //Log.v("vvvvvv", "5555555");
-
-//                RequestBody formBody = new FormBody.Builder()
-//                        .add("usr_id", "7")
-//                        .add("lat", this.arrayList.get(0))
-//                        .add("lng", this.arrayList.get(1))
-//                        .add("date", this.arrayList.get(2))
-//                        .build();
-
-//                Request request = new Request.Builder()
-//                        .url(url)
-//                        .post(formBody)
-//                        .build();
-
-//                try {
-//                    Response response = client.newCall(request).execute();
-//
-//                    //this.res = response.body().toString();
-//                    //textViews.setText("3456");
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-//                RequestBody formBody = new FormBody.Builder()
-//                        .add("message", "Your message")
-//                        .build();
-
-            } catch (JSONException e) {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+
+//            try {
+//                jsonObject = new JSONObject(this.arrayList.get(0));
+//
+////                jsonArray = new JSONArray();
+////
+////                tempJson = new JSONObject();
+////                tempJson.put("usr_id", "7");
+////                tempJson.put("lat", this.arrayList.get(0));
+////                tempJson.put("lng", this.arrayList.get(1));
+////                jsonArray.put(tempJson);
+////
+////                tempJson = new JSONObject();
+////                tempJson.put("usr_id", "7");
+////                tempJson.put("lat", "9.53435");
+////                tempJson.put("lng", "-13.559");
+////                jsonArray.put(tempJson);
+////
+////                jsonObject.put("data", jsonArray);
+////
+////                Log.v("vvvvvv",jsonObject.toString());
+//
+////                body = RequestBody.create(JSON, jsonObject.toString());
+////                request = new Request.Builder()
+////                        .url(url)
+////                        .post(body)
+////                        .build();
+//
+//                //Log.v("vvvvvv", "5555555");
+//
+////                RequestBody formBody = new FormBody.Builder()
+////                        .add("usr_id", "7")
+////                        .add("lat", this.arrayList.get(0))
+////                        .add("lng", this.arrayList.get(1))
+////                        .add("date", this.arrayList.get(2))
+////                        .build();
+//
+////                Request request = new Request.Builder()
+////                        .url(url)
+////                        .post(formBody)
+////                        .build();
+//
+////                try {
+////                    Response response = client.newCall(request).execute();
+////
+////                    //this.res = response.body().toString();
+////                    //textViews.setText("3456");
+////
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////                }
+//
+////                RequestBody formBody = new FormBody.Builder()
+////                        .add("message", "Your message")
+////                        .build();
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
 
 
             //Request.Builder builder = new Request.Builder();
