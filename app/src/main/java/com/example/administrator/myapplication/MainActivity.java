@@ -1,9 +1,9 @@
 package com.example.administrator.myapplication;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -18,10 +18,10 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -33,10 +33,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -53,20 +59,18 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 
-public class MainActivity extends FragmentActivity
-        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
-
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener {
 
     public SharedPreferences sp;
     public SharedPreferences.Editor editor;
@@ -94,11 +98,72 @@ public class MainActivity extends FragmentActivity
         public String message;
     }
 
+    int[] networkTypes = new int[]{
+            ConnectivityManager.TYPE_BLUETOOTH,
+            ConnectivityManager.TYPE_DUMMY,
+            ConnectivityManager.TYPE_ETHERNET,
+            ConnectivityManager.TYPE_MOBILE,
+            ConnectivityManager.TYPE_MOBILE_DUN,
+            ConnectivityManager.TYPE_MOBILE_HIPRI,
+            ConnectivityManager.TYPE_MOBILE_MMS,
+            ConnectivityManager.TYPE_MOBILE_SUPL,
+            ConnectivityManager.TYPE_VPN,
+            ConnectivityManager.TYPE_WIFI,
+            ConnectivityManager.TYPE_WIMAX
+};
+
     public boolean isOnline() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+//        ConnectivityManager cm =
+//                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+//        try {
+//            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+//            for (int networkType : networkTypes) {
+//                NetworkInfo netInfo = cm.getNetworkInfo(networkType);
+//                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+//                    return true;
+//                }
+//            }
+//        } catch (Exception e) {
+//            return false;
+//        }
+//        return false;
+
+        //return netInfo.isAvailable();
+
+        Runtime runtime = Runtime.getRuntime();
+        try {
+
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+
+        //return netInfo != null && netInfo.isConnected();
+//        boolean status = true;
+//        if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
+//                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING ) {
+//
+//            // notify user you are online
+//            status = true;
+//        }
+//        else if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
+//                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+//            status = false;
+//            // notify user you are not online
+//        } else {
+//            status = false;
+//        }
+//        return status;
     }
 
     @Override
@@ -106,13 +171,12 @@ public class MainActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
-        sp.edit().clear().commit();
+        Log.i("status", "App Created");
 
         if (isOnline()) {
-            Toast.makeText(this, "Internet available", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Internet available", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "System Stop !!!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Internet is not available", Toast.LENGTH_SHORT).show();
         }
 
         bus = new Bus(ThreadEnforcer.MAIN);
@@ -134,16 +198,11 @@ public class MainActivity extends FragmentActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        //drawer.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#330000ff")));
-        //drawer.setStackedBackgroundDrawable(new ColorDrawable(Color.parseColor("#550000ff")));
-
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        //Bus bus = new Bus();
 
         Button captureBtn = (Button) findViewById(R.id.capture);
         captureBtn.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +236,7 @@ public class MainActivity extends FragmentActivity
             }
         });
 
-        googleApiClient = new GoogleApiClient.Builder(this)
+        googleApiClient = new GoogleApiClient.Builder(this, this, this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -188,50 +247,45 @@ public class MainActivity extends FragmentActivity
             @Override
             public void onClick(View v) {
                 Intent t = new Intent(MainActivity.this, MapsActivity.class);
-
-                TestData ts = new TestData();
-                ts.message = "Hello from the activity";
-                bus.post(ts);
-
                 startActivity(t);
             }
-
         });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //       BusProvider.getInstance().register(this);
     }
 
     @Override
     protected void onResume() {
 
         super.onResume();
-        googleApiClient.connect();
+
     }
 
     @Override
     protected void onStart() {
+        googleApiClient.connect();
         super.onStart();
+
+        Log.i("status", "App Start");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
+//        if (googleApiClient != null && googleApiClient.isConnected()) {
+//            googleApiClient.disconnect();
+//        }
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
+        super.onDestroy();
     }
 
     @Override
@@ -257,8 +311,6 @@ public class MainActivity extends FragmentActivity
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -327,8 +379,6 @@ public class MainActivity extends FragmentActivity
 
         if (scanningResult != null) {
             //we have a result
-
-
             String scanContent = scanningResult.getContents();
             String scanFormat = scanningResult.getFormatName();
 
@@ -343,176 +393,142 @@ public class MainActivity extends FragmentActivity
         if (resultCode == RESULT_OK) {
             if (requestCode == CONTENT_REQUEST) {
 
-
-
-
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, "Picture was not taken", Toast.LENGTH_SHORT);
             } else if (resultCode == 2) {
                 String contents = data.getStringExtra("SCAN_RESULT");
-
             }
         }
-
-
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        LocationAvailability locationAvailability = LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
-        //if(locationAvailability.isLocationAvailable()) {
-        LocationRequest locationRequest = new LocationRequest()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10000);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
-            Toast.makeText(this, "Location provider no longer available !!!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+        //LocationAvailability locationAvailability = LocationServices.FusedLocationApi.getLocationAvailability(googleApiClient);
+        //if (locationAvailability.isLocationAvailable()) {
+            LocationRequest locationRequest = new LocationRequest()
+                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                    .setInterval(9000);
+            //Log.i("vvvvvv","vvvvvv");
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
 //        } else {
-//            Toast.makeText(this, "Location provider no longer available !!!", Toast.LENGTH_LONG).show();
-//            // Do something when location provider not available
+//            Toast.makeText(this, "Location provider no longer available !!!", Toast.LENGTH_SHORT).show();
 //        }
     }
 
     @Override
     public void onLocationChanged(Location location) {
+
         la = location.getLatitude();
         lo = location.getLongitude();
         TextView textView = (TextView) findViewById(R.id.textView2);
         textView.setText("Latitude : " + location.getLatitude() + "\n" +
                 "Longistudesmd : " + location.getLongitude());
-
+//3433
         ArrayList<String> temp;
-
-        sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
-        if(isOnline()) {
-            if(sp.getString("data", "[]").equals("[]")) {
-                temp = new ArrayList<String>();
-                // add ปกติ
-                //temp.add(String.valueOf(la));
-
-                //Toast.makeText(this, "send to server as normally", Toast.LENGTH_LONG).show();
-                new serviceProgress(temp).execute();
-
-//                Toast.makeText(this, "online + clear text.", Toast.LENGTH_SHORT).show();
-//                // android new asyntask
+//
+//        sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
+//        Log.i("dataD", sp.getString("data", "[]").toString().length()+"");
+//        if(isOnline()) {
+//            if(sp.getString("data", "[]").equals("[]")) {
 //                temp = new ArrayList<String>();
-//                temp.add(sp.getString("and_lat", "0.00"));
-//                temp.add(sp.getString("and_lng", "0.00"));
-//                temp.add(sp.getString("and_date", "0000-00-00 00:00:00"));
+//                // add ปกติ
+//                TempJson = new JSONObject();
+//                try {
+//                    TempJson.put("usr_id", "11");
+//                    TempJson.put("lat",  String.valueOf(la));
+//                    TempJson.put("lng",  String.valueOf(lo));
+//                    TempJson.put("time", "NOW");
+//
+//                    JsonArray = new JSONArray();
+//                    JsonArray.put(TempJson);
+//
+//                    temp.add(JsonArray.toString());
+//
+//                    new serviceProgress(temp).execute();
+//
+//                    //Toast.makeText(this, "send to server as normally", Toast.LENGTH_SHORT).show();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                // เคสของ เมื่อออฟไลน์มานาน มีข้อมูลอยู่เยอะ จะให้ทำการส่งข้อมูลไปยังเซิร์ฟเวอร์
+//                temp = new ArrayList<String>();
+//                temp.add(sp.getString("data", "[]"));
 //
 //                new serviceProgress(temp).execute();
+//
 //                sp.edit().clear().commit();
-            } else {
-                temp = new ArrayList<String>();
-//                temp.add(sp.getString("and_lat", "0.00"));
-//                temp.add(sp.getString("and_lng", "0.00"));
-//                temp.add(sp.getString("and_date", "0000-00-00 00:00:00"));
-
-                // ถึงตรงนี้
-                temp.add(sp.getString("data", "[]"));
-
-                new serviceProgress(temp).execute();
-                //sp.edit().clear().commit();
-                Toast.makeText(this, "online + clear text.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            java.util.Date dt = new java.util.Date();
-            java.text.SimpleDateFormat sdf =
-                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            String currentTime = sdf.format(dt);
-
-            editor = sp.edit();
-            //JsonObject = new JSONObject();
-            JsonArray = new JSONArray();
-
-            //Log.v("XWV" , sp.getString("data", "[]"));
-
-            try {
-
-                TempJson = new JSONObject();
-                TempJson.put("usr_id", "7");
-                TempJson.put("lat",  String.valueOf(la));
-                TempJson.put("lng",  String.valueOf(lo));
-                TempJson.put("time", currentTime);
-
-                JsonArray.put(TempJson);
-
-                String json = "";   // [] = default value.
-
-                if( sp.getString("data", "[]").equals("[]") ) {
-
-                    json = "";
-                    JsonObject = new JSONObject();
-                    editor.putString("data", JsonArray.toString());
-
-                    //Log.v("vvvvvv", json);
-                    //Log.v("vvvvvv", json + "," + JsonObject.toString());
-                } else {
-                    json = sp.getString("data", "[]");
-                    json = json.substring(1);
-                    json = json.substring(0, json.length()-1);
-
-                    //JsonObject = new JSONObject(json);
-                    editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
-
-                }
-
-                //editor.putString("data", JsonArray.toString());
-                editor.commit();
-
-                Log.v("dataTest", sp.getString("data", "[]"));
-                //JsonObject = new JSONObject(sp.getString("data", "[]"));
-                //Log.v("dataTest2", JsonObject.toString());
-                //JsonObject
-            } catch (JSONException e) {
-                e.printStackTrace();
-                //editor.putString("data", "");
-                //editor.commit();
-
-                Log.v("vvvvvv", "Error");
-            }
-
-
-//            editor.putString("and_lat", String.valueOf(la));
-//            editor.putString("and_lng", String.valueOf(lo));
-//            editor.putString("and_date", currentTime);
-//            editor.putBoolean("and_status", false);
-
-            //editor.commit();
-
-            Toast.makeText(this,currentTime, Toast.LENGTH_SHORT).show();
-        }
+//            }
+//        } else {
+//            java.util.Date dt = new java.util.Date();
+//            java.text.SimpleDateFormat sdf =
+//                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//            String currentTime = sdf.format(dt);
+//
+//            editor = sp.edit();
+//            JsonArray = new JSONArray();
+//
+//            try {
+//
+//                TempJson = new JSONObject();
+//                TempJson.put("usr_id", "11");
+//                TempJson.put("lat",  String.valueOf(la));
+//                TempJson.put("lng",  String.valueOf(lo));
+//                TempJson.put("time", currentTime);
+//
+//                JsonArray.put(TempJson);
+//
+//                String json = "";   // [] = default value.
+//
+//                Log.i("dataTest",sp.getString("data", "[]"));
+//
+//                if( sp.getString("data", "[]").equals("[]") ) {
+//
+//                    json = "";
+//                    editor.putString("data", JsonArray.toString());
+//
+//                } else {
+//                    json = sp.getString("data", "[]");
+//                    json = json.substring(1);
+//                    json = json.substring(0, json.length()-1);
+//
+//                    editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
+//                }
+//                editor.commit();
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                Log.v("vvvvvv", "Error");
+//            }
+//
+//            //Toast.makeText(this, "Get location at "+currentTime, Toast.LENGTH_SHORT).show();
+//        }
     }
+
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.i("GPS-PROVIDER","suppended.");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    // google map display
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-
+        Log.i("GPS-PROVIDER","not available.");
     }
 
     private class serviceProgress extends AsyncTask<String, Integer, String> {
-        private ProgressDialog pd;
+        //private ProgressDialog pd;
 
         private OkHttpClient client;
 
@@ -525,25 +541,13 @@ public class MainActivity extends FragmentActivity
         private RequestBody body;
         private Request request;
 
-        private String jsonData;
-
-        private JSONObject jsonObject;
-
-        JSONArray jsonArray;
-
-        JSONObject tempJson;
-
         public serviceProgress(ArrayList<String> temp) {
             this.arrayList = temp;
-            this.body = null;
-            this.request = null;
             this.res = "";
         }
 
         public serviceProgress(ArrayList<String> temp, boolean status) {
             this.arrayList = temp;
-            this.body = null;
-            this.request = null;
             this.res = "";
         }
 
@@ -570,15 +574,12 @@ public class MainActivity extends FragmentActivity
         }
 
         protected void onProgressUpdate(Integer... values) {
-            pd.setProgress(values[0]);
+            //pd.setProgress(values[0]);
         }
 
         @Override
         protected String doInBackground(String... params)   {
-            this.res = "";
-
             client = new OkHttpClient();
-            //Log.v("NNNNN", this.arrayList.get(0));
 
             this.res = "{\"data\":" + this.arrayList.get(0) + "}";
 
@@ -587,107 +588,70 @@ public class MainActivity extends FragmentActivity
                         .url(url)
                         .post(body)
                         .build();
-
             try {
-                Response response = client.newCall(request).execute();
+                //Response response =
+                client.newCall(request).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return "";//this.res;
+        }
+    }
 
-//            try {
-//                jsonObject = new JSONObject(this.arrayList.get(0));
-//
-////                jsonArray = new JSONArray();
-////
-////                tempJson = new JSONObject();
-////                tempJson.put("usr_id", "7");
-////                tempJson.put("lat", this.arrayList.get(0));
-////                tempJson.put("lng", this.arrayList.get(1));
-////                jsonArray.put(tempJson);
-////
-////                tempJson = new JSONObject();
-////                tempJson.put("usr_id", "7");
-////                tempJson.put("lat", "9.53435");
-////                tempJson.put("lng", "-13.559");
-////                jsonArray.put(tempJson);
-////
-////                jsonObject.put("data", jsonArray);
-////
-////                Log.v("vvvvvv",jsonObject.toString());
-//
-////                body = RequestBody.create(JSON, jsonObject.toString());
-////                request = new Request.Builder()
-////                        .url(url)
-////                        .post(body)
-////                        .build();
-//
-//                //Log.v("vvvvvv", "5555555");
-//
-////                RequestBody formBody = new FormBody.Builder()
-////                        .add("usr_id", "7")
-////                        .add("lat", this.arrayList.get(0))
-////                        .add("lng", this.arrayList.get(1))
-////                        .add("date", this.arrayList.get(2))
-////                        .build();
-//
-////                Request request = new Request.Builder()
-////                        .url(url)
-////                        .post(formBody)
-////                        .build();
-//
-////                try {
-////                    Response response = client.newCall(request).execute();
-////
-////                    //this.res = response.body().toString();
-////                    //textViews.setText("3456");
-////
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
-//
-////                RequestBody formBody = new FormBody.Builder()
-////                        .add("message", "Your message")
-////                        .build();
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+    String beforeEnable;
 
+    private void turnGPSOn () {
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(LocationServices.API).addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(MainActivity.this).build();
+            googleApiClient.connect();
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            locationRequest.setInterval(30 * 1000);
+            locationRequest.setFastestInterval(5 * 1000);
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest);
 
-            //Request.Builder builder = new Request.Builder();
-            //Request request = builder.url("http://date.jsontest.com/").build();
+            // **************************
+            builder.setAlwaysShow(true); // this is the key ingredient
+            // **************************
 
-            //Response response = okHttpClient.newCall(request).execute();
-//            okHttpClient.newCall(request).enqueue(new Callback() {
-//                @Override
-//                public void onFailure(Request request, IOException e) {
-//                    updateView("Error - " + e.getMessage());
-//                }
-//
-//                @Override
-//                public void onResponse(Response response) {
-//                    if (response.isSuccessful()) {
-//                        try {
-//                            updateView(response.body().string());
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                            updateView("Error - " + e.getMessage());
-//                        }
-//                    } else {
-//                        updateView("Not Success - code : " + response.code());
-//                    }
-//                }
-//
-//                public void updateView(final String strResult) {
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //Toast.makeText(MainActivity.this, strResult, Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }
-//            });
-            return this.res;
+            PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi
+                    .checkLocationSettings(googleApiClient, builder.build());
+            result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+                @Override
+                public void onResult(LocationSettingsResult result) {
+                    final Status status = result.getStatus();
+                    final LocationSettingsStates state = result
+                            .getLocationSettingsStates();
+                    switch (status.getStatusCode()) {
+                        case LocationSettingsStatusCodes.SUCCESS:
+                            // All location settings are satisfied. The client can
+                            // initialize location
+                            // requests here.
+                            break;
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            // Location settings are not satisfied. But could be
+                            // fixed by showing the user
+                            // a dialog.
+                            try {
+                                // Show the dialog by calling
+                                // startResolutionForResult(),
+                                // and check the result in onActivityResult().
+                                status.startResolutionForResult(MainActivity.this, 1000);
+                            } catch (IntentSender.SendIntentException e) {
+                                // Ignore the error.
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            // Location settings are not satisfied. However, we have
+                            // no way to fix the
+                            // settings so we won't show the dialog.
+                            break;
+                    }
+                }
+            });
         }
     }
 }
