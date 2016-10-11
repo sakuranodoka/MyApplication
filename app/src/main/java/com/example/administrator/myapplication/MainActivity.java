@@ -171,6 +171,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        TextView textView = (TextView) findViewById(R.id.textCapture);
+//        textView.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+
         Log.i("status", "App Created");
 
         if (isOnline()) {
@@ -430,90 +433,94 @@ public class MainActivity extends AppCompatActivity
 
         la = location.getLatitude();
         lo = location.getLongitude();
-        TextView textView = (TextView) findViewById(R.id.textView2);
-        textView.setText("Latitude : " + location.getLatitude() + "\n" +
-                "Longistudesmd : " + location.getLongitude());
-//3433
+        TextView resultLat = (TextView) findViewById(R.id.resultLat);
+        resultLat.setText(location.getLatitude()+"");
+
+        TextView resultLng = (TextView) findViewById(R.id.resultLng);
+        resultLng.setText(location.getLongitude()+"");
+
         ArrayList<String> temp;
+
+//        Log.v("xxxxxx", "Changed");
 //
-//        sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
-//        Log.i("dataD", sp.getString("data", "[]").toString().length()+"");
-//        if(isOnline()) {
-//            if(sp.getString("data", "[]").equals("[]")) {
-//                temp = new ArrayList<String>();
-//                // add ปกติ
-//                TempJson = new JSONObject();
-//                try {
-//                    TempJson.put("usr_id", "11");
-//                    TempJson.put("lat",  String.valueOf(la));
-//                    TempJson.put("lng",  String.valueOf(lo));
-//                    TempJson.put("time", "NOW");
-//
-//                    JsonArray = new JSONArray();
-//                    JsonArray.put(TempJson);
-//
-//                    temp.add(JsonArray.toString());
-//
-//                    new serviceProgress(temp).execute();
-//
-//                    //Toast.makeText(this, "send to server as normally", Toast.LENGTH_SHORT).show();
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                // เคสของ เมื่อออฟไลน์มานาน มีข้อมูลอยู่เยอะ จะให้ทำการส่งข้อมูลไปยังเซิร์ฟเวอร์
-//                temp = new ArrayList<String>();
-//                temp.add(sp.getString("data", "[]"));
-//
-//                new serviceProgress(temp).execute();
-//
-//                sp.edit().clear().commit();
-//            }
-//        } else {
-//            java.util.Date dt = new java.util.Date();
-//            java.text.SimpleDateFormat sdf =
-//                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//
-//            String currentTime = sdf.format(dt);
-//
-//            editor = sp.edit();
-//            JsonArray = new JSONArray();
-//
-//            try {
-//
-//                TempJson = new JSONObject();
-//                TempJson.put("usr_id", "11");
-//                TempJson.put("lat",  String.valueOf(la));
-//                TempJson.put("lng",  String.valueOf(lo));
-//                TempJson.put("time", currentTime);
-//
-//                JsonArray.put(TempJson);
-//
-//                String json = "";   // [] = default value.
-//
-//                Log.i("dataTest",sp.getString("data", "[]"));
-//
-//                if( sp.getString("data", "[]").equals("[]") ) {
-//
-//                    json = "";
-//                    editor.putString("data", JsonArray.toString());
-//
-//                } else {
-//                    json = sp.getString("data", "[]");
-//                    json = json.substring(1);
-//                    json = json.substring(0, json.length()-1);
-//
-//                    editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
-//                }
-//                editor.commit();
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//                Log.v("vvvvvv", "Error");
-//            }
-//
-//            //Toast.makeText(this, "Get location at "+currentTime, Toast.LENGTH_SHORT).show();
-//        }
+        sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
+        //Log.i("dataD", sp.getString("data", "[]").toString().length()+"");
+        if(isOnline()) {
+            if(sp.getString("data", "[]").equals("[]")) {
+                temp = new ArrayList<String>();
+                // add ปกติ
+                TempJson = new JSONObject();
+                try {
+                    TempJson.put("usr_id", "11");
+                    TempJson.put("lat",  String.valueOf(la));
+                    TempJson.put("lng",  String.valueOf(lo));
+                    TempJson.put("time", "NOW");
+
+                    JsonArray = new JSONArray();
+                    JsonArray.put(TempJson);
+
+                    temp.add(JsonArray.toString());
+
+                    new serviceProgress(temp).execute();
+
+                    //Toast.makeText(this, "send to server as normally", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // เคสของ เมื่อออฟไลน์มานาน มีข้อมูลอยู่เยอะ จะให้ทำการส่งข้อมูลไปยังเซิร์ฟเวอร์
+                temp = new ArrayList<String>();
+                temp.add(sp.getString("data", "[]"));
+
+                new serviceProgress(temp).execute();
+
+                sp.edit().clear().commit();
+            }
+        } else {
+            java.util.Date dt = new java.util.Date();
+            java.text.SimpleDateFormat sdf =
+                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            String currentTime = sdf.format(dt);
+
+            editor = sp.edit();
+            JsonArray = new JSONArray();
+
+            try {
+
+                TempJson = new JSONObject();
+                TempJson.put("usr_id", "11");
+                TempJson.put("lat",  String.valueOf(la));
+                TempJson.put("lng",  String.valueOf(lo));
+                TempJson.put("time", currentTime);
+
+                JsonArray.put(TempJson);
+
+                String json = "";   // [] = default value.
+
+                Log.i("dataTest",sp.getString("data", "[]"));
+
+                if( sp.getString("data", "[]").equals("[]") ) {
+
+                    json = "";
+                    editor.putString("data", JsonArray.toString());
+
+                } else {
+                    json = sp.getString("data", "[]");
+                    json = json.substring(1);
+                    json = json.substring(0, json.length()-1);
+
+                    editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
+                }
+                editor.commit();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.v("vvvvvv", "Error");
+            }
+
+            //Toast.makeText(this, "Get location at "+currentTime, Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -595,63 +602,6 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             return "";//this.res;
-        }
-    }
-
-    String beforeEnable;
-
-    private void turnGPSOn () {
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(this)
-                    .addApi(LocationServices.API).addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(MainActivity.this).build();
-            googleApiClient.connect();
-            LocationRequest locationRequest = LocationRequest.create();
-            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            locationRequest.setInterval(30 * 1000);
-            locationRequest.setFastestInterval(5 * 1000);
-            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
-                    .addLocationRequest(locationRequest);
-
-            // **************************
-            builder.setAlwaysShow(true); // this is the key ingredient
-            // **************************
-
-            PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi
-                    .checkLocationSettings(googleApiClient, builder.build());
-            result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-                @Override
-                public void onResult(LocationSettingsResult result) {
-                    final Status status = result.getStatus();
-                    final LocationSettingsStates state = result
-                            .getLocationSettingsStates();
-                    switch (status.getStatusCode()) {
-                        case LocationSettingsStatusCodes.SUCCESS:
-                            // All location settings are satisfied. The client can
-                            // initialize location
-                            // requests here.
-                            break;
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied. But could be
-                            // fixed by showing the user
-                            // a dialog.
-                            try {
-                                // Show the dialog by calling
-                                // startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                status.startResolutionForResult(MainActivity.this, 1000);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have
-                            // no way to fix the
-                            // settings so we won't show the dialog.
-                            break;
-                    }
-                }
-            });
         }
     }
 }
