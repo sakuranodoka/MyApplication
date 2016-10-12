@@ -113,9 +113,9 @@ public class MainActivity extends AppCompatActivity
 };
 
     public boolean isOnline() {
-//        ConnectivityManager cm =
-//                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
 //        try {
 //            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -132,38 +132,38 @@ public class MainActivity extends AppCompatActivity
 
         //return netInfo.isAvailable();
 
-        Runtime runtime = Runtime.getRuntime();
-        try {
-
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+//        Runtime runtime = Runtime.getRuntime();
+//        try {
+//
+//            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+//            int exitValue = ipProcess.waitFor();
+//            return (exitValue == 0);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return false;
 
 
         //return netInfo != null && netInfo.isConnected();
-//        boolean status = true;
-//        if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
-//                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING ) {
-//
-//            // notify user you are online
-//            status = true;
-//        }
-//        else if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
-//                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
-//            status = false;
-//            // notify user you are not online
-//        } else {
-//            status = false;
-//        }
-//        return status;
+        boolean status = true;
+        if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
+                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING ) {
+
+            // notify user you are online
+            status = true;
+        }
+        else if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
+                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+            status = false;
+            // notify user you are not online
+        } else {
+            status = false;
+        }
+        return status;
     }
 
     @Override
@@ -239,6 +239,24 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        Button openGraphBtn = (Button) findViewById(R.id.openGraphBtn);
+        openGraphBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent t =  new Intent(MainActivity.this, SimplyGraph.class);
+                startActivity(t);
+            }
+        });
+
+        Button openPieGraphBtn = (Button) findViewById(R.id.openPieChartGraphBtn);
+        openPieGraphBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent t =  new Intent(MainActivity.this, SimplyPieChartActivity.class);
+                startActivity(t);
+            }
+        });
+
         googleApiClient = new GoogleApiClient.Builder(this, this, this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -269,7 +287,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        googleApiClient.connect();
+        //googleApiClient.connect();
         super.onStart();
 
         Log.i("status", "App Start");
@@ -477,47 +495,47 @@ public class MainActivity extends AppCompatActivity
                 sp.edit().clear().commit();
             }
         } else {
-            java.util.Date dt = new java.util.Date();
-            java.text.SimpleDateFormat sdf =
-                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            String currentTime = sdf.format(dt);
-
-            editor = sp.edit();
-            JsonArray = new JSONArray();
-
-            try {
-
-                TempJson = new JSONObject();
-                TempJson.put("usr_id", "11");
-                TempJson.put("lat",  String.valueOf(la));
-                TempJson.put("lng",  String.valueOf(lo));
-                TempJson.put("time", currentTime);
-
-                JsonArray.put(TempJson);
-
-                String json = "";   // [] = default value.
-
-                Log.i("dataTest",sp.getString("data", "[]"));
-
-                if( sp.getString("data", "[]").equals("[]") ) {
-
-                    json = "";
-                    editor.putString("data", JsonArray.toString());
-
-                } else {
-                    json = sp.getString("data", "[]");
-                    json = json.substring(1);
-                    json = json.substring(0, json.length()-1);
-
-                    editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
-                }
-                editor.commit();
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.v("vvvvvv", "Error");
-            }
+//            java.util.Date dt = new java.util.Date();
+//            java.text.SimpleDateFormat sdf =
+//                    new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//            String currentTime = sdf.format(dt);
+//
+//            editor = sp.edit();
+//            JsonArray = new JSONArray();
+//
+//            try {
+//
+//                TempJson = new JSONObject();
+//                TempJson.put("usr_id", "11");
+//                TempJson.put("lat",  String.valueOf(la));
+//                TempJson.put("lng",  String.valueOf(lo));
+//                TempJson.put("time", currentTime);
+//
+//                JsonArray.put(TempJson);
+//
+//                String json = "";   // [] = default value.
+//
+//                Log.i("dataTest",sp.getString("data", "[]"));
+//
+//                if( sp.getString("data", "[]").equals("[]") ) {
+//
+//                    json = "";
+//                    editor.putString("data", JsonArray.toString());
+//
+//                } else {
+//                    json = sp.getString("data", "[]");
+//                    json = json.substring(1);
+//                    json = json.substring(0, json.length()-1);
+//
+//                    editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
+//                }
+//                editor.commit();
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                Log.v("vvvvvv", "Error");
+//            }
 
             //Toast.makeText(this, "Get location at "+currentTime, Toast.LENGTH_SHORT).show();
         }

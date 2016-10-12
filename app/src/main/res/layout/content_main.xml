@@ -280,6 +280,82 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin">
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="6">
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_chart"
+                    android:layout_weight="2"/>
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textGraph"
+                    android:text="กราฟ / Chart"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="30sp"
+                    android:freezesText="true"
+                    android:layout_weight="4"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="6">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="เปิดระบบทดสอบกราฟ"
+                    android:textSize="25sp"
+                    android:id="@+id/openGraphBtn"
+                    android:layout_marginBottom="30dp"
+                    android:layout_weight="6"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:background="@drawable/button_state_list_animator"
+                    android:textColor="@color/colorWhite" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="6">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PieChart Graph"
+                    android:textSize="25sp"
+                    android:id="@+id/openPieChartGraphBtn"
+                    android:layout_weight="6"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:background="@drawable/button_state_list_animator"
+                    android:textColor="@color/colorWhite" />
+            </LinearLayout>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 </RelativeLayout>
