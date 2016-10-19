@@ -16,7 +16,7 @@
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing_port"
-        android:src="@mipmap/logo" />
+        android:src="@drawable/logo" />
 
     <TextView
         android:layout_width="match_parent"

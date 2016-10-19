@@ -4,30 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.example.administrator.myapplication.MainActivity">
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="256dp"
+        android:layout_height="?attr/actionBarSize"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbarLayout"
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:expandedTitleGravity="right|bottom"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <!--<android.support.v7.widget.Toolbar-->
-                <!--android:id="@+id/toolbar"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="?attr/actionBarSize"-->
-                <!--android:background="?attr/colorPrimary"-->
-                <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">-->
-            <!--</android.support.v7.widget.Toolbar>-->
+            android:layout_height="match_parent">
+            <!--app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -35,23 +24,67 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:minHeight="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:gravity="top">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="4"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_weight="2"
+                        android:gravity="center|right"
+                        android:paddingRight="13dp">
+
+                        <!--<Button-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="XXX"-->
+                            <!--android:visibility="visible"/>-->
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/backPressed"
+                            android:src="@drawable/places_ic_clear"
+                            android:background="#00000000"
+                            android:visibility="invisible"
+                            android:theme="@style/AppTheme.AppBarOverlay"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <!--<android.support.v4.widget.NestedScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:fillViewport="true"-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
 
-     <include layout="@layout/content_main" />
+        <!--<include layout="@layout/content_main" />-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/content"></FrameLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    <!--</android.support.v4.widget.NestedScrollView>-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

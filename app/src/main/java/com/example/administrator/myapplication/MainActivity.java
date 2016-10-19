@@ -10,16 +10,23 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.LayoutRes;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +34,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.MultiAutoCompleteTextView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,6 +129,7 @@ public class MainActivity extends AppCompatActivity
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
+        return netInfo != null && netInfo.isConnectedOrConnecting();
 //        try {
 //            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 //            for (int networkType : networkTypes) {
@@ -149,21 +162,32 @@ public class MainActivity extends AppCompatActivity
 
 
         //return netInfo != null && netInfo.isConnected();
-        boolean status = true;
-        if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
-                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING ) {
+        //boolean status = true;
+//        if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
+//                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING ) {
+//
+//            // notify user you are online
+//            status = true;
+//        }
+//        else if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
+//                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
+//            status = false;
+//            // notify user you are not online
+//        } else {
+//            status = false;
+//        }
+        //return status;
+    }
 
-            // notify user you are online
-            status = true;
-        }
-        else if ( cm.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
-                || cm.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
-            status = false;
-            // notify user you are not online
-        } else {
-            status = false;
-        }
-        return status;
+    @Override
+    public void setContentView(@LayoutRes int layoutResID) {
+        DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(layoutResID, null);
+
+        FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.content);
+
+        getLayoutInflater().inflate(R.layout.content_main, frameLayout, true);
+
+        super.setContentView(fullLayout);
     }
 
     @Override
@@ -171,17 +195,17 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        TextView textView = (TextView) findViewById(R.id.textCapture);
-//        textView.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        //collapsingToolbarLayout.setBackground(R.drawable.background2);
+        //collapsingToolbarLayout.setBackgroundResource(R.drawable.background);
+        collapsingToolbarLayout.setTitle("Application");
+
+        //collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        //TextView textView = (TextView) findViewById(R.id.textCapture);
+        //textView.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
 
         Log.i("status", "App Created");
-
-        if (isOnline()) {
-            Toast.makeText(this, "Internet available", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Internet is not available", Toast.LENGTH_SHORT).show();
-        }
-
         bus = new Bus(ThreadEnforcer.MAIN);
         bus.register(this);
 
@@ -200,6 +224,8 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
 
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -257,12 +283,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        googleApiClient = new GoogleApiClient.Builder(this, this, this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
         Button openMapBtn = (Button) findViewById(R.id.openMapBtn);
         openMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -271,6 +291,12 @@ public class MainActivity extends AppCompatActivity
                 startActivity(t);
             }
         });
+
+        googleApiClient = new GoogleApiClient.Builder(this, this, this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -281,13 +307,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
 
-        super.onResume();
+        if (isOnline()) {
 
+            WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            WifiInfo info = manager.getConnectionInfo();
+            String address = info.getMacAddress();
+
+            Toast.makeText(this, "Internet available | " + address, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Internet is not available", Toast.LENGTH_SHORT).show();
+        }
+        super.onResume();
     }
 
     @Override
     protected void onStart() {
-        //googleApiClient.connect();
+        googleApiClient.connect();
         super.onStart();
 
         Log.i("status", "App Start");
@@ -296,9 +331,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-//        if (googleApiClient != null && googleApiClient.isConnected()) {
-//            googleApiClient.disconnect();
-//        }
     }
 
     @Override
@@ -325,7 +357,6 @@ public class MainActivity extends AppCompatActivity
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
@@ -373,19 +404,24 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_test) {
+            Intent t = new Intent(MainActivity.this, MapsActivity.class);
+            startActivity(t);
         }
+
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -428,8 +464,8 @@ public class MainActivity extends AppCompatActivity
         //if (locationAvailability.isLocationAvailable()) {
             LocationRequest locationRequest = new LocationRequest()
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(9000);
-            //Log.i("vvvvvv","vvvvvv");
+                    .setInterval(600000);
+            Log.i("vvvvvv","GPS is now connected.");
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -459,7 +495,7 @@ public class MainActivity extends AppCompatActivity
 
         ArrayList<String> temp;
 
-//        Log.v("xxxxxx", "Changed");
+        Log.v("vvvvvv", "Changed");
 //
         sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
         //Log.i("dataD", sp.getString("data", "[]").toString().length()+"");
@@ -479,7 +515,7 @@ public class MainActivity extends AppCompatActivity
 
                     temp.add(JsonArray.toString());
 
-                    new serviceProgress(temp).execute();
+                    //new serviceProgress(temp).execute();
 
                     //Toast.makeText(this, "send to server as normally", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
@@ -490,9 +526,30 @@ public class MainActivity extends AppCompatActivity
                 temp = new ArrayList<String>();
                 temp.add(sp.getString("data", "[]"));
 
-                new serviceProgress(temp).execute();
+                TempJson = new JSONObject();
+                try {
+                    TempJson.put("usr_id", "11");
+                    TempJson.put("lat",  String.valueOf(la));
+                    TempJson.put("lng",  String.valueOf(lo));
+                    TempJson.put("time", "NOW");
 
-                sp.edit().clear().commit();
+                    JsonArray = new JSONArray();
+                    JsonArray.put(TempJson);
+
+                    String _temp_ = sp.getString("data", "[]");
+
+                    Log.i("vvvvvv",_temp_.substring(0, _temp_.length()-1) +","+ JsonArray.toString().substring(1));
+
+                    temp.add(_temp_.substring(0, _temp_.length()-1) +","+ JsonArray.toString().substring(1) );
+
+                    new serviceProgress(temp).execute();
+
+                    //Toast.makeText(this, "send to server as normally", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //new serviceProgress(temp).execute();
             }
         } else {
 //            java.util.Date dt = new java.util.Date();
@@ -541,15 +598,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i("GPS-PROVIDER","suppended.");
+        Log.i("vvvvvv","suppended.");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.i("GPS-PROVIDER","not available.");
+        Log.i("vvvvvv","not available.");
     }
 
     private class serviceProgress extends AsyncTask<String, Integer, String> {
@@ -606,6 +662,8 @@ public class MainActivity extends AppCompatActivity
         protected String doInBackground(String... params)   {
             client = new OkHttpClient();
 
+            sp = getSharedPreferences(_PREF_MODE, Context.MODE_PRIVATE);
+
             this.res = "{\"data\":" + this.arrayList.get(0) + "}";
 
             body = RequestBody.create(JSON, this.res);
@@ -616,8 +674,56 @@ public class MainActivity extends AppCompatActivity
             try {
                 //Response response =
                 client.newCall(request).execute();
+                sp.edit().clear().commit();
+                Log.v("vvvvvv", "Clear Text");
             } catch (IOException e) {
                 e.printStackTrace();
+
+
+
+//                java.util.Date dt = new java.util.Date();
+//                java.text.SimpleDateFormat sdf =
+//                        new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//                String currentTime = sdf.format(dt);
+//
+//                editor = sp.edit();
+//                JsonArray = new JSONArray();
+//
+//                try {
+//
+//                    TempJson = new JSONObject();
+//                    TempJson.put("usr_id", "11");
+//                    TempJson.put("lat",  String.valueOf(la));
+//                    TempJson.put("lng",  String.valueOf(lo));
+//                    TempJson.put("time", currentTime);
+//
+//                    JsonArray.put(TempJson);
+//
+//                    String json = "";   // [] = default value.
+//
+//                    Log.i("dataTest",sp.getString("data", "[]"));
+//
+//                    if( sp.getString("data", "[]").equals("[]") ) {
+//
+//                        json = "";
+//                        editor.putString("data", JsonArray.toString());
+//
+//                    } else {
+//                        json = sp.getString("data", "[]");
+//                        json = json.substring(1);
+//                        json = json.substring(0, json.length()-1);
+//
+//                        editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
+//                    }
+//                    editor.commit();
+//
+//                } catch (JSONException ex) {
+//                    ex.printStackTrace();
+//                    Log.v("vvvvvv", "Error");
+//                }
+
+                Log.v("vvvvvv", "send to server failed");
             }
             return "";//this.res;
         }

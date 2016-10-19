@@ -1,9 +1,14 @@
 package com.example.administrator.myapplication;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -29,7 +34,7 @@ import okhttp3.Response;
  * Created by Administrator on 5/10/2559.
  */
 class LoadTaskData extends AsyncTask<String, Integer, String> {
-    //private ProgressDialog pd;
+    private ProgressDialog pd = null;
 
     public final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
@@ -47,20 +52,23 @@ class LoadTaskData extends AsyncTask<String, Integer, String> {
 
     GoogleMap mMap;
 
+    private Context context;
+
     public LoadTaskData() {
         //this.body = null;
         //this.request = null;
         this.res = "";
-
     }
 
-    public LoadTaskData(GoogleMap mMap, String usr_id) {
+    public LoadTaskData(GoogleMap mMap, String usr_id, Context context) {
         this.usr_id = usr_id;
 
         this.mMap = mMap;
         this.dateStart = "2016-01-01 00:00:00";
         this.dateEnd = "2016-01-01 00:00:00";
         this.method = "SET";
+
+        this.context = context;
     }
 
     private String usr_id;
@@ -68,37 +76,44 @@ class LoadTaskData extends AsyncTask<String, Integer, String> {
     private String dateEnd;
     private String method;
 
-    public LoadTaskData(GoogleMap mMap, String dateStart, String dateEnd, String method, String usr_id) {
+    public LoadTaskData(GoogleMap mMap, String dateStart, String dateEnd, String method, String usr_id, Context context) {
         this.usr_id = usr_id;
 
         this.mMap = mMap;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.method = method;
+
+        this.context = context;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-//            pd = new ProgressDialog(MainActivity.this);
-//            pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//            pd.setTitle("Loading...");
-//            pd.setMessage("Loading images...");
-//            pd.setCancelable(false);
-//            pd.setIndeterminate(false);
-//            pd.setMax(100);
-//            pd.setProgress(0);
-//            pd.show();
+        pd = new ProgressDialog(this.context);
+        pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        pd.setTitle("กรุณารอสักครู่...");
+        pd.setCancelable(false);
+        pd.setIndeterminate(false);
+        pd.setMax(100);
+        pd.setProgress(0);
+        pd.show();
     }
 
-    int hourSt;
-    int minuteSt;
-    int hourEd;
-    int minuteEd;
+//    int hourSt;
+//    int minuteSt;
+//    int hourEd;
+//    int minuteEd;
 
     @Override
     protected void onPostExecute(String result)  {
-        this.mMap.clear();
+        pd.dismiss();
+
+        if(this.mMap != null) {
+            this.mMap.clear();
+        } else {
+
+        }
         //Log.i("NPC-Testing", result);
 
         // Re-used variable.
@@ -113,7 +128,6 @@ class LoadTaskData extends AsyncTask<String, Integer, String> {
             PolylineOptions rectLine = new PolylineOptions()
                     .width(13)
                     .color(Color.rgb(0x23, 0x92, 0x99));
-            //.geodesic(true);
 
             LatLng latLng = null;
 
@@ -123,11 +137,25 @@ class LoadTaskData extends AsyncTask<String, Integer, String> {
             Date date1 = null;
             Date date2 = null;
 
-            for(int i = 0 ; i < jsSize; i++) {
-                temp = jsonArray.getJSONObject(i);
+            if(jsSize == 0) {
+                new AlertDialog.Builder(this.context)
+                        .setTitle("แจ้งเตือน")
+                        .setMessage("ไม่พบตำแหน่งของผู้ใช้ในช่วงระยะเวลาดังกล่าว")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            } else {
 
-                latLng = new LatLng( Float.parseFloat(temp.get("and_lat").toString()), Float.parseFloat(temp.get("and_lng").toString()));
-                rectLine.add(latLng);
+                for (int i = 0; i < jsSize; i++) {
+                    temp = jsonArray.getJSONObject(i);
+
+                    latLng = new LatLng(Float.parseFloat(temp.get("and_lat").toString()), Float.parseFloat(temp.get("and_lng").toString()));
+                    rectLine.add(latLng);
 
 //                try {
 //                    if(i == 0) {
@@ -166,26 +194,22 @@ class LoadTaskData extends AsyncTask<String, Integer, String> {
 //                    e.printStackTrace();
 //                }
 
+                }
             }
 
             if(latLng != null) {
-                mMap.addMarker(new MarkerOptions().position(latLng).title("ตำแหน่งปัจจุบัน"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                mMap.addMarker(new MarkerOptions().position(latLng).title("ตำแหน่งปลายทาง"));
                 mMap.addPolyline(rectLine);
             }
-
-
         } catch (JSONException e) {
             Log.i("vvvvvv", "JSON Parse failed.");
             e.printStackTrace();
         }
-//            pd.dismiss();
-        // TextView textViews = (TextView) findViewById(R.id.textView);
-        //textViews.setText(result);
-        //Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
     }
 
     protected void onProgressUpdate(Integer... values) {
-        //pd.setProgress(values[0]);
+        pd.setProgress(values[0]);
     }
 
     JSONObject jsonObject;
@@ -226,6 +250,7 @@ class LoadTaskData extends AsyncTask<String, Integer, String> {
                 Response response = client.newCall(request).execute();
                 JSONObject responseObj = new JSONObject(response.body().string());
 
+                // Log for check response data
                 //Log.i("vvvvvv", "responseObj: " + responseObj.toString());
 
                 this.res = responseObj.toString();

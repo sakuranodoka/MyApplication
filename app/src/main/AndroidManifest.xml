@@ -47,7 +47,8 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity android:name=".SimplyGraph" />
-        <activity android:name=".SimplyPieChartActivity"></activity>
+        <activity android:name=".SimplyPieChartActivity" />
+        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>
