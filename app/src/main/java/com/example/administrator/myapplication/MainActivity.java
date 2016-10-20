@@ -405,7 +405,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_test) {
-            Intent t = new Intent(MainActivity.this, MapsActivity.class);
+            Intent t = new Intent(MainActivity.this, TestActivity.class);
             startActivity(t);
         }
 
@@ -515,7 +515,7 @@ public class MainActivity extends AppCompatActivity
 
                     temp.add(JsonArray.toString());
 
-                    //new serviceProgress(temp).execute();
+                    new serviceProgress(temp).execute();
 
                     //Toast.makeText(this, "send to server as normally", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
