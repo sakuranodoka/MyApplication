@@ -1,6 +1,7 @@
 package com.example.administrator.myapplication;
 
 import android.Manifest;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -84,6 +85,9 @@ public class MainActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
+    //user : infoshop
+    // Pass : !nf0sh@p
+
     public SharedPreferences sp;
     public SharedPreferences.Editor editor;
 
@@ -103,26 +107,17 @@ public class MainActivity extends AppCompatActivity
     private JSONArray JsonArray = null;
     private JSONObject TempJson = null;
 
+    private static final String TAG_TASK_FRAGMENT = "task_fragment";
+
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+
 
     public class TestData {
         public String message;
     }
 
-    int[] networkTypes = new int[]{
-            ConnectivityManager.TYPE_BLUETOOTH,
-            ConnectivityManager.TYPE_DUMMY,
-            ConnectivityManager.TYPE_ETHERNET,
-            ConnectivityManager.TYPE_MOBILE,
-            ConnectivityManager.TYPE_MOBILE_DUN,
-            ConnectivityManager.TYPE_MOBILE_HIPRI,
-            ConnectivityManager.TYPE_MOBILE_MMS,
-            ConnectivityManager.TYPE_MOBILE_SUPL,
-            ConnectivityManager.TYPE_VPN,
-            ConnectivityManager.TYPE_WIFI,
-            ConnectivityManager.TYPE_WIMAX
-};
+    private String address;
 
     public boolean isOnline() {
         ConnectivityManager cm =
@@ -206,8 +201,8 @@ public class MainActivity extends AppCompatActivity
         //textView.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
 
         Log.i("status", "App Created");
-        bus = new Bus(ThreadEnforcer.MAIN);
-        bus.register(this);
+//        bus = new Bus(ThreadEnforcer.MAIN);
+//        bus.register(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -233,70 +228,70 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Button captureBtn = (Button) findViewById(R.id.capture);
-        captureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int REQUEST_CAMERA = 0;
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-                String imageFileName = "IMG_" + timeStamp + ".jpg";
-
-                File f = new File(Environment.getExternalStorageDirectory()
-                        , "DCIM/Camera/" + imageFileName);
-
-                Uri uri = Uri.fromFile(f);
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
-                startActivityForResult(Intent.createChooser(intent
-                        , "Take a picture with"), REQUEST_CAMERA);
-            }
-        });
-
-        Button scanBtn = (Button) findViewById(R.id.scan);
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
-                scanIntegrator.initiateScan();
-            }
-        });
-
-        Button openGraphBtn = (Button) findViewById(R.id.openGraphBtn);
-        openGraphBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent t =  new Intent(MainActivity.this, SimplyGraph.class);
-                startActivity(t);
-            }
-        });
-
-        Button openPieGraphBtn = (Button) findViewById(R.id.openPieChartGraphBtn);
-        openPieGraphBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent t =  new Intent(MainActivity.this, SimplyPieChartActivity.class);
-                startActivity(t);
-            }
-        });
-
-        Button openMapBtn = (Button) findViewById(R.id.openMapBtn);
-        openMapBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent t = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(t);
-            }
-        });
-
-        googleApiClient = new GoogleApiClient.Builder(this, this, this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+//        Button captureBtn = (Button) findViewById(R.id.capture);
+//        captureBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                int REQUEST_CAMERA = 0;
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//
+//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//
+//                String imageFileName = "IMG_" + timeStamp + ".jpg";
+//
+//                File f = new File(Environment.getExternalStorageDirectory()
+//                        , "DCIM/Camera/" + imageFileName);
+//
+//                Uri uri = Uri.fromFile(f);
+//
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//
+//                startActivityForResult(Intent.createChooser(intent
+//                        , "Take a picture with"), REQUEST_CAMERA);
+//            }
+//        });
+//
+//        Button scanBtn = (Button) findViewById(R.id.scan);
+//        scanBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
+//                scanIntegrator.initiateScan();
+//            }
+//        });
+//
+//        Button openGraphBtn = (Button) findViewById(R.id.openGraphBtn);
+//        openGraphBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent t =  new Intent(MainActivity.this, SimplyGraph.class);
+//                startActivity(t);
+//            }
+//        });
+//
+//        Button openPieGraphBtn = (Button) findViewById(R.id.openPieChartGraphBtn);
+//        openPieGraphBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent t =  new Intent(MainActivity.this, SimplyPieChartActivity.class);
+//                startActivity(t);
+//            }
+//        });
+//
+//        Button openMapBtn = (Button) findViewById(R.id.openMapBtn);
+//        openMapBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent t = new Intent(MainActivity.this, MapsActivity.class);
+//                startActivity(t);
+//            }
+//        });
+//
+//        googleApiClient = new GoogleApiClient.Builder(this, this, this)
+//                .addApi(LocationServices.API)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .build();
     }
 
     @Override
@@ -311,7 +306,7 @@ public class MainActivity extends AppCompatActivity
 
             WifiManager manager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = manager.getConnectionInfo();
-            String address = info.getMacAddress();
+            address = info.getMacAddress();
 
             Toast.makeText(this, "Internet available | " + address, Toast.LENGTH_SHORT).show();
         } else {
@@ -322,7 +317,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onStart() {
-        googleApiClient.connect();
+        //googleApiClient.connect();
         super.onStart();
 
         Log.i("status", "App Start");
@@ -343,7 +338,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        //super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -385,9 +381,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -405,7 +398,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_test) {
-            Intent t = new Intent(MainActivity.this, TestActivity.class);
+            Intent t = new Intent(MainActivity.this, UserActivity.class);
             startActivity(t);
         }
 
@@ -464,16 +457,10 @@ public class MainActivity extends AppCompatActivity
         //if (locationAvailability.isLocationAvailable()) {
             LocationRequest locationRequest = new LocationRequest()
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                    .setInterval(600000);
+                    .setInterval(10000);
             Log.i("vvvvvv","GPS is now connected.");
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
@@ -481,6 +468,8 @@ public class MainActivity extends AppCompatActivity
 //            Toast.makeText(this, "Location provider no longer available !!!", Toast.LENGTH_SHORT).show();
 //        }
     }
+
+    private UpdateLocationFragment ulFragment;
 
     @Override
     public void onLocationChanged(Location location) {
@@ -505,7 +494,7 @@ public class MainActivity extends AppCompatActivity
                 // add ปกติ
                 TempJson = new JSONObject();
                 try {
-                    TempJson.put("usr_id", "11");
+                    TempJson.put("usr_id", address);
                     TempJson.put("lat",  String.valueOf(la));
                     TempJson.put("lng",  String.valueOf(lo));
                     TempJson.put("time", "NOW");
@@ -515,7 +504,16 @@ public class MainActivity extends AppCompatActivity
 
                     temp.add(JsonArray.toString());
 
-                    new serviceProgress(temp).execute();
+                    FragmentManager fragmentManager = getFragmentManager();
+                    //ulFragment = (UpdateLocationFragment) fragmentManager.findFragmentByTag(TAG_TASK_FRAGMENT);
+                    //if (ulFragment == null) {
+                    ulFragment = new UpdateLocationFragment(temp);
+                    fragmentManager.beginTransaction().add(ulFragment, TAG_TASK_FRAGMENT).commitAllowingStateLoss();
+//                    } else {
+//
+//                    }
+
+                    //new serviceProgress(temp).execute();
 
                     //Toast.makeText(this, "send to server as normally", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
@@ -528,7 +526,7 @@ public class MainActivity extends AppCompatActivity
 
                 TempJson = new JSONObject();
                 try {
-                    TempJson.put("usr_id", "11");
+                    TempJson.put("usr_id", address);
                     TempJson.put("lat",  String.valueOf(la));
                     TempJson.put("lng",  String.valueOf(lo));
                     TempJson.put("time", "NOW");
@@ -671,60 +669,62 @@ public class MainActivity extends AppCompatActivity
                         .url(url)
                         .post(body)
                         .build();
-            try {
-                //Response response =
-                client.newCall(request).execute();
-                sp.edit().clear().commit();
-                Log.v("vvvvvv", "Clear Text");
-            } catch (IOException e) {
-                e.printStackTrace();
 
-
-
-//                java.util.Date dt = new java.util.Date();
-//                java.text.SimpleDateFormat sdf =
-//                        new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Log.v("vvvvvv", "Clear Text");
+//            try {
+//                //Response response =
+//                client.newCall(request).execute();
+//                sp.edit().clear().commit();
+//                Log.v("vvvvvv", "Clear Text");
+//            } catch (IOException e) {
+//                e.printStackTrace();
 //
-//                String currentTime = sdf.format(dt);
 //
-//                editor = sp.edit();
-//                JsonArray = new JSONArray();
 //
-//                try {
+////                java.util.Date dt = new java.util.Date();
+////                java.text.SimpleDateFormat sdf =
+////                        new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+////
+////                String currentTime = sdf.format(dt);
+////
+////                editor = sp.edit();
+////                JsonArray = new JSONArray();
+////
+////                try {
+////
+////                    TempJson = new JSONObject();
+////                    TempJson.put("usr_id", "11");
+////                    TempJson.put("lat",  String.valueOf(la));
+////                    TempJson.put("lng",  String.valueOf(lo));
+////                    TempJson.put("time", currentTime);
+////
+////                    JsonArray.put(TempJson);
+////
+////                    String json = "";   // [] = default value.
+////
+////                    Log.i("dataTest",sp.getString("data", "[]"));
+////
+////                    if( sp.getString("data", "[]").equals("[]") ) {
+////
+////                        json = "";
+////                        editor.putString("data", JsonArray.toString());
+////
+////                    } else {
+////                        json = sp.getString("data", "[]");
+////                        json = json.substring(1);
+////                        json = json.substring(0, json.length()-1);
+////
+////                        editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
+////                    }
+////                    editor.commit();
+////
+////                } catch (JSONException ex) {
+////                    ex.printStackTrace();
+////                    Log.v("vvvvvv", "Error");
+////                }
 //
-//                    TempJson = new JSONObject();
-//                    TempJson.put("usr_id", "11");
-//                    TempJson.put("lat",  String.valueOf(la));
-//                    TempJson.put("lng",  String.valueOf(lo));
-//                    TempJson.put("time", currentTime);
-//
-//                    JsonArray.put(TempJson);
-//
-//                    String json = "";   // [] = default value.
-//
-//                    Log.i("dataTest",sp.getString("data", "[]"));
-//
-//                    if( sp.getString("data", "[]").equals("[]") ) {
-//
-//                        json = "";
-//                        editor.putString("data", JsonArray.toString());
-//
-//                    } else {
-//                        json = sp.getString("data", "[]");
-//                        json = json.substring(1);
-//                        json = json.substring(0, json.length()-1);
-//
-//                        editor.putString("data", "["+json+","+JsonArray.toString().substring(1));
-//                    }
-//                    editor.commit();
-//
-//                } catch (JSONException ex) {
-//                    ex.printStackTrace();
-//                    Log.v("vvvvvv", "Error");
-//                }
-
-                Log.v("vvvvvv", "send to server failed");
-            }
+//                Log.v("vvvvvv", "send to server failed");
+//            }
             return "";//this.res;
         }
     }

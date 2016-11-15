@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "446817432985",
+    "firebase_url": "https://application-b56cc.firebaseio.com",
+    "project_id": "application-b56cc",
+    "storage_bucket": "application-b56cc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446817432985:android:c29ba4c3c47176e8",
+        "android_client_info": {
+          "package_name": "com.example.administrator.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446817432985-bg0uuthafabonils0kcip953vhfj403f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh0CrkMogUEny9E38LbnSgurH3EljPgUU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:446817432985:android:c91aa4584263e96d",
+        "android_client_info": {
+          "package_name": "com.wacoal.shop.info"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "446817432985-bg0uuthafabonils0kcip953vhfj403f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh0CrkMogUEny9E38LbnSgurH3EljPgUU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
