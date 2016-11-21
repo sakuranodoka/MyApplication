@@ -1,6 +1,7 @@
 package com.example.administrator.myapplication;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -34,10 +35,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
@@ -58,6 +63,7 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.otto.Bus;
@@ -71,8 +77,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import autocomplete.SetAutoCompleteView;
+import autocomplete.ShopArrayAdapter;
+import autocomplete.ShopItem;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -190,37 +201,104 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        //SetAutoCompleteView.setView(this);
+
+        final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
+
+        Gson gson = new Gson();
+        ShopItem[] temp = gson.fromJson(SetAutoCompleteView.language, ShopItem[].class);
+        List<ShopItem> bb = Arrays.asList(temp);
+
+        ShopArrayAdapter adapter = new ShopArrayAdapter(this, R.layout.view_search_paging, bb);
+
+        acTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                acTextView.showDropDown();
+            }
+        });
+
+        acTextView.bringToFront();
+        acTextView.setAdapter(adapter);
+
+//        String language = "\n" +
+//                "  [\n" +
+//                "    {\n" +
+//                "      \"shop_id\" : \"1011112\",\n" +
+//                "      \"shop_name\" : \"Test\"\n" +
+//                "    },{\n" +
+//                "      \"shop_id\" : \"1011113\",\n" +
+//                "      \"shop_name\" : \"Test S.\"\n" +
+//                "    },{\n" +
+//                "      \"shop_id\" : \"1011111\",\n" +
+//                "      \"shop_name\" : \"Test B.\"\n" +
+//                "    }\n" +
+//                "    ]\n";
+//
+//        final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
+//        //Set the number of characters the user must type before the drop down list is shown
+//        acTextView.setThreshold(1);
+//
+//        Gson gson = new Gson();
+//        ShopItem[] temp = gson.fromJson(language, ShopItem[].class);
+//        List<ShopItem> bb = Arrays.asList(temp);
+//
+//        ShopArrayAdapter adapter = new ShopArrayAdapter(this, R.layout.view_search_paging, bb);
+//
+//        acTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                acTextView.showDropDown();
+//            }
+//        });
+
+//        acTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(hasFocus) {
+//                    acTextView.showDropDown();
+//                } else {
+//                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//
+//                    acTextView.dismissDropDown();
+//                    //imm//.setVisibility(View.GONE);
+//                    //v.clearFocus();
+//                }
+//            }
+//        });
+
+        //Set the adapter
+
+       // CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         //collapsingToolbarLayout.setBackground(R.drawable.background2);
         //collapsingToolbarLayout.setBackgroundResource(R.drawable.background);
-        collapsingToolbarLayout.setTitle("Application");
+        //collapsingToolbarLayout.setTitle("Application");
 
         //collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         //TextView textView = (TextView) findViewById(R.id.textCapture);
         //textView.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
 
-        Log.i("status", "App Created");
 //        bus = new Bus(ThreadEnforcer.MAIN);
 //        bus.register(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-
 
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -228,37 +306,37 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-//        Button captureBtn = (Button) findViewById(R.id.capture);
-//        captureBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int REQUEST_CAMERA = 0;
-//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//
-//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//
-//                String imageFileName = "IMG_" + timeStamp + ".jpg";
-//
-//                File f = new File(Environment.getExternalStorageDirectory()
-//                        , "DCIM/Camera/" + imageFileName);
-//
-//                Uri uri = Uri.fromFile(f);
-//
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-//
-//                startActivityForResult(Intent.createChooser(intent
-//                        , "Take a picture with"), REQUEST_CAMERA);
-//            }
-//        });
-//
-//        Button scanBtn = (Button) findViewById(R.id.scan);
-//        scanBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
-//                scanIntegrator.initiateScan();
-//            }
-//        });
+        Button captureBtn = (Button) findViewById(R.id.capture);
+        captureBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int REQUEST_CAMERA = 0;
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+                String imageFileName = "IMG_" + timeStamp + ".jpg";
+
+                File f = new File(Environment.getExternalStorageDirectory()
+                        , "DCIM/Camera/" + imageFileName);
+
+                Uri uri = Uri.fromFile(f);
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
+                startActivityForResult(Intent.createChooser(intent
+                        , "Take a picture with"), REQUEST_CAMERA);
+            }
+        });
+
+        Button scanBtn = (Button) findViewById(R.id.scan);
+        scanBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
+                scanIntegrator.initiateScan();
+            }
+        });
 //
 //        Button openGraphBtn = (Button) findViewById(R.id.openGraphBtn);
 //        openGraphBtn.setOnClickListener(new View.OnClickListener() {
@@ -292,6 +370,9 @@ public class MainActivity extends AppCompatActivity
 //                .addConnectionCallbacks(this)
 //                .addOnConnectionFailedListener(this)
 //                .build();
+
+        //acTextView.bringToFront();
+        //acTextView.setAdapter(adapter);
     }
 
     @Override
@@ -398,7 +479,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_test) {
-            Intent t = new Intent(MainActivity.this, UserActivity.class);
+            Intent t = new Intent(MainActivity.this, SellerActivity.class);
             startActivity(t);
         }
 
@@ -728,4 +809,11 @@ public class MainActivity extends AppCompatActivity
             return "";//this.res;
         }
     }
+
+
+
+
+
+
+
 }

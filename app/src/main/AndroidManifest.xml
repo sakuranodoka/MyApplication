@@ -61,7 +61,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".UserActivity"></activity>
+        <activity android:name=".UserActivity" />
+        <activity android:name=".EBusinessActivity" />
+        <activity android:name=".SellerActivity"></activity>
     </application>
 
 </manifest>
