@@ -12,17 +12,28 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import autocomplete.SetAutoCompleteView;
+import autocomplete.ShopArrayAdapter;
+import autocomplete.ShopItem;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
+import seller.InterfaceOnItemClick;
 import seller.SellerAdapter;
 import seller.SellerBaseItem;
 import seller.SellerData;
+import seller.ViewDialog;
 import seller.autocomplete.GetSellerTitle;
 import seller.autocomplete.InterfaceOnChangeTitleCallback;
 import seller.convert.data.ConvertContent;
@@ -34,7 +45,8 @@ import seller.services.retrofit.ServiceCollection;
 
 public class SellerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        InterfaceOnChangeTitleCallback
+        InterfaceOnChangeTitleCallback,
+        InterfaceOnItemClick
 {
 
     private RecyclerView sellerRecyclerView;
@@ -65,6 +77,23 @@ public class SellerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
+        Gson gson = new Gson();
+        ShopItem[] temp = gson.fromJson(SetAutoCompleteView.language, ShopItem[].class);
+        List<ShopItem> bb = Arrays.asList(temp);
+
+        ShopArrayAdapter adapter = new ShopArrayAdapter(this, R.layout.view_search_paging, bb);
+
+        acTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                acTextView.showDropDown();
+            }
+        });
+
+        acTextView.bringToFront();
+        acTextView.setAdapter(adapter);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -80,8 +109,9 @@ public class SellerActivity extends AppCompatActivity
         sellerRecyclerView = (RecyclerView) findViewById(R.id.sellerRecyclerView);
         sellerRecyclerView.setLayoutManager( new LinearLayoutManager(this) );
 
-        sellerAdapter = new SellerAdapter();
+        sellerAdapter = new SellerAdapter(this);
         sellerAdapter.setInterfaceOnChangeTitleCallback(this);
+        sellerAdapter.setInterfaceOnItemClick(this);
         sellerRecyclerView.setAdapter(sellerAdapter);
 
         ItemSellerTitle itemSellerTitle = new ItemSellerTitle();
@@ -90,7 +120,10 @@ public class SellerActivity extends AppCompatActivity
         itemSellerTitle.setSettingsTint(ContextCompat.getColor(getApplicationContext() , R.color.angel_white) );
         listSellerBaseItem.add(itemSellerTitle);
 
-        setContentData();
+        sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+        sellerAdapter.notifyDataSetChanged();
+
+        //setContentData();
     }
 
     InterfaceListen interfaceListen = new InterfaceListen() {
@@ -111,7 +144,11 @@ public class SellerActivity extends AppCompatActivity
 
                 SellerBestSellerPOJO temp = (SellerBestSellerPOJO) data;
 
-                listSellerBaseItem.addAll(ConvertContent.listItemSellerBestSeller(temp) );
+                if (SellerData.reportId == 2) {
+                    listSellerBaseItem.addAll(ConvertContent.listItemSellerBestSeller(temp));
+                } else {
+                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp));
+                }
 
                 sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
                 sellerAdapter.notifyDataSetChanged();
@@ -152,6 +189,12 @@ public class SellerActivity extends AppCompatActivity
     }
 
     private void setContentData() {
-        new ServiceCollection().callServer(interfaceListen, SellerData.reportId);
+        new ServiceCollection().callServer(interfaceListen, SellerData.reportId, null);
+    }
+
+    @Override
+    public void onItemClickListener(String itemCode) {
+        ViewDialog alert = new ViewDialog();
+        alert.showDialog(this, itemCode);
     }
 }

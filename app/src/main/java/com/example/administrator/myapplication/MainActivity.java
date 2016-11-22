@@ -44,6 +44,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -185,62 +186,46 @@ public class MainActivity extends AppCompatActivity
         //return status;
     }
 
-    @Override
-    public void setContentView(@LayoutRes int layoutResID) {
-        DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(layoutResID, null);
-
-        FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.content);
-
-        getLayoutInflater().inflate(R.layout.content_main, frameLayout, true);
-
-        super.setContentView(fullLayout);
-    }
+//    @Override
+//    public void setContentView(@LayoutRes int layoutResID) {
+//        DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(layoutResID, null);
+//
+//        FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.content);
+//
+//        getLayoutInflater().inflate(R.layout.content_main, frameLayout, true);
+//
+//        super.setContentView(fullLayout);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.view_login);
 
-        //SetAutoCompleteView.setView(this);
-
-        final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
-
-        Gson gson = new Gson();
-        ShopItem[] temp = gson.fromJson(SetAutoCompleteView.language, ShopItem[].class);
-        List<ShopItem> bb = Arrays.asList(temp);
-
-        ShopArrayAdapter adapter = new ShopArrayAdapter(this, R.layout.view_search_paging, bb);
-
-        acTextView.setOnClickListener(new View.OnClickListener() {
+        LinearLayout llUsers = (LinearLayout) findViewById(R.id.users);
+        llUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                acTextView.showDropDown();
+                Intent t = new Intent(MainActivity.this, UserActivity.class);
+                startActivity(t);
             }
         });
 
-        acTextView.bringToFront();
-        acTextView.setAdapter(adapter);
+        LinearLayout llAdmin = (LinearLayout) findViewById(R.id.admin);
+        llAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent t = new Intent(MainActivity.this, EBusinessActivity.class);
+                startActivity(t);
+            }
+        });
 
-//        String language = "\n" +
-//                "  [\n" +
-//                "    {\n" +
-//                "      \"shop_id\" : \"1011112\",\n" +
-//                "      \"shop_name\" : \"Test\"\n" +
-//                "    },{\n" +
-//                "      \"shop_id\" : \"1011113\",\n" +
-//                "      \"shop_name\" : \"Test S.\"\n" +
-//                "    },{\n" +
-//                "      \"shop_id\" : \"1011111\",\n" +
-//                "      \"shop_name\" : \"Test B.\"\n" +
-//                "    }\n" +
-//                "    ]\n";
-//
+        //SetAutoCompleteView.setView(this);
+
 //        final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
-//        //Set the number of characters the user must type before the drop down list is shown
-//        acTextView.setThreshold(1);
 //
 //        Gson gson = new Gson();
-//        ShopItem[] temp = gson.fromJson(language, ShopItem[].class);
+//        ShopItem[] temp = gson.fromJson(SetAutoCompleteView.language, ShopItem[].class);
 //        List<ShopItem> bb = Arrays.asList(temp);
 //
 //        ShopArrayAdapter adapter = new ShopArrayAdapter(this, R.layout.view_search_paging, bb);
@@ -251,92 +236,63 @@ public class MainActivity extends AppCompatActivity
 //                acTextView.showDropDown();
 //            }
 //        });
-
-//        acTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //
+//        acTextView.bringToFront();
+//        acTextView.setAdapter(adapter);
+//
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        //setSupportActionBar(toolbar);
+//
+////        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+////        fab.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View view) {
+////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+////                        .setAction("Action", null).show();
+////            }
+////        });
+//
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
+//
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
+//
+//        Button captureBtn = (Button) findViewById(R.id.capture);
+//        captureBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if(hasFocus) {
-//                    acTextView.showDropDown();
-//                } else {
-//                    final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//            public void onClick(View v) {
+//                int REQUEST_CAMERA = 0;
+//                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 //
-//                    acTextView.dismissDropDown();
-//                    //imm//.setVisibility(View.GONE);
-//                    //v.clearFocus();
-//                }
+//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//
+//                String imageFileName = "IMG_" + timeStamp + ".jpg";
+//
+//                File f = new File(Environment.getExternalStorageDirectory()
+//                        , "DCIM/Camera/" + imageFileName);
+//
+//                Uri uri = Uri.fromFile(f);
+//
+//                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//
+//                startActivityForResult(Intent.createChooser(intent
+//                        , "Take a picture with"), REQUEST_CAMERA);
 //            }
 //        });
-
-        //Set the adapter
-
-       // CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        //collapsingToolbarLayout.setBackground(R.drawable.background2);
-        //collapsingToolbarLayout.setBackgroundResource(R.drawable.background);
-        //collapsingToolbarLayout.setTitle("Application");
-
-        //collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-
-        //TextView textView = (TextView) findViewById(R.id.textCapture);
-        //textView.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_launcher, 0, 0, 0);
-
-//        bus = new Bus(ThreadEnforcer.MAIN);
-//        bus.register(this);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
+//
+//        Button scanBtn = (Button) findViewById(R.id.scan);
+//        scanBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+//            public void onClick(View v) {
+//                IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
+//                scanIntegrator.initiateScan();
 //            }
 //        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        Button captureBtn = (Button) findViewById(R.id.capture);
-        captureBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int REQUEST_CAMERA = 0;
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-                String imageFileName = "IMG_" + timeStamp + ".jpg";
-
-                File f = new File(Environment.getExternalStorageDirectory()
-                        , "DCIM/Camera/" + imageFileName);
-
-                Uri uri = Uri.fromFile(f);
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
-                startActivityForResult(Intent.createChooser(intent
-                        , "Take a picture with"), REQUEST_CAMERA);
-            }
-        });
-
-        Button scanBtn = (Button) findViewById(R.id.scan);
-        scanBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
-                scanIntegrator.initiateScan();
-            }
-        });
 //
 //        Button openGraphBtn = (Button) findViewById(R.id.openGraphBtn);
 //        openGraphBtn.setOnClickListener(new View.OnClickListener() {
@@ -389,9 +345,9 @@ public class MainActivity extends AppCompatActivity
             WifiInfo info = manager.getConnectionInfo();
             address = info.getMacAddress();
 
-            Toast.makeText(this, "Internet available | " + address, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Internet available | " + address, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Internet is not available", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Internet is not available", Toast.LENGTH_SHORT).show();
         }
         super.onResume();
     }
@@ -411,15 +367,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            googleApiClient.disconnect();
-        }
+//        if (googleApiClient != null && googleApiClient.isConnected()) {
+//            googleApiClient.disconnect();
+//        }
         super.onDestroy();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
+        //outState.putString("WORKAROUND_FOR_BUG_19917_KEY", "WORKAROUND_FOR_BUG_19917_VALUE");
         //super.onSaveInstanceState(outState);
     }
 
@@ -478,10 +434,10 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_test) {
-            Intent t = new Intent(MainActivity.this, SellerActivity.class);
-            startActivity(t);
-        }
+//        if (id == R.id.nav_test) {
+//            Intent t = new Intent(MainActivity.this, SellerActivity.class);
+//            startActivity(t);
+//        }
 
 //        if (id == R.id.nav_camera) {
 //            // Handle the camera action

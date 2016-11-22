@@ -10,4 +10,5 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="round_padding">7dp</dimen>
+    <dimen name="title_expanded">13dp</dimen>
 </resources>

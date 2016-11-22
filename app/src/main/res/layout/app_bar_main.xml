@@ -39,7 +39,10 @@
                     android:paddingRight="10dp"
                     android:drawablePadding="8dp"
 
-                    android:layout_margin="7dp"
+                    android:layout_marginTop="@dimen/round_padding"
+                    android:layout_marginBottom="@dimen/round_padding"
+                    android:layout_marginLeft="@dimen/round_padding"
+                    android:layout_marginRight="14dp"
 
                     android:gravity="center|center"
                     android:layout_gravity="center_vertical"
