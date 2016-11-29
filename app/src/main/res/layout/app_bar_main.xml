@@ -10,7 +10,6 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -29,41 +28,69 @@
                 android:minHeight="?attr/actionBarSize"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-                <autocomplete.InstantAutocomplete
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center_horizontal">
 
-                    android:id="@+id/search_box"
+                    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+                    <LinearLayout
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:layout_width="0px"
+                        android:layout_height="0px"
+                        android:id="@+id/llNrs"
+                        android:orientation="horizontal" />
 
-                    android:paddingLeft="25dp"
-                    android:paddingRight="10dp"
-                    android:drawablePadding="8dp"
+                    <autocomplete.InstantAutocomplete
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
 
-                    android:layout_marginTop="@dimen/round_padding"
-                    android:layout_marginBottom="@dimen/round_padding"
-                    android:layout_marginLeft="@dimen/round_padding"
-                    android:layout_marginRight="14dp"
+                        android:id="@+id/search_box"
 
-                    android:gravity="center|center"
-                    android:layout_gravity="center_vertical"
+                        android:paddingLeft="25dp"
+                        android:paddingRight="10dp"
+                        android:drawablePadding="8dp"
 
-                    android:dropDownVerticalOffset="5dp"
-                    android:dropDownWidth="wrap_content"
+                        android:layout_marginTop="@dimen/round_padding"
+                        android:layout_marginBottom="@dimen/round_padding"
+                        android:layout_marginLeft="@dimen/round_padding"
+                        android:layout_marginRight="14dp"
 
-                    android:focusable="false"
-                    android:focusableInTouchMode="true"
+                        android:gravity="center|center"
+                        android:layout_gravity="center_vertical"
 
-                    android:inputType="textAutoComplete|textAutoCorrect"
+                        android:dropDownVerticalOffset="0dp"
+                        android:dropDownWidth="match_parent"
 
-                    android:popupBackground="@color/angel_white"
-                    android:textColor="@color/little_light_gray"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:nextFocusUp="@+id/search_box"
+                        android:nextFocusLeft="@+id/search_box"
 
-                    android:background="@drawable/search_background"
-                    android:hint="ค้นหาร้านค้า"
+                        android:inputType="textAutoComplete|textAutoCorrect"
 
-                    android:drawableRight="@drawable/ic_search_black_24dp">
-                </autocomplete.InstantAutocomplete>
+                        android:popupBackground="@color/angel_white"
+                        android:textColor="@color/little_light_gray"
 
+                        android:background="@drawable/search_background"
+                        android:hint="ค้นหาร้านค้า"
+
+                        android:drawableRight="@drawable/ic_search_black_24dp">
+                    </autocomplete.InstantAutocomplete>
+
+                    <!--<ProgressBar-->
+                        <!--style="?android:attr/progressBarStyleSmallTitle"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignTop="@id/search_box"-->
+                        <!--android:layout_alignBottom="@id/search_box"-->
+                        <!--android:layout_alignLeft="@id/search_box"/>-->
+
+                    <!--android:focusable="false"-->
+                    <!--android:focusableInTouchMode="true"-->
+
+                </RelativeLayout>
 
             </android.support.v7.widget.Toolbar>
 

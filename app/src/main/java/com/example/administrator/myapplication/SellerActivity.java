@@ -12,21 +12,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import autocomplete.SetAutoCompleteView;
-import autocomplete.ShopArrayAdapter;
-import autocomplete.ShopItem;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import seller.InterfaceOnItemClick;
@@ -34,8 +26,9 @@ import seller.SellerAdapter;
 import seller.SellerBaseItem;
 import seller.SellerData;
 import seller.ViewDialog;
+import seller.ViewDialogOption;
 import seller.autocomplete.GetSellerTitle;
-import seller.autocomplete.InterfaceOnChangeTitleCallback;
+import seller.autocomplete.InterfaceTitleCallback;
 import seller.convert.data.ConvertContent;
 import seller.item.ItemSellerTitle;
 import seller.pojo.SellerBestSellerPOJO;
@@ -45,11 +38,12 @@ import seller.services.retrofit.ServiceCollection;
 
 public class SellerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        InterfaceOnChangeTitleCallback,
+        InterfaceTitleCallback,
         InterfaceOnItemClick
 {
 
     private RecyclerView sellerRecyclerView;
+
     private SellerAdapter sellerAdapter;
 
     private List<SellerBaseItem> listSellerBaseItem = new ArrayList<>();
@@ -77,22 +71,9 @@ public class SellerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
-        Gson gson = new Gson();
-        ShopItem[] temp = gson.fromJson(SetAutoCompleteView.language, ShopItem[].class);
-        List<ShopItem> bb = Arrays.asList(temp);
+        new SetAutoCompleteView().setView(this);
 
-        ShopArrayAdapter adapter = new ShopArrayAdapter(this, R.layout.view_search_paging, bb);
 
-        acTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                acTextView.showDropDown();
-            }
-        });
-
-        acTextView.bringToFront();
-        acTextView.setAdapter(adapter);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -110,7 +91,7 @@ public class SellerActivity extends AppCompatActivity
         sellerRecyclerView.setLayoutManager( new LinearLayoutManager(this) );
 
         sellerAdapter = new SellerAdapter(this);
-        sellerAdapter.setInterfaceOnChangeTitleCallback(this);
+        sellerAdapter.setInterfaceTitleCallback(this);
         sellerAdapter.setInterfaceOnItemClick(this);
         sellerRecyclerView.setAdapter(sellerAdapter);
 
@@ -182,19 +163,31 @@ public class SellerActivity extends AppCompatActivity
         }
     }
 
+
+
+    private void setContentData() {
+        new ServiceCollection().callServer(interfaceListen, SellerData.reportId, SellerData.shopCode, null);
+    }
+
+    // Implements method .........................
+    // Implements from Seller Adapter when item's detail will be touch
+    @Override
+    public void onItemClickListener(String itemCode) {
+        ViewDialog alert = new ViewDialog();
+        alert.showDialog(this, itemCode);
+    }
+
+    // Implement from Seller Adapter when a title is done changing ...
     @Override
     public void onChangeTitleCallBack(int reportId) {
         SellerData.reportId = reportId;
         setContentData();
     }
 
-    private void setContentData() {
-        new ServiceCollection().callServer(interfaceListen, SellerData.reportId, null);
-    }
-
+    // Implement from Seller Adapter when a setting's icon in the title is done clicking ...
     @Override
-    public void onItemClickListener(String itemCode) {
-        ViewDialog alert = new ViewDialog();
-        alert.showDialog(this, itemCode);
+    public void onTitleSettingClickCallBack(int reportId) {
+        ViewDialogOption alert = new ViewDialogOption();
+        alert.showDialog(this, reportId);
     }
 }

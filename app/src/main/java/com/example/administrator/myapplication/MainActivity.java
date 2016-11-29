@@ -200,6 +200,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new StatusBarStyle().setHideStatusBar(getWindow().getDecorView());
+
         setContentView(R.layout.view_login);
 
         LinearLayout llUsers = (LinearLayout) findViewById(R.id.users);
@@ -396,16 +399,6 @@ public class MainActivity extends AppCompatActivity
                 }
                 return;
             }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
     }
 
