@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -22,13 +23,16 @@ import autocomplete.SetAutoCompleteView;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import seller.InterfaceOnItemClick;
+import seller.InterfaceOnOption;
 import seller.SellerAdapter;
 import seller.SellerBaseItem;
 import seller.SellerData;
-import seller.ViewDialog;
+import seller.SellerType;
+import seller.ViewDialogProductDetail;
 import seller.ViewDialogOption;
 import seller.autocomplete.GetSellerTitle;
 import seller.autocomplete.InterfaceTitleCallback;
+import seller.autocomplete.SellerTitleDAO;
 import seller.convert.data.ConvertContent;
 import seller.item.ItemSellerTitle;
 import seller.pojo.SellerBestSellerPOJO;
@@ -73,8 +77,6 @@ public class SellerActivity extends AppCompatActivity
 
         new SetAutoCompleteView().setView(this);
 
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -95,6 +97,8 @@ public class SellerActivity extends AppCompatActivity
         sellerAdapter.setInterfaceOnItemClick(this);
         sellerRecyclerView.setAdapter(sellerAdapter);
 
+        List<SellerTitleDAO> a = GetSellerTitle.getSellerTitleList();
+
         ItemSellerTitle itemSellerTitle = new ItemSellerTitle();
         itemSellerTitle.setListOptionValue(GetSellerTitle.getSellerTitleList());
         itemSellerTitle.setSettingsBackgroundColor(ContextCompat.getColor(getApplicationContext() , R.color.dark_honest_green) );
@@ -103,8 +107,6 @@ public class SellerActivity extends AppCompatActivity
 
         sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
         sellerAdapter.notifyDataSetChanged();
-
-        //setContentData();
     }
 
     InterfaceListen interfaceListen = new InterfaceListen() {
@@ -125,7 +127,7 @@ public class SellerActivity extends AppCompatActivity
 
                 SellerBestSellerPOJO temp = (SellerBestSellerPOJO) data;
 
-                if (SellerData.reportId == 2) {
+                if (SellerData.reportId == SellerType.TYPE_SELLER_BEST_SELLER) {
                     listSellerBaseItem.addAll(ConvertContent.listItemSellerBestSeller(temp));
                 } else {
                     listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp));
@@ -152,18 +154,23 @@ public class SellerActivity extends AppCompatActivity
         }
     };
 
+    InterfaceOnOption optionInterface = new InterfaceOnOption() {
+        @Override
+        public void GraphSelected(int graphId) {
+            SellerData.reportId = graphId;
+            new ServiceCollection().callServer(interfaceListen, SellerData.reportId, SellerData.shopCode, null);
+        }
+    };
+
     private void clearData() {
         int size = this.listSellerBaseItem.size();
         if (size > 1) {
             for (int i = 0; i < size-1; i++) {
                 this.listSellerBaseItem.remove(1);
             }
-
             this.sellerAdapter.notifyItemRangeRemoved(0, size-1);
         }
     }
-
-
 
     private void setContentData() {
         new ServiceCollection().callServer(interfaceListen, SellerData.reportId, SellerData.shopCode, null);
@@ -173,7 +180,7 @@ public class SellerActivity extends AppCompatActivity
     // Implements from Seller Adapter when item's detail will be touch
     @Override
     public void onItemClickListener(String itemCode) {
-        ViewDialog alert = new ViewDialog();
+        ViewDialogProductDetail alert = new ViewDialogProductDetail();
         alert.showDialog(this, itemCode);
     }
 
@@ -181,6 +188,7 @@ public class SellerActivity extends AppCompatActivity
     @Override
     public void onChangeTitleCallBack(int reportId) {
         SellerData.reportId = reportId;
+
         setContentData();
     }
 
@@ -188,6 +196,6 @@ public class SellerActivity extends AppCompatActivity
     @Override
     public void onTitleSettingClickCallBack(int reportId) {
         ViewDialogOption alert = new ViewDialogOption();
-        alert.showDialog(this, reportId);
+        alert.showDialog(this, optionInterface, reportId);
     }
 }
