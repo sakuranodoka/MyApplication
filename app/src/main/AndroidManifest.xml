@@ -24,8 +24,8 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,7 +65,8 @@
 
         <activity android:name=".UserActivity" />
         <activity android:name=".EBusinessActivity" />
-        <activity android:name=".SellerActivity"></activity>
+        <activity android:name=".SellerActivity" />
+        <activity android:name=".LocationActivity"></activity>
     </application>
 
 </manifest>
