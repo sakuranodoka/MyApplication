@@ -9,4 +9,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="seller_barchart_best_seller_title">กราฟแสดงรายการเปรียบเทียบยอดขายผลิตภัณฑ์</string>
+    <string name="seller_barchart_now">ยอดขายปัจจุบัน</string>
+    <string name="seller_barchart_30">ยอดขายเมื่อ 30 วันที่แล้ว</string>
+    <string name="seller_barchart_60">ยอดขายเมื่อ 60 วันที่แล้ว</string>
+    <string name="seller_barchart_180">ยอดขายเมื่อ 180 วันที่แล้ว</string>
+
+    <string name="currency_th">บาท</string>
+
 </resources>

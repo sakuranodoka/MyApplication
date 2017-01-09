@@ -21,6 +21,8 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -89,8 +91,18 @@ public class SellerActivity extends AppCompatActivity
 
         super.setContentView(fullLayout);
 
-        RelativeLayout shopSearchBar = (RelativeLayout) findViewById(R.id.shopSearchBar);
-        shopSearchBar.setVisibility(View.VISIBLE);
+        //RelativeLayout shopSearchBar = (RelativeLayout) findViewById(R.id.shopSearchBar);
+        //shopSearchBar.setVisibility(View.VISIBLE);
+
+        Button backPressedState = (Button) findViewById(R.id.backPressedState);
+        backPressedState.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        setTitle();
     }
 
     @Override
@@ -139,7 +151,6 @@ public class SellerActivity extends AppCompatActivity
         sellerAdapter.setInterfaceOnItem(this);
         sellerRecyclerView.setAdapter(sellerAdapter);
 
-
 //        sellerRecyclerView.canScrollVertically(0);
         //sellerRecyclerView.setLayoutFrozen(true);
 
@@ -160,18 +171,29 @@ public class SellerActivity extends AppCompatActivity
     InterfaceListen interfaceListen = new InterfaceListen() {
         @Override
         public void onResponse(Object data, Retrofit retrofit) {
+            // หลังจากเซิร์ฟเวอร์ส่ง Data กลับมา ^ _ ^
             if(data instanceof SellerCollectionPOJO) {
                 clearData();
 
+                exchangeOptionBar(false);
+
                 SellerCollectionPOJO temp = (SellerCollectionPOJO) data;
 
-                listSellerBaseItem.addAll(ConvertContent.listItemSellerCollection(temp) );
+//                if (SellerData.graphOptionId == 0) {
+//                    listSellerBaseItem.addAll(ConvertContent.listItemSellerCollection(temp));
+//                } else {
+//                    listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, SellerType.TYPE_REPORT_BAR));
+//                }
+
+                listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, SellerType.TYPE_REPORT_BAR));
 
                 sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
                 sellerAdapter.notifyDataSetChanged();
 
             } else if(data instanceof SellerBestSellerPOJO) {
                 clearData();
+
+                exchangeOptionBar(true);
 
                 SellerBestSellerPOJO temp = (SellerBestSellerPOJO) data;
 
@@ -195,11 +217,9 @@ public class SellerActivity extends AppCompatActivity
                         default:
                             reportId = SellerType.TYPE_REPORT_PIE;
                     }
-
                     listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, reportId));
 
                     sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-
                     sellerAdapter.notifyDataSetChanged();
                 }
             }
@@ -252,32 +272,83 @@ public class SellerActivity extends AppCompatActivity
     }
 
     private void setContentData() {
+        setLoadingScreen();
         new ServiceCollection().callServer(interfaceListen, SellerData.reportId, SellerData.shopCode, "2-TWICE");
     }
 
-    private void setDescription() {
+//    private void setDescription() {
+//
+//        if ((this.listSellerBaseItem != null) && (this.listSellerBaseItem.size() != 0)) {
+//            this.listSellerBaseItem.remove(0);
+//        }
+//
+//        ItemSellerDescription itemSellerDescription = new ItemSellerDescription();
+//        itemSellerDescription.setShopDescription(shopName);
+//        itemSellerDescription.setReportDescription(reportName);
+//        itemSellerDescription.setDateDescription(date);
+//
+//        itemSellerDescription.setExtendDateDescription(dateExtended);
+//
+//        if(!dateExtended.equals("")) {
+//            itemSellerDescription.isExtended = true;
+//        } else {
+//            itemSellerDescription.isExtended = false;
+//        }
+//
+//        listSellerBaseItem.add(itemSellerDescription);
+//
+//        sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+//        sellerAdapter.notifyDataSetChanged();
+//    }
 
-        if ((this.listSellerBaseItem != null) && (this.listSellerBaseItem.size() != 0)) {
-            this.listSellerBaseItem.remove(0);
-        }
-
-        ItemSellerDescription itemSellerDescription = new ItemSellerDescription();
-        itemSellerDescription.setShopDescription(shopName);
-        itemSellerDescription.setReportDescription(reportName);
-        itemSellerDescription.setDateDescription(date);
-
-        itemSellerDescription.setExtendDateDescription(dateExtended);
-
-        if(!dateExtended.equals("")) {
-            itemSellerDescription.isExtended = true;
-        } else {
-            itemSellerDescription.isExtended = false;
-        }
-
-        listSellerBaseItem.add(itemSellerDescription);
+    private void setLoadingScreen() {
+        clearData();
+        listSellerBaseItem.add(ConvertContent.getLoadingScreenItem());
 
         sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
         sellerAdapter.notifyDataSetChanged();
+    }
+
+    // เลือก Title
+    // เลือก Option อาทิเช่น 30 วันย้อนหลัง
+    private void setTitle() {
+        final InstantAutocomplete reportDescription = (InstantAutocomplete) findViewById(R.id.report_description);
+        final InstantAutocomplete reportRange = (InstantAutocomplete) findViewById(R.id.report_range);
+        final InstantAutocomplete reportOption = (InstantAutocomplete) findViewById(R.id.report_option);
+
+        final ItemSellerTitle itemSellerTitle = new ItemSellerTitle();
+        itemSellerTitle.setListOptionValue(GetSellerTitle.getSellerTitleList());
+
+        ArrayAdapter<SellerTitleDAO> autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice, itemSellerTitle.getListOptionValue());
+        reportDescription.setAdapter(autoCompleteAdapter);
+
+        reportDescription.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                reportDescription.showDropDown();
+            }
+        });
+
+        reportDescription.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onChangeTitleCallBack(itemSellerTitle.listOptionValue.get(position).getId(), itemSellerTitle.listOptionValue.get(position).getTitle());
+            }
+        });
+    }
+
+    // เปิดปิดโหมด Option ใต้ช่องเลือก Title
+    private void exchangeOptionBar(boolean action) {
+        LinearLayout optional_bar = (LinearLayout) findViewById(R.id.optional_bar);
+
+        if(optional_bar!= null) {
+            if(action) {
+                optional_bar.setVisibility(View.VISIBLE);
+            } else {
+                optional_bar.setVisibility(View.GONE);
+            }
+        }
     }
 
 //    private void setHeaderButtonEffected() {
@@ -339,14 +410,7 @@ public class SellerActivity extends AppCompatActivity
     // เมื่อร้านค้าเปลี่ยน หรือถูกเลือก
     @Override
     public void shopSelected(String shopName) {
-        //Log.e("AIRLINE", "45531");
-
         this.shopName = shopName;
-
-        //clearData();
-
-        //setDescription();
-     //   setContentData();
     }
 
     // Implements method .........................
@@ -366,8 +430,6 @@ public class SellerActivity extends AppCompatActivity
         SellerData.graphOptionId = 0;
 
         this.reportName = reportName;
-
-        //setDescription();
 
         setContentData();
     }
