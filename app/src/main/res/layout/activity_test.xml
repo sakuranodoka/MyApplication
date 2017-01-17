@@ -33,7 +33,6 @@
             android:textColor="@color/colorWhite"
             android:id="@+id/button"
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:background="@drawable/shadow_layer"
             android:layout_gravity="center" />
 
         <LinearLayout

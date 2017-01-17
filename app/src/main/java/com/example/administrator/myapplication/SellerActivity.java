@@ -1,13 +1,9 @@
 package com.example.administrator.myapplication;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,52 +13,43 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import AppBar.ApplicationBar;
+import AppBar.BarType;
 import autocomplete.InstantAutocomplete;
-import autocomplete.InterfaceOnShop;
-import autocomplete.SetAutoCompleteView;
+import seller.TypeSellerReport;
+import seller.titlebar.SellerOptionalDAO;
+import seller.titlebar.SellerTitleBar;
+import shopFinding.InterfaceOnShop;
+import shopFinding.SetShopAutoCompleteView;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import seller.CustomLinearLayoutManager;
-import seller.InterfaceOnItem;
-import seller.InterfaceOnOption;
 import seller.SellerAdapter;
 import seller.SellerBaseItem;
 import seller.SellerData;
 import seller.SellerGraphType;
-import seller.SellerReportDialogFragment;
-import seller.SellerType;
-import seller.ViewDialogProductDetail;
-import seller.ViewDialogOption;
-import seller.autocomplete.GetSellerTitle;
-import seller.autocomplete.InterfaceTitleCallback;
-import seller.autocomplete.SellerTitleDAO;
+import seller.titlebar.InterfaceOnTitleBar;
+import seller.titlebar.SellerTitleDAO;
 import seller.convert.data.ConvertContent;
-import seller.item.ItemSellerDescription;
 import seller.item.ItemSellerTitle;
 import seller.pojo.SellerBestSellerPOJO;
 import seller.pojo.SellerCollectionPOJO;
 import retrofit.InterfaceListen;
 import seller.services.retrofit.ServiceCollection;
-import seller.viewholder.DialogFragmentGraphOption;
 
 public class SellerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        InterfaceTitleCallback,
-        InterfaceOnItem,
+        InterfaceOnTitleBar,
         InterfaceOnShop
 {
 
@@ -91,16 +78,7 @@ public class SellerActivity extends AppCompatActivity
 
         super.setContentView(fullLayout);
 
-        //RelativeLayout shopSearchBar = (RelativeLayout) findViewById(R.id.shopSearchBar);
-        //shopSearchBar.setVisibility(View.VISIBLE);
-
-        Button backPressedState = (Button) findViewById(R.id.backPressedState);
-        backPressedState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        new ApplicationBar(this, BarType.TYPE_SHOP_SEARCH).setShopBar();
 
         setTitle();
     }
@@ -147,17 +125,13 @@ public class SellerActivity extends AppCompatActivity
         sellerRecyclerView.setNestedScrollingEnabled(false);
 
         sellerAdapter = new SellerAdapter(this);
-        //sellerAdapter.setInterfaceTitleCallback(interfaceTitleCallback);
-        sellerAdapter.setInterfaceOnItem(this);
+        //sellerAdapter.setInterfaceOnItem(this);
         sellerRecyclerView.setAdapter(sellerAdapter);
 
-//        sellerRecyclerView.canScrollVertically(0);
-        //sellerRecyclerView.setLayoutFrozen(true);
-
-        List<SellerTitleDAO> a = GetSellerTitle.getSellerTitleList();
+        List<SellerTitleDAO> a = SellerTitleBar.getSellerTitleList();
 
 //        ItemSellerTitle itemSellerTitle = new ItemSellerTitle();
-//        itemSellerTitle.setListOptionValue(GetSellerTitle.getSellerTitleList());
+//        itemSellerTitle.setListTitleDescription(SellerTitleBar.getSellerTitleList());
 //        itemSellerTitle.setSettingsBackgroundColor(ContextCompat.getColor(getApplicationContext() , R.color.dark_honest_green) );
 //        itemSellerTitle.setSettingsTint(ContextCompat.getColor(getApplicationContext() , R.color.angel_white) );
 //        listSellerBaseItem.add(itemSellerTitle);
@@ -165,7 +139,7 @@ public class SellerActivity extends AppCompatActivity
         //setDescription();
 
         // ค้นหาชื่อร้านค้าทั้งหมดจาก DB
-        new SetAutoCompleteView().setView(this);
+        new SetShopAutoCompleteView().setView(this);
     }
 
     InterfaceListen interfaceListen = new InterfaceListen() {
@@ -182,10 +156,10 @@ public class SellerActivity extends AppCompatActivity
 //                if (SellerData.graphOptionId == 0) {
 //                    listSellerBaseItem.addAll(ConvertContent.listItemSellerCollection(temp));
 //                } else {
-//                    listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, SellerType.TYPE_REPORT_BAR));
+//                    listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
 //                }
 
-                listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, SellerType.TYPE_REPORT_BAR));
+                listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
 
                 sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
                 sellerAdapter.notifyDataSetChanged();
@@ -198,29 +172,28 @@ public class SellerActivity extends AppCompatActivity
                 SellerBestSellerPOJO temp = (SellerBestSellerPOJO) data;
 
                 if (SellerData.graphOptionId == 0) {
-                    //listSellerBaseItem.addAll(ConvertContent.listItemSellerBestSeller(temp));
 
-                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, SellerType.TYPE_REPORT_BAR));
+                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
 
                     sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
                     sellerAdapter.notifyDataSetChanged();
                 } else {
-                    int reportId = 0;
-                    switch(SellerData.graphOptionId) {
-                        case SellerGraphType.TYPE_GRAPH_BAR :
-                            reportId = SellerType.TYPE_REPORT_BAR;
-                            break;
-                        case SellerGraphType.TYPE_GRAPH_LINE :
-                            reportId = SellerType.TYPE_REPORT_LINE;
-                            break;
-                        case SellerGraphType.TYPE_GRAPH_PIE :
-                        default:
-                            reportId = SellerType.TYPE_REPORT_PIE;
-                    }
-                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, reportId));
-
-                    sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-                    sellerAdapter.notifyDataSetChanged();
+//                    int reportId = 0;
+//                    switch(SellerData.graphOptionId) {
+//                        case SellerGraphType.TYPE_GRAPH_BAR :
+//                            reportId = TypeSellerReport.TYPE_REPORT_BAR;
+//                            break;
+//                        case SellerGraphType.TYPE_GRAPH_LINE :
+//                            reportId = TypeSellerReport.TYPE_REPORT_LINE;
+//                            break;
+//                        case SellerGraphType.TYPE_GRAPH_PIE :
+//                        default:
+//                            reportId = TypeSellerReport.TYPE_REPORT_PIE;
+//                    }
+//                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, reportId));
+//
+//                    sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+//                    sellerAdapter.notifyDataSetChanged();
                 }
             }
         }
@@ -241,65 +214,19 @@ public class SellerActivity extends AppCompatActivity
         }
     };
 
-    InterfaceOnOption optionInterface = new InterfaceOnOption() {
-        @Override
-        public void GraphSelected(int graphId) {
-            SellerData.graphOptionId = graphId;
-            setContentData();
-        }
-    };
-
     private void clearData() {
         //16/12/2559
         int size = this.listSellerBaseItem.size();
-        //if (size > 1) {
-            for (int i = 0; i < size; i++) {
-                this.listSellerBaseItem.remove(i);
-            }
-            //sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-            //sellerAdapter.notifyDataSetChanged();
-            //this.sellerAdapter.notifyItemRangeRemoved(0, size-1);
-        //} else {
-            // เมื่อไม่มี title
 
-            //for (int i = 0; i < size-1; i++) {
-            //    this.listSellerBaseItem.remove(0);
-            //}
-
-            //sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-            //this.sellerAdapter.notifyItemRangeRemoved(0, size-1);
-        //}
+        for (int i = 0; i < size; i++) {
+            this.listSellerBaseItem.remove(i);
+        }
     }
 
     private void setContentData() {
         setLoadingScreen();
         new ServiceCollection().callServer(interfaceListen, SellerData.reportId, SellerData.shopCode, "2-TWICE");
     }
-
-//    private void setDescription() {
-//
-//        if ((this.listSellerBaseItem != null) && (this.listSellerBaseItem.size() != 0)) {
-//            this.listSellerBaseItem.remove(0);
-//        }
-//
-//        ItemSellerDescription itemSellerDescription = new ItemSellerDescription();
-//        itemSellerDescription.setShopDescription(shopName);
-//        itemSellerDescription.setReportDescription(reportName);
-//        itemSellerDescription.setDateDescription(date);
-//
-//        itemSellerDescription.setExtendDateDescription(dateExtended);
-//
-//        if(!dateExtended.equals("")) {
-//            itemSellerDescription.isExtended = true;
-//        } else {
-//            itemSellerDescription.isExtended = false;
-//        }
-//
-//        listSellerBaseItem.add(itemSellerDescription);
-//
-//        sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-//        sellerAdapter.notifyDataSetChanged();
-//    }
 
     private void setLoadingScreen() {
         clearData();
@@ -314,12 +241,14 @@ public class SellerActivity extends AppCompatActivity
     private void setTitle() {
         final InstantAutocomplete reportDescription = (InstantAutocomplete) findViewById(R.id.report_description);
         final InstantAutocomplete reportRange = (InstantAutocomplete) findViewById(R.id.report_range);
-        final InstantAutocomplete reportOption = (InstantAutocomplete) findViewById(R.id.report_option);
+        final InstantAutocomplete reportOptional = (InstantAutocomplete) findViewById(R.id.report_optional);
 
         final ItemSellerTitle itemSellerTitle = new ItemSellerTitle();
-        itemSellerTitle.setListOptionValue(GetSellerTitle.getSellerTitleList());
+        itemSellerTitle.setListTitleDescription(SellerTitleBar.getSellerTitleList());
+        //
+        itemSellerTitle.setListTitleOptional(SellerTitleBar.getSellerOptional());
 
-        ArrayAdapter<SellerTitleDAO> autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice, itemSellerTitle.getListOptionValue());
+        ArrayAdapter<SellerTitleDAO> autoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice, itemSellerTitle.getListTitleDescription());
         reportDescription.setAdapter(autoCompleteAdapter);
 
         reportDescription.setOnClickListener(new View.OnClickListener() {
@@ -333,7 +262,27 @@ public class SellerActivity extends AppCompatActivity
         reportDescription.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onChangeTitleCallBack(itemSellerTitle.listOptionValue.get(position).getId(), itemSellerTitle.listOptionValue.get(position).getTitle());
+                onTitleChange(itemSellerTitle.listTitleDescription.get(position).getId(), itemSellerTitle.listTitleDescription.get(position).getTitle());
+            }
+        });
+
+
+        // แท็บออฟชั่น
+        ArrayAdapter<SellerOptionalDAO> OptinalAutoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice, itemSellerTitle.getListTitleOptional());
+        reportOptional.setAdapter(OptinalAutoCompleteAdapter);
+
+        reportOptional.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                reportOptional.showDropDown();
+            }
+        });
+
+        reportOptional.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onOptionalChange(itemSellerTitle.listTitleOptional.get(position).getId());
             }
         });
     }
@@ -396,7 +345,6 @@ public class SellerActivity extends AppCompatActivity
 //            @Override
 //            public void onClick(View v) {
 //                // this's error
-//                SellerReportDialogFragment newFragment = new SellerReportDialogFragment(SellerActivity.this);
 //                newFragment.show(fm, "Open Dialog");
 //            }
 //        });
@@ -413,19 +361,10 @@ public class SellerActivity extends AppCompatActivity
         this.shopName = shopName;
     }
 
-    // Implements method .........................
-    // Implements from Seller Adapter when item's detail will be touch
-    // เมื่อโปรดักถูกคลิก เพื่อดูรหัส SKU 12 หลัก
-    @Override
-    public void onItemClickListener(String itemCode) {
-        ViewDialogProductDetail alert = new ViewDialogProductDetail();
-        alert.showDialog(this, itemCode);
-    }
-
     // Implement from Seller Adapter when a title is done changing ...
     // เปลี่ยน report
     @Override
-    public void onChangeTitleCallBack(int reportId, String reportName) {
+    public void onTitleChange(int reportId, String reportName) {
         SellerData.reportId = reportId;
         SellerData.graphOptionId = 0;
 
@@ -434,11 +373,13 @@ public class SellerActivity extends AppCompatActivity
         setContentData();
     }
 
-    // Implement from Seller Adapter when a setting's icon in the title is done clicking ...
-    // เลือกกราฟ ...
+    // เปลี่ยน optional เปลี่ยน top10 เปลี่ยน last 10
+
     @Override
-    public void onTitleSettingClickCallBack() {
-        ViewDialogOption alert = new ViewDialogOption();
-        alert.showDialog(this, optionInterface);
+    public void onOptionalChange(int reportOptional) {
+
+        SellerData.reportOptional = reportOptional;
+
+        setContentData();
     }
 }

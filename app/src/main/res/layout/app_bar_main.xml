@@ -51,11 +51,39 @@
 
                     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+
+                        android:layout_marginEnd="@dimen/round_padding"
+
+                        android:orientation="vertical"
+
+                        android:gravity="center_vertical"
+
+                        android:visibility="visible"
+
+                        android:id="@+id/frontOptionLayout">
+
+                        <Button
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+
+                            android:id="@+id/backPressedState"
+
+                            style="@style/Base.Widget.AppCompat.Button.Borderless"
+
+                            android:background="@drawable/ic_arrow_back_white_24dp" />
+                    </LinearLayout>
+
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:paddingRight="@dimen/round_padding"
+
+                        android:visibility="gone"
+
                         android:id="@+id/shopSearchBar">
 
                         <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
@@ -67,26 +95,26 @@
                             android:id="@+id/llNrs"
                             android:orientation="horizontal" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                        <!--<LinearLayout-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="match_parent"-->
 
-                            android:orientation="vertical"
+                            <!--android:orientation="vertical"-->
 
-                            android:gravity="center_vertical"
+                            <!--android:gravity="center_vertical"-->
 
-                            android:id="@+id/statedPart">
+                            <!--android:id="@+id/statedPart">-->
 
-                            <Button
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                            <!--<Button-->
+                                <!--android:layout_width="32dp"-->
+                                <!--android:layout_height="32dp"-->
 
-                                android:id="@+id/backPressedState"
+                                <!--android:id="@+id/backPressedState"-->
 
-                                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                                <!--style="@style/Base.Widget.AppCompat.Button.Borderless"-->
 
-                                android:background="@drawable/ic_arrow_back_white_24dp" />
-                        </LinearLayout>
+                                <!--android:background="@drawable/ic_arrow_back_white_24dp" />-->
+                        <!--</LinearLayout>-->
 
                         <autocomplete.InstantAutocomplete
                             android:layout_width="match_parent"
@@ -96,17 +124,18 @@
 
                             android:paddingLeft="25dp"
                             android:paddingRight="10dp"
-                            android:drawablePadding="8dp"
+                            android:drawablePadding="@dimen/round_padding"
 
                             android:layout_marginTop="@dimen/round_padding"
                             android:layout_marginBottom="@dimen/round_padding"
-                            android:layout_marginStart="52dp"
+                            android:layout_marginStart="@dimen/double_round"
 
                             android:gravity="center|center"
                             android:layout_gravity="center_vertical"
 
                             android:dropDownVerticalOffset="0dp"
                             android:dropDownWidth="match_parent"
+
 
                             android:focusable="true"
                             android:focusableInTouchMode="true"
@@ -118,102 +147,43 @@
                             android:popupBackground="@color/angel_white"
                             android:textColor="@color/little_light_gray"
 
-                            android:background="@drawable/search_background"
+                            android:background="@color/dark_blue"
                             android:hint="ค้นหาร้านค้า"
 
                             android:drawableRight="@drawable/ic_search_black_24dp">
                         </autocomplete.InstantAutocomplete>
 
-
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
 
-                            android:orientation="horizontal"
-
                             android:id="@+id/option_bar">
 
-                            <!--<TextView-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="match_parent"-->
-
-                                <!--android:id="@+id/menuNaming"-->
-
-                                <!--android:text="@string/app_name"-->
-
-                                <!--android:textSize="@dimen/font_app_name"-->
-                                <!--android:textColor="@color/angel_white"-->
-
-                                <!--android:gravity="center|left"-->
-
-                                <!--android:layout_alignParentStart="true"/>-->
-
-
-                            <!--<LinearLayout-->
-                                <!--android:layout_width="wrap_content"-->
-                                <!--android:layout_height="match_parent"-->
-                                <!--android:orientation="horizontal"-->
-
-                                <!--android:gravity="center"-->
-
-                                <!--android:layout_alignParentEnd="true">-->
-
-                                    <!--<Button-->
-                                        <!--android:layout_marginTop="2dp"-->
-
-                                        <!--android:layout_width="36dp"-->
-                                        <!--android:layout_height="36dp"-->
-                                        <!--android:background="@drawable/round_search_42dp"-->
-                                        <!--style="@style/Base.Widget.AppCompat.Button.Borderless"-->
-
-                                        <!--android:id="@+id/shop_icon_id"-->
-
-                                        <!--android:layout_marginEnd="10dp"/>-->
-
-                                    <!--<LinearLayout-->
-                                        <!--android:layout_width="match_parent"-->
-                                        <!--android:layout_height="wrap_content"-->
-                                        <!--android:orientation="horizontal"-->
-
-                                        <!--android:id="@+id/app_bar_part_additional"-->
-
-                                        <!--android:visibility="gone">-->
-
-                                        <!--<View-->
-                                            <!--android:layout_width="1dp"-->
-                                            <!--android:layout_height="match_parent"-->
-                                            <!--android:background="@color/angel_white"-->
-
-                                            <!--android:layout_marginEnd="10dp"/>-->
-
-                                        <!--<Button-->
-                                            <!--android:layout_marginTop="2dp"-->
-
-                                            <!--android:layout_width="36dp"-->
-                                            <!--android:layout_height="36dp"-->
-                                            <!--android:background="@drawable/round_description_42dp"-->
-                                            <!--style="@style/Base.Widget.AppCompat.Button.Borderless"-->
-
-                                            <!--android:id="@+id/report_icon_id" />-->
-                                    <!--</LinearLayout>-->
-
-                            <!--</LinearLayout>-->
                         </RelativeLayout>
 
                     </RelativeLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="left|center_vertical"
+
+                        android:visibility="gone"
+
+                        android:paddingRight="@dimen/round_padding"
+                        android:id="@+id/appNameBar">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Activity"
+                            android:textSize="@dimen/font_app_name"
+                            android:textColor="@color/angel_white"
+                            android:id="@+id/textAppName"/>
+
+                    </RelativeLayout>
+
                 </android.support.v7.widget.Toolbar>
-
-                <!--<RelativeLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content">-->
-
-                    <!--<View-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="5dp"-->
-                        <!--android:background="@drawable/shadow_layer"/>-->
-
-                <!--</RelativeLayout>-->
 
             </LinearLayout>
 
