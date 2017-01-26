@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/view_seller_description"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:background="@color/honest_green">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="@dimen/round_padding"
+                android:layout_marginEnd="@dimen/round_padding"
+                android:layout_marginTop="@dimen/round_padding"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Stock"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
+
+                    android:background="@color/dark_honest_green"
+
+                    android:paddingBottom="@dimen/round_padding"
+                    android:paddingTop="@dimen/round_padding"
+                    android:paddingStart="@dimen/round_padding"
+                    android:paddingEnd="@dimen/round_padding"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="332 ชิ้น"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
+
+                    android:background="@color/rising_green"
+
+                    android:paddingBottom="@dimen/round_padding"
+                    android:paddingTop="@dimen/round_padding"
+                    android:paddingStart="@dimen/round_padding"
+                    android:paddingEnd="@dimen/round_padding"
+
+                    android:gravity="center"
+
+                    android:id="@+id/storage"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="ยอดขาย 30 วัน"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
+
+                    android:layout_marginStart="@dimen/round_padding"
+
+                    android:background="@color/dark_honest_green"
+
+                    android:paddingBottom="@dimen/round_padding"
+                    android:paddingTop="@dimen/round_padding"
+                    android:paddingStart="@dimen/round_padding"
+                    android:paddingEnd="@dimen/round_padding"
+
+                    android:gravity="right"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="332 ชิ้น"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
+
+                    android:background="@color/rising_green"
+
+                    android:paddingBottom="@dimen/round_padding"
+                    android:paddingTop="@dimen/round_padding"
+                    android:paddingStart="@dimen/round_padding"
+                    android:paddingEnd="@dimen/round_padding"
+
+                    android:gravity="center"
+
+                    android:id="@+id/quantity"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="@dimen/round_padding"
+                android:layout_marginEnd="@dimen/round_padding"
+                android:layout_marginBottom="@dimen/round_padding"
+                android:layout_marginTop="@dimen/round_padding"
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="Day Cover"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
+
+                    android:background="@color/dark_honest_green"
+
+                    android:paddingTop="@dimen/round_padding"
+                    android:paddingBottom="@dimen/round_padding"
+
+                    android:paddingStart="@dimen/double_round"
+                    android:paddingEnd="@dimen/double_round"
+
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="332 ชิ้น"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
+
+
+                    android:background="@color/rising_green"
+
+                    android:paddingBottom="@dimen/round_padding"
+                    android:paddingTop="@dimen/round_padding"
+                    android:paddingStart="@dimen/double_round"
+                    android:paddingEnd="@dimen/double_round"
+
+                    android:gravity="center"
+
+                    android:id="@+id/day_cover"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

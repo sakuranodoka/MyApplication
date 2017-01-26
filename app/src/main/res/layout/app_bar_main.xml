@@ -168,7 +168,7 @@
                         android:layout_height="match_parent"
                         android:gravity="left|center_vertical"
 
-                        android:visibility="gone"
+                        android:visibility="visible"
 
                         android:paddingRight="@dimen/round_padding"
                         android:id="@+id/appNameBar">
@@ -176,6 +176,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+
+                            android:layout_marginStart="@dimen/double_round"
+
                             android:text="Activity"
                             android:textSize="@dimen/font_app_name"
                             android:textColor="@color/angel_white"

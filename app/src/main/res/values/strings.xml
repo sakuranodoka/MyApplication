@@ -18,5 +18,6 @@
     <string name="seller_barchart_180">ยอดขายเมื่อ 180 วันที่แล้ว</string>
 
     <string name="currency_th">บาท</string>
+    <string name="currency_date_th">วัน</string>
 
 </resources>
