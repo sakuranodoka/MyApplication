@@ -20,4 +20,6 @@
     <string name="currency_th">บาท</string>
     <string name="currency_date_th">วัน</string>
 
+    <string name="error_retrofit_error">Retrofit got error in observation.</string>
+
 </resources>

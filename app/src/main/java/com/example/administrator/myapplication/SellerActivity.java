@@ -204,12 +204,25 @@ public class SellerActivity extends AppCompatActivity
 
                 exchangeOptionBar(false);
 
-                listSellerBaseItem.add(ConvertContent.itemSellerStorageDateCoverGraph((List <SellerStorageDateCoverPOJO>) data, TypeSellerReport.TYPE_REPORT_BAR));
+                if(SellerData.reportId == TypeSellerReport.TYPE_STORAGE_UNDEFINED_DAY_COVER) {
+
+                    sellerRecyclerView.setLayoutManager( new LinearLayoutManager(SellerActivity.this) );
+                    listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover((List<SellerStorageDateCoverPOJO>) data, SellerData.reportId));
+
+                } else {
+
+                    //CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(SellerActivity.this,LinearLayoutManager.VERTICAL,false);
+
+                    sellerRecyclerView.setLayoutManager( new LinearLayoutManager(SellerActivity.this) );
+
+                    listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover((List<SellerStorageDateCoverPOJO>) data, SellerData.reportId));
+
+                    //listSellerBaseItem.add(ConvertContent.itemSellerStorageDateCoverGraph((List<SellerStorageDateCoverPOJO>) data, TypeSellerReport.TYPE_REPORT_BAR));
+                }
 
                 sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
 
                 sellerAdapter.notifyDataSetChanged();
-
             }
         }
 
@@ -233,23 +246,30 @@ public class SellerActivity extends AppCompatActivity
         //16/12/2559
         int size = this.listSellerBaseItem.size();
 
-        for (int i = 0; i < size; i++) {
-            this.listSellerBaseItem.remove(i);
-        }
+        /*for (int i = 0; i < size-1; i++) {
+            //if(this.listSellerBaseItem != null && this.listSellerBaseItem.get(i) != null)
+                this.listSellerBaseItem.remove(i);
+        }*/
+
+        this.listSellerBaseItem = new ArrayList<>();
 
         sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
 
         sellerAdapter.notifyDataSetChanged();
+
+        //sellerAdapter.notifyItemRangeRemoved(0, size);
     }
 
     private void setContentData() {
         setLoadingScreen();
+
         List<String> listData = new ArrayList<>();
         listData.add(SellerData._PURE_DATA_TRANSFER_PORT_);
         new ServiceCollection().callServer(interfaceListen, SellerData.reportId, SellerData.shopCode, listData);
     }
 
     private void setLoadingScreen() {
+
         clearData();
         listSellerBaseItem.add(ConvertContent.getLoadingScreenItem());
 
@@ -286,7 +306,6 @@ public class SellerActivity extends AppCompatActivity
                 onTitleChange(itemSellerTitle.listTitleDescription.get(position).getId(), itemSellerTitle.listTitleDescription.get(position).getTitle());
             }
         });
-
 
         // แท็บออฟชั่น
         ArrayAdapter<SellerOptionalDAO> OptinalAutoCompleteAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice, itemSellerTitle.getListTitleOptional());

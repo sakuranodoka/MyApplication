@@ -10,12 +10,22 @@ public class SellerStorageDateCoverPOJO {
     @SerializedName("collection")
     @Expose
     private String collection;
+
     @SerializedName("dayCover")
     @Expose
+
     private String bal;
-    @SerializedName("candidateBal")
+    @SerializedName("bal")
     @Expose
     private String candidateBal;
+
+    @SerializedName("storage")
+    @Expose
+    private String storage;
+
+    @SerializedName("XBar")
+    @Expose
+    private String XBar;
 
     public String getCollection() {
         return collection;
@@ -39,5 +49,21 @@ public class SellerStorageDateCoverPOJO {
 
     public void setCandidateBal(String candidateBal) {
         this.candidateBal = candidateBal;
+    }
+
+    public String getStorage() {
+        return storage;
+    }
+
+    public void setStorage(String storage) {
+        this.storage = storage;
+    }
+
+    public String getXBar() {
+        return XBar;
+    }
+
+    public void setXBar(String XBar) {
+        this.XBar = XBar;
     }
 }
