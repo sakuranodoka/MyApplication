@@ -72,6 +72,8 @@ public class SellerSubActivity extends AppCompatActivity {
             this.item = b.getString("item");
             this.reportId = b.getInt("reportId");
             this.shopCode = b.getString("shopCode");
+
+            Log.e("xxxxxx", this.item);
         }
 
         setContentView(R.layout.activity_main);
@@ -90,7 +92,7 @@ public class SellerSubActivity extends AppCompatActivity {
 
         setContentTitle();
 
-        setContentData(TypeSellerReport.TYPE_SELLER_SUB_SKU_DAY_COVER);
+        //setContentData(TypeSellerReport.TYPE_SELLER_SUB_SKU_DAY_COVER);
     }
 
     private InterfaceListen interfaceListen = new InterfaceListen() {
