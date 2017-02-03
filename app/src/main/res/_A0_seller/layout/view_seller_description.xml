@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:cardPreventCornerOverlap="false">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            android:background="@color/honest_green">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:layout_marginStart="@dimen/round_padding"
+                android:layout_marginEnd="@dimen/round_padding"
+                android:layout_marginTop="@dimen/round_padding"
+                android:layout_marginBottom="@dimen/round_padding"
+
+                android:orientation="horizontal">
+
+                    <!--<Button-->
+                        <!--android:layout_width="36dp"-->
+                        <!--android:layout_height="36dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--style="@style/Base.Widget.AppCompat.Button.Borderless"-->
+
+                        <!--android:background="@drawable/icon_info_green"/>-->
+
+                    <autocomplete.InstantAutocomplete
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:padding="@dimen/round_padding"
+
+                        android:text="เลือกประเภทของรายงาน"
+                        android:textColor="@color/angel_white"
+                        android:textSize="@dimen/font_text_view"
+
+                        android:focusable="false"
+                        android:focusableInTouchMode="true"
+
+                        android:background="@color/rising_green"
+
+                        android:gravity="center"
+
+                        android:drawableEnd="@drawable/ic_arrow_drop_down_black"
+
+                        android:id="@+id/report_description" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+
+                    android:id="@+id/optional_bar"
+
+                    android:visibility="gone">
+
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+
+                        <!--android:gravity="center"-->
+
+                        <!--android:layout_marginStart="@dimen/round_padding"-->
+
+                        <!--android:paddingEnd="@dimen/round_padding"-->
+
+                        <!--android:text="รูปแบบ"-->
+                        <!--android:textColor="@color/angel_white"-->
+                        <!--android:textSize="18sp" />-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="start"
+
+                        android:weightSum="10"
+
+                        android:layout_marginStart="@dimen/round_padding"
+                        android:layout_marginEnd="@dimen/round_padding"
+                        android:layout_marginBottom="@dimen/round_padding"
+
+                        android:orientation="horizontal">
+
+                        <autocomplete.InstantAutocomplete
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+
+                            android:text="30 วันย้อนหลัง"
+                            android:textColor="@color/angel_white"
+                            android:textSize="@dimen/font_text_view"
+
+                            android:background="@color/rising_green"
+                            android:padding="@dimen/round_padding"
+                            android:gravity="center"
+
+                            android:focusable="false"
+                            android:focusableInTouchMode="true"
+
+                            android:drawableRight="@drawable/ic_arrow_drop_down_black"
+
+                            android:id="@+id/report_range"/>
+
+                        <autocomplete.InstantAutocomplete
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+
+                            android:text="TOP 10"
+                            android:textColor="@color/angel_white"
+                            android:textSize="@dimen/font_text_view"
+
+                            android:layout_marginStart="@dimen/round_padding"
+
+                            android:focusable="false"
+                            android:focusableInTouchMode="true"
+
+                            android:background="@color/rising_green"
+                            android:padding="@dimen/round_padding"
+                            android:gravity="center"
+
+                            android:drawableRight="@drawable/ic_arrow_drop_down_black"
+
+                            android:id="@+id/report_optional"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

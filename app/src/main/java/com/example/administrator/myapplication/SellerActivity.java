@@ -51,8 +51,7 @@ import retrofit.InterfaceListen;
 import seller.services.retrofit.ServiceCollection;
 
 public class SellerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        InterfaceOnTitleBar,
+        implements InterfaceOnTitleBar,
         InterfaceOnShop
 {
 
@@ -66,8 +65,11 @@ public class SellerActivity extends AppCompatActivity
 
     private ActionBarDrawerToggle toggle;
 
+    protected SellerData sellerData;
+
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
+
         DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(layoutResID, null);
 
         FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.content);
@@ -82,34 +84,12 @@ public class SellerActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.nav_test) {
-            // เลือกวันเวลาหรับเลือกช่วงของยอดขาย
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.sellerData = null;
+
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        toggle.setDrawerIndicatorEnabled(false);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         sellerRecyclerView = (RecyclerView) findViewById(R.id.sellerRecyclerView);
 
@@ -121,108 +101,131 @@ public class SellerActivity extends AppCompatActivity
         sellerRecyclerView.setNestedScrollingEnabled(false);
 
         sellerAdapter = new SellerAdapter(this);
-        //sellerAdapter.setInterfaceOnItem(this);
+
         sellerRecyclerView.setAdapter(sellerAdapter);
 
-        // ค้นหาชื่อร้านค้าทั้งหมดจาก DB
-        new SetShopAutoCompleteView().setView(this);
     }
 
-    InterfaceListen interfaceListen = new InterfaceListen() {
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState == null) {
+            outState = new Bundle();
+        } else {
+            if (this.sellerData != null) {
+                outState.putInt("REPORT_NO", this.sellerData.getREPORT_NO());
+                outState.putString("SHIP_NO", this.sellerData.getSHIP_NO());
+            }
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if( savedInstanceState != null ) {
+            if(savedInstanceState.containsKey("SHIP_NO")) {
+
+                this.sellerData = new SellerData();
+
+                this.sellerData.setSHIP_NO(savedInstanceState.getString("SHIP_NO"));
+
+                if(savedInstanceState.containsKey("REPORT_NO")) {
+
+                    this.sellerData.setREPORT_NO(savedInstanceState.getInt("REPORT_NO"));
+
+                    setContentData();
+                }
+
+                new SetShopAutoCompleteView().setView(this, false);
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(this.sellerData == null) {
+            this.sellerData = new SellerData();
+            new SetShopAutoCompleteView().setView(this, true);
+        }
+    }
+
+    private InterfaceListen interfaceListen = new InterfaceListen() {
         @Override
         public void onResponse(Object data, Retrofit retrofit) {
-            // หลังจากเซิร์ฟเวอร์ส่ง Data กลับมา ^ _ ^
-            if(data instanceof SellerCollectionPOJO) {
+
+            if(sellerData != null ) {
+
                 clearData();
 
                 exchangeOptionBar(false);
 
-                SellerCollectionPOJO temp = (SellerCollectionPOJO) data;
+                // หลังจากเซิร์ฟเวอร์ส่ง Data กลับมา ^ _ ^
+                if (data instanceof SellerCollectionPOJO) {
 
-//                if (SellerData.graphOptionId == 0) {
-//                    listSellerBaseItem.addAll(ConvertContent.listItemSellerCollection(temp));
-//                } else {
-//                    listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
-//                }
+                    SellerCollectionPOJO temp = (SellerCollectionPOJO) data;
 
-                listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
-
-                sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-
-                sellerAdapter.notifyDataSetChanged();
-
-            } else if(data instanceof SellerBestSellerPOJO) {
-
-                clearData();
-
-                exchangeOptionBar(true);
-
-                SellerBestSellerPOJO temp = (SellerBestSellerPOJO) data;
-
-                if (SellerData.graphOptionId == 0) {
-
-                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
+                    listSellerBaseItem.add(ConvertContent.itemSellerCollectionGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
 
                     sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+
                     sellerAdapter.notifyDataSetChanged();
-                } else {
-//                    int reportId = 0;
-//                    switch(SellerData.graphOptionId) {
-//                        case SellerGraphType.TYPE_GRAPH_BAR :
-//                            reportId = TypeSellerReport.TYPE_REPORT_BAR;
-//                            break;
-//                        case SellerGraphType.TYPE_GRAPH_LINE :
-//                            reportId = TypeSellerReport.TYPE_REPORT_LINE;
-//                            break;
-//                        case SellerGraphType.TYPE_GRAPH_PIE :
-//                        default:
-//                            reportId = TypeSellerReport.TYPE_REPORT_PIE;
-//                    }
-//                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, reportId));
-//
-//                    sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-//                    sellerAdapter.notifyDataSetChanged();
+
+                } else if (data instanceof SellerBestSellerPOJO) {
+
+                    exchangeOptionBar(true);
+
+                    SellerBestSellerPOJO temp = (SellerBestSellerPOJO) data;
+
+                    if (SellerData.graphOptionId == 0) {
+
+                        listSellerBaseItem.add(ConvertContent.itemSellerBestSellerGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
+
+                        sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+
+                        sellerAdapter.notifyDataSetChanged();
+
+                    } else {
+
+                    }
+
+                } else if (data instanceof List && (((List) data) != null) && (((List) data).get(0) instanceof SellerBestSellerMonthToDatePOJO)) {
+
+                    CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(SellerActivity.this,LinearLayoutManager.VERTICAL,false);
+
+                    sellerRecyclerView.setLayoutManager(customLayoutManager);
+
+                    List<SellerBestSellerMonthToDatePOJO> temp = (List<SellerBestSellerMonthToDatePOJO>) data;
+
+                    listSellerBaseItem.add(ConvertContent.itemSellerBestSellerMonthToDateGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
+
+                    sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+
+                    sellerAdapter.notifyDataSetChanged();
+
+                } else if (data instanceof List && (((List) data) != null) && (((List) data).get(0) instanceof SellerStorageDateCoverPOJO)) {
+
+                    if (sellerData.getREPORT_NO() == TypeSellerReport.TYPE_STORAGE_UNDEFINED_DAY_COVER) {
+
+                        sellerRecyclerView.setLayoutManager(new LinearLayoutManager(SellerActivity.this));
+
+                        listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover((List<SellerStorageDateCoverPOJO>) data, sellerData.getREPORT_NO()));
+
+                    } else {
+
+                        //CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(SellerActivity.this,LinearLayoutManager.VERTICAL,false);
+
+                        sellerRecyclerView.setLayoutManager(new LinearLayoutManager(SellerActivity.this));
+
+                        listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover((List<SellerStorageDateCoverPOJO>) data, sellerData.getREPORT_NO()));
+
+                        //listSellerBaseItem.add(ConvertContent.itemSellerStorageDateCoverGraph((List<SellerStorageDateCoverPOJO>) data, TypeSellerReport.TYPE_REPORT_BAR));
+                    }
+
+                    sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+
+                    sellerAdapter.notifyDataSetChanged();
                 }
-
-            } else if(data instanceof List && (((List) data) != null) && (((List) data).get(0) instanceof SellerBestSellerMonthToDatePOJO) ) {
-
-                clearData();
-
-                exchangeOptionBar(false);
-
-                List<SellerBestSellerMonthToDatePOJO> temp = (List <SellerBestSellerMonthToDatePOJO>) data;
-
-                listSellerBaseItem.add(ConvertContent.itemSellerBestSellerMonthToDateGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
-
-                sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-
-                sellerAdapter.notifyDataSetChanged();
-
-            } else if(data instanceof List && (((List) data) != null) && (((List) data).get(0) instanceof SellerStorageDateCoverPOJO)) {
-
-                clearData();
-
-                exchangeOptionBar(false);
-
-                if(SellerData.reportId == TypeSellerReport.TYPE_STORAGE_UNDEFINED_DAY_COVER) {
-
-                    sellerRecyclerView.setLayoutManager( new LinearLayoutManager(SellerActivity.this) );
-                    listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover((List<SellerStorageDateCoverPOJO>) data, SellerData.reportId));
-
-                } else {
-
-                    //CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(SellerActivity.this,LinearLayoutManager.VERTICAL,false);
-
-                    sellerRecyclerView.setLayoutManager( new LinearLayoutManager(SellerActivity.this) );
-
-                    listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover((List<SellerStorageDateCoverPOJO>) data, SellerData.reportId));
-
-                    //listSellerBaseItem.add(ConvertContent.itemSellerStorageDateCoverGraph((List<SellerStorageDateCoverPOJO>) data, TypeSellerReport.TYPE_REPORT_BAR));
-                }
-
-                sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
-
-                sellerAdapter.notifyDataSetChanged();
             }
         }
 
@@ -257,23 +260,31 @@ public class SellerActivity extends AppCompatActivity
 
         sellerAdapter.notifyDataSetChanged();
 
-        //sellerAdapter.notifyItemRangeRemoved(0, size);
     }
 
     private void setContentData() {
+
         setLoadingScreen();
 
         List<String> listData = new ArrayList<>();
+
         listData.add(SellerData._PURE_DATA_TRANSFER_PORT_);
-        new ServiceCollection().callServer(interfaceListen, SellerData.reportId, SellerData.shopCode, listData);
+
+        if(this.sellerData != null) {
+            new ServiceCollection().callServer(interfaceListen, this.sellerData.getREPORT_NO(), this.sellerData.getSHIP_NO(), listData);
+        } else {
+            Log.e("Error", "Seller data is empty.");
+        }
     }
 
     private void setLoadingScreen() {
 
         clearData();
+
         listSellerBaseItem.add(ConvertContent.getLoadingScreenItem());
 
         sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+
         sellerAdapter.notifyDataSetChanged();
     }
 
@@ -348,8 +359,13 @@ public class SellerActivity extends AppCompatActivity
         final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
         if(acTextView != null) {
             String [] shopArf = shopName.split(":");
-            if(shopArf != null) {
+            if(shopArf != null && this.sellerData != null) {
+
+                this.sellerData.setSHIP_NO(shopArf[0].trim());
+
                 acTextView.setText(shopArf[1].trim());
+
+                sellerAdapter.setSellerData(this.sellerData);
             }
         }
     }
@@ -358,23 +374,34 @@ public class SellerActivity extends AppCompatActivity
     // เปลี่ยน report
     @Override
     public void onTitleChange(int reportId, String reportName) {
-        SellerData.reportId = reportId;
-        SellerData.graphOptionId = 0;
+        if( this.sellerData != null ) {
+            //SellerData.reportId = reportId;
+            //SellerData.graphOptionId = 0;
 
-        InstantAutocomplete reportDescription = (InstantAutocomplete) findViewById(R.id.report_description);
-        reportDescription.setText(reportName);
+            this.sellerData.setREPORT_NO(reportId);
 
-        setTitle();
+            InstantAutocomplete reportDescription = (InstantAutocomplete) findViewById(R.id.report_description);
+            reportDescription.setText(reportName);
 
-        setContentData();
+            // เซ็ตดาต้าให้กับ Autocomplete Textview แต่เดิม แสดงผลแค่อันเดียว
+            setTitle();
+
+            // โชว์ ข้อมูล report ใหม่
+            setContentData();
+        }
     }
 
     // เปลี่ยน optional เปลี่ยน top10 เปลี่ยน last 10
     @Override
     public void onOptionalChange(int reportOptional) {
 
-        SellerData.reportOptional = reportOptional;
-
+        //SellerData.reportOptional = reportOptional;
         setContentData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.sellerData = null;
     }
 }

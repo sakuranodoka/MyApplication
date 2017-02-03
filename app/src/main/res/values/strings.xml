@@ -20,6 +20,8 @@
     <string name="currency_th">บาท</string>
     <string name="currency_date_th">วัน</string>
 
+    <string name="test_value">ข้อมูลตั้งแต่ 1 ก.ค. ถึง 1 ส.ค. พ.ศ. 2559</string>
+
     <string name="error_retrofit_error">Retrofit got error in observation.</string>
 
 </resources>
