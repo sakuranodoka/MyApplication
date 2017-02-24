@@ -67,7 +67,10 @@
         <activity android:name=".EBusinessActivity" />
         <activity android:name=".SellerActivity" />
         <activity android:name=".LocationActivity" />
-        <activity android:name=".SellerSubActivity"></activity>
+        <activity android:name=".SellerSubActivity" />
+        <activity android:name=".ShopInfoActivity" />
+        <activity android:name=".LocationCaseFormActivity" />
+        <activity android:name=".ProductTrackingActivity"></activity>
     </application>
 
 </manifest>

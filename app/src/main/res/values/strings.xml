@@ -17,10 +17,17 @@
     <string name="seller_barchart_60">ยอดขายเมื่อ 60 วันที่แล้ว</string>
     <string name="seller_barchart_180">ยอดขายเมื่อ 180 วันที่แล้ว</string>
 
+    <string name="primary_intent_seller_ship_no">SHIP_NO</string>
+    <string name="primary_intent_seller_report_no">REPORT_NO</string>
+    <string name="primary_intent_seller_stock">STOCK</string>
+    <string name="primary_intent_seller_sold_out">SOLD_OUT</string>
+    <string name="primary_intent_seller_day_cover">DAY_COVER</string>
+
     <string name="currency_th">บาท</string>
+    <string name="currency_piece_th">ชิ้น</string>
     <string name="currency_date_th">วัน</string>
 
-    <string name="test_value">ข้อมูลตั้งแต่ 1 ก.ค. ถึง 1 ส.ค. พ.ศ. 2559</string>
+    <string name="test_value">ข้อมูลตั้งแต่ 29 ต.ค. ถึง 29 พ.ย. พ.ศ. 2559</string>
 
     <string name="error_retrofit_error">Retrofit got error in observation.</string>
 

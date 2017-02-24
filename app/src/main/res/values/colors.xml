@@ -35,4 +35,17 @@
     <color name="stone_gray">#2E3846</color>
     <color name="shadow_white">#EFE6F1</color>
 
+    <!-- Lemon destruction -->
+    <color name="lemon_light_fortune">#74b598</color>
+    <color name="lemon_wingless">#60ab89</color>
+    <color name="lemon_resonance_structure">#4ca07a</color>
+
+    <!-- Rose destruction -->
+
+    <color name="rose_a_screaming_of_angels">#ffbfbf</color>
+    <color name="rose_lightweight">#ffabab</color>
+    <color name="rose_soft_robotics">#FF8585</color>
+    <color name="rose_cursed_rain">#ff5c5c</color>
+    <color name="rose_lost_wings">#ff3c3c</color>
+
 </resources>

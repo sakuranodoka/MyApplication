@@ -30,6 +30,7 @@ import AppBar.BarType;
 import autocomplete.InstantAutocomplete;
 import seller.TypeSellerReport;
 import seller.pojo.SellerBestSellerMonthToDatePOJO;
+import seller.pojo.SellerStockKeeperPOJO;
 import seller.pojo.SellerStorageDateCoverPOJO;
 import seller.titlebar.SellerOptionalDAO;
 import seller.titlebar.SellerTitleBar;
@@ -134,6 +135,10 @@ public class SellerActivity extends AppCompatActivity
                     this.sellerData.setREPORT_NO(savedInstanceState.getInt("REPORT_NO"));
 
                     setContentData();
+
+                    setTitle();
+
+                    sellerAdapter.setSellerData(this.sellerData);
                 }
 
                 new SetShopAutoCompleteView().setView(this, false);
@@ -150,6 +155,7 @@ public class SellerActivity extends AppCompatActivity
         }
     }
 
+    // Retrofit call back ...
     private InterfaceListen interfaceListen = new InterfaceListen() {
         @Override
         public void onResponse(Object data, Retrofit retrofit) {
@@ -213,14 +219,24 @@ public class SellerActivity extends AppCompatActivity
 
                     } else {
 
-                        //CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(SellerActivity.this,LinearLayoutManager.VERTICAL,false);
-
                         sellerRecyclerView.setLayoutManager(new LinearLayoutManager(SellerActivity.this));
 
                         listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover((List<SellerStorageDateCoverPOJO>) data, sellerData.getREPORT_NO()));
 
                         //listSellerBaseItem.add(ConvertContent.itemSellerStorageDateCoverGraph((List<SellerStorageDateCoverPOJO>) data, TypeSellerReport.TYPE_REPORT_BAR));
                     }
+
+                    sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
+
+                    sellerAdapter.notifyDataSetChanged();
+
+                } else if (data instanceof List && (((List) data) != null) && (((List) data).get(0) instanceof SellerStockKeeperPOJO)) {
+
+                    CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(SellerActivity.this,LinearLayoutManager.VERTICAL,false);
+
+                    sellerRecyclerView.setLayoutManager(customLayoutManager);
+
+                    listSellerBaseItem.add(ConvertContent.itemSellerStockKeeperGraph((List<SellerStockKeeperPOJO>) data, TypeSellerReport.TYPE_REPORT_BAR));
 
                     sellerAdapter.setRecyclerAdapter(listSellerBaseItem);
 
@@ -235,24 +251,20 @@ public class SellerActivity extends AppCompatActivity
         }
 
         @Override
-        public void onBodyErrorIsNull() {
-            Log.e("error", "body is null");
-        }
+        public void onBodyErrorIsNull() { Log.e("error", "body is null"); }
 
         @Override
-        public void onFailure(Throwable t) {
-            t.printStackTrace();
-        }
+        public void onFailure(Throwable t) { t.printStackTrace(); }
     };
 
     private void clearData() {
         //16/12/2559
         int size = this.listSellerBaseItem.size();
 
-        /*for (int i = 0; i < size-1; i++) {
-            //if(this.listSellerBaseItem != null && this.listSellerBaseItem.get(i) != null)
-                this.listSellerBaseItem.remove(i);
-        }*/
+//        for (int i = 0; i < size-1; i++) {
+//            //if(this.listSellerBaseItem != null && this.listSellerBaseItem.get(i) != null)
+//                this.listSellerBaseItem.remove(i);
+//        }
 
         this.listSellerBaseItem = new ArrayList<>();
 
@@ -356,16 +368,26 @@ public class SellerActivity extends AppCompatActivity
     // เมื่อร้านค้าเปลี่ยน หรือถูกเลือก
     @Override
     public void shopSelected(String shopName) {
+
         final AutoCompleteTextView acTextView = (AutoCompleteTextView) findViewById(R.id.search_box);
+
         if(acTextView != null) {
+
             String [] shopArf = shopName.split(":");
+
             if(shopArf != null && this.sellerData != null) {
 
                 this.sellerData.setSHIP_NO(shopArf[0].trim());
 
+                this.sellerData.setREPORT_NO(TypeSellerReport.TYPE_STOCK_KEEPER);
+
                 acTextView.setText(shopArf[1].trim());
 
                 sellerAdapter.setSellerData(this.sellerData);
+
+                setTitle();
+
+                setContentData();
             }
         }
     }

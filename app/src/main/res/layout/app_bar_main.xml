@@ -30,8 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
-
-
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <LinearLayout
@@ -189,7 +187,23 @@
         android:id="@+id/content">
     </FrameLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:src="@drawable/ic_search"
 
+        android:id="@+id/floatingActionButton"
+
+        app:fabSize="normal"
+
+        android:tint="@color/angel_white"
+
+        android:layout_margin="@dimen/double_round"
+
+        android:layout_gravity="right|bottom"
+
+        android:clickable="true"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </android.support.design.widget.CoordinatorLayout>
 

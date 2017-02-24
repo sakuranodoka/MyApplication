@@ -5,15 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
+    android:paddingStart="2dp"
+    android:paddingEnd="2dp"
+
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    card_view:cardPreventCornerOverlap="false">
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardBackgroundColor="@android:color/transparent">
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:id="@+id/view_seller_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,100 +38,89 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:layout_marginStart="@dimen/round_padding"
-                    android:layout_marginEnd="@dimen/round_padding"
-                    android:layout_marginTop="@dimen/round_padding"
+                    android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="100sp"
                         android:layout_height="match_parent"
-
-                        android:layout_weight="2.5"
 
                         android:text="Stock"
                         android:textColor="@color/angel_white"
                         android:textSize="@dimen/font_text_view"
 
-                        android:background="@color/dark_honest_green"
+                        android:background="#74b598"
 
-                        android:paddingBottom="@dimen/round_padding"
-                        android:paddingTop="@dimen/round_padding"
-                        android:paddingStart="@dimen/round_padding"
-                        android:paddingEnd="@dimen/round_padding"
-                        android:gravity="center"/>
+                        android:padding="@dimen/round_padding"
+                        android:gravity="start"/>
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
-                        android:layout_weight="2.5"
-
-                        android:layout_marginEnd="@dimen/slice_align"
 
                         android:text="332 ชิ้น"
                         android:textColor="@color/angel_white"
                         android:textSize="@dimen/font_text_view"
 
-                        android:background="@color/rising_green"
+                        android:background="#74b598"
 
                         android:paddingBottom="@dimen/round_padding"
                         android:paddingTop="@dimen/round_padding"
                         android:paddingStart="@dimen/round_padding"
                         android:paddingEnd="@dimen/round_padding"
 
-                        android:gravity="center"
+                        android:gravity="start|center"
 
-                        android:id="@+id/storage"/>
+                        android:id="@+id/stock"/>
 
-                    <!--<View-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!---->
-                        <!--android:layout_weight="1"/>-->
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="100sp"
                         android:layout_height="match_parent"
-
-                        android:layout_weight="2.5"
 
                         android:text="ยอดขาย"
                         android:textColor="@color/angel_white"
                         android:textSize="@dimen/font_text_view"
 
-                        android:layout_marginStart="@dimen/slice_align"
-
-                        android:background="@color/dark_honest_green"
+                        android:background="#60ab89"
 
                         android:paddingBottom="@dimen/round_padding"
                         android:paddingTop="@dimen/round_padding"
                         android:paddingStart="@dimen/round_padding"
                         android:paddingEnd="@dimen/round_padding"
 
-                        android:gravity="center"/>
+                        android:gravity="start"/>
+
+
 
                     <TextView
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
-                        android:layout_weight="2.5"
 
                         android:text="332 ชิ้น"
                         android:textColor="@color/angel_white"
                         android:textSize="@dimen/font_text_view"
 
-                        android:background="@color/rising_green"
+                        android:background="#60ab89"
 
                         android:paddingBottom="@dimen/round_padding"
                         android:paddingTop="@dimen/round_padding"
                         android:paddingStart="@dimen/round_padding"
                         android:paddingEnd="@dimen/round_padding"
 
-                        android:gravity="center"
+                        android:gravity="start|center"
 
-                        android:id="@+id/quantity"/>
+                        android:id="@+id/XBar"/>
+                    </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
@@ -134,59 +130,34 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+
+                    android:text="Day Cover"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
+
+                    android:background="#4ca07a"
+
+                    android:padding="@dimen/round_padding"
+                    android:gravity="start"/>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:layout_marginStart="@dimen/round_padding"
-                    android:layout_marginEnd="@dimen/round_padding"
-                    android:layout_marginBottom="@dimen/round_padding"
-                    android:layout_marginTop="@dimen/round_padding"
 
-                    android:orientation="horizontal">
+                    android:text="332 ชิ้น"
+                    android:textColor="@color/angel_white"
+                    android:textSize="@dimen/font_text_view"
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                    android:background="#4ca07a"
 
-                        android:layout_weight="5"
+                    android:padding="@dimen/round_padding"
+                    android:gravity="start"
 
-                        android:text="Day Cover"
-                        android:textColor="@color/angel_white"
-                        android:textSize="@dimen/font_text_view"
-
-                        android:background="@color/dark_honest_green"
-
-                        android:paddingTop="@dimen/round_padding"
-                        android:paddingBottom="@dimen/round_padding"
-
-                        android:paddingStart="@dimen/double_round"
-                        android:paddingEnd="@dimen/double_round"
-
-                        android:gravity="center"/>
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-
-                        android:layout_weight="5"
-
-                        android:text="332 ชิ้น"
-                        android:textColor="@color/angel_white"
-                        android:textSize="@dimen/font_text_view"
-
-
-                        android:background="@color/rising_green"
-
-                        android:paddingBottom="@dimen/round_padding"
-                        android:paddingTop="@dimen/round_padding"
-                        android:paddingStart="@dimen/double_round"
-                        android:paddingEnd="@dimen/double_round"
-
-                        android:gravity="center"
-
-                        android:id="@+id/day_cover"/>
-                </LinearLayout>
+                    android:id="@+id/day_cover"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

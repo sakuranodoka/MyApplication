@@ -12,15 +12,15 @@ import com.example.administrator.myapplication.R;
 
 public class SubSellerTitleViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView storage;
-    public TextView quantity;
+    public TextView stock;
+    public TextView XBar;
     public TextView dayCover;
 
     public SubSellerTitleViewHolder(View itemView) {
         super(itemView);
 
-        storage = (TextView) itemView.findViewById(R.id.storage);
-        quantity = (TextView) itemView.findViewById(R.id.quantity);
+        stock = (TextView) itemView.findViewById(R.id.stock);
+        XBar = (TextView) itemView.findViewById(R.id.XBar);
         dayCover = (TextView) itemView.findViewById(R.id.day_cover);
 
     }

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,12 @@ public class SellerSubActivity extends AppCompatActivity {
     private int reportId;
     private String item;
     private String shopCode;
+    private String stock;
+    private String stockUnit;
+    private String XBar;
+    private String XBarUnit;
+    private String dayCover;
+    private String dayCoverUnit;
 
     private int innerType;
 
@@ -47,6 +54,10 @@ public class SellerSubActivity extends AppCompatActivity {
         this.reportId = 0;
         this.item = "";
         this.shopCode = "EMPTY";
+
+        this.stockUnit = "ชิ้น";//getApplicationContext().getResources().getString(R.string.currency_piece_th);
+        this.XBarUnit = "ชิ้น";//getApplicationContext().getResources().getString(R.string.currency_piece_th);
+        this.dayCoverUnit = "วัน";//getApplicationContext().getResources().getString(R.string.currency_date_th);
     }
 
     @Override
@@ -73,7 +84,9 @@ public class SellerSubActivity extends AppCompatActivity {
             this.reportId = b.getInt("reportId");
             this.shopCode = b.getString("shopCode");
 
-            Log.e("xxxxxx", this.item);
+            this.stock = b.getString("stock");
+            this.XBar = b.getString("XBar");
+            this.dayCover = b.getString("dayCover");
         }
 
         setContentView(R.layout.activity_main);
@@ -82,7 +95,7 @@ public class SellerSubActivity extends AppCompatActivity {
 
         CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
 
-        sellerSubRecyclerView.setLayoutManager( customLayoutManager );
+        sellerSubRecyclerView.setLayoutManager( new LinearLayoutManager(this) );
 
         sellerSubRecyclerView.setNestedScrollingEnabled(false);
 
@@ -91,8 +104,42 @@ public class SellerSubActivity extends AppCompatActivity {
         sellerSubRecyclerView.setAdapter(sellerSubAdapter);
 
         setContentTitle();
+    }
 
-        //setContentData(TypeSellerReport.TYPE_SELLER_SUB_SKU_DAY_COVER);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setContentData(this.reportId);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState == null) {
+            outState = new Bundle();
+        } else {
+            outState.putString("item", this.item);
+            outState.putInt("reportId", this.reportId);
+            outState.putString("shopCode", this.shopCode);
+
+            outState.putString("stock", this.stock);
+            outState.putString("XBar", this.XBar);
+            outState.putString("dayCover", this.dayCover);
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(savedInstanceState != null) {
+            if (savedInstanceState.containsKey("item")) { this.item = savedInstanceState.getString("item"); }
+            if (savedInstanceState.containsKey("reportId")) { this.reportId = savedInstanceState.getInt("reportId"); }
+            if (savedInstanceState.containsKey("shopCode")) { this.shopCode = savedInstanceState.getString("shopCode"); }
+            if (savedInstanceState.containsKey("stock")) { this.stock = savedInstanceState.getString("item"); }
+            if (savedInstanceState.containsKey("XBar")) { this.XBar = savedInstanceState.getString("XBar"); }
+            if (savedInstanceState.containsKey("dayCover")) { this.dayCover = savedInstanceState.getString("dayCover"); }
+        }
     }
 
     private InterfaceListen interfaceListen = new InterfaceListen() {
@@ -103,7 +150,8 @@ public class SellerSubActivity extends AppCompatActivity {
 
                 List<SellerStorageDateCoverPOJO> temp = (List <SellerStorageDateCoverPOJO>) data;
 
-                listSellerBaseItem.add(ConvertContent.itemSellerStorageDateCoverGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
+                //listSellerBaseItem.add(ConvertContent.itemSellerStorageDateCoverGraph(temp, TypeSellerReport.TYPE_REPORT_BAR));
+                listSellerBaseItem.addAll(ConvertContent.itemSellerStorageDateCover(temp, reportId));
 
                 sellerSubAdapter.setRecyclerAdapter(listSellerBaseItem);
 
@@ -123,7 +171,17 @@ public class SellerSubActivity extends AppCompatActivity {
 
     private void setContentTitle() {
 
+        TextView stock = (TextView) findViewById(R.id.stock);
+        TextView XBar = (TextView) findViewById(R.id.XBar);
+        TextView dayCover = (TextView) findViewById(R.id.day_cover);
 
+        stock.setText(this.stock+" "+this.stockUnit);
+        if(!this.XBar.equals("0.0001")) {
+            XBar.setText(this.XBar + " " + this.XBarUnit);
+        } else {
+            XBar.setText("-");
+        }
+        dayCover.setText((int) Math.floor( Float.parseFloat(this.dayCover))+" "+this.dayCoverUnit);
 
 //        listSellerBaseItem.add(new ItemSubSellerTitle(TypeSellerReport.TYPE_SELLER_SUB_TITLE));
 //
@@ -133,9 +191,21 @@ public class SellerSubActivity extends AppCompatActivity {
     }
 
     private void setContentData(int subSellerReport) {
+
+        clearData();
+
         List<String> listData = new ArrayList<>();
         listData.add(this.item);
-        new ServiceCollection().callServer(interfaceListen, subSellerReport, shopCode, listData);
+        new ServiceCollection().callServer(interfaceListen, this.reportId, shopCode, listData);
+    }
+
+    private void clearData() {
+
+        this.listSellerBaseItem = new ArrayList<>();
+
+        sellerSubAdapter.setRecyclerAdapter(listSellerBaseItem);
+
+        sellerSubAdapter.notifyDataSetChanged();
     }
 
     @Override

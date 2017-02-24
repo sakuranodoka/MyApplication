@@ -6,12 +6,21 @@
     android:layout_height="wrap_content"
 
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    card_view:cardPreventCornerOverlap="false">
+
+    android:paddingStart="2dp"
+    android:paddingEnd="2dp"
+
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardBackgroundColor="@android:color/transparent">
 
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+
+        android:paddingStart="2dp"
+        android:paddingEnd="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,11 +32,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
-                android:layout_marginStart="@dimen/round_padding"
-                android:layout_marginEnd="@dimen/round_padding"
-                android:layout_marginTop="@dimen/round_padding"
-                android:layout_marginBottom="@dimen/round_padding"
 
                 android:orientation="horizontal">
 
@@ -52,7 +56,7 @@
                         android:focusable="false"
                         android:focusableInTouchMode="true"
 
-                        android:background="@color/rising_green"
+                        android:background="@color/lemon_resonance_structure"
 
                         android:gravity="center"
 

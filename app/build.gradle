@@ -15,8 +15,10 @@ android {
         main {
             res.srcDirs =
             [
+                    '/src/main/res/_R0_environment',
                     '/src/main/res/_A0_seller',
                     '/src/main/res/_A0_location',
+                    '/src/main/res/_A0_shop_info',
                     '/src/main/res'
             ]
         }
@@ -28,7 +30,6 @@ android {
         }
     }
 }
-
 
 repositories {
     mavenCentral()
@@ -83,6 +84,9 @@ dependencies {
     // Background asynchonous task helper
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
+
+    // Android shadow icon
+    compile 'com.github.devlight.shadowlayout:library:1.0.2'
 
     // Graph
     compile 'com.github.PhilJay:MPAndroidChart-Realm:v1.1.0@aar'
