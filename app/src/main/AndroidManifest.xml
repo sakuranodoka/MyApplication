@@ -70,7 +70,7 @@
         <activity android:name=".SellerSubActivity" />
         <activity android:name=".ShopInfoActivity" />
         <activity android:name=".LocationCaseFormActivity" />
-        <activity android:name=".ProductTrackingActivity"></activity>
+        <activity android:name=".CanvasActivity" />
     </application>
 
 </manifest>

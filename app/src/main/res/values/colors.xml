@@ -43,9 +43,9 @@
     <!-- Rose destruction -->
 
     <color name="rose_a_screaming_of_angels">#ffbfbf</color>
-    <color name="rose_lightweight">#ffabab</color>
-    <color name="rose_soft_robotics">#FF8585</color>
-    <color name="rose_cursed_rain">#ff5c5c</color>
-    <color name="rose_lost_wings">#ff3c3c</color>
+    <color name="rose_cursed_rain">#ffabab</color>
+    <color name="rose_lost_wings">#FF8585</color>
+    <color name="rose_pending">#ff5c5c</color>
+    <color name="rose_soft_robotics">#ff3c3c</color>
 
 </resources>
