@@ -19,6 +19,7 @@ android {
                     '/src/main/res/_A0_seller',
                     '/src/main/res/_A0_location',
                     '/src/main/res/_A0_shop_info',
+                    '/src/main/res/_A1_invoice',
                     '/src/main/res'
             ]
         }

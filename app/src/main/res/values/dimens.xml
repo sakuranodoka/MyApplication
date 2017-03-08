@@ -10,6 +10,7 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="dialog_title_header">21sp</dimen>
+    <dimen name="dialog_button_fixed_height">52dp</dimen>
 
     <dimen name="font_text_view">17sp</dimen>
     <dimen name="font_app_name">22sp</dimen>

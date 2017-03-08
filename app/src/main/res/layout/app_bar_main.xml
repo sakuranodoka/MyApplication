@@ -18,13 +18,6 @@
 
         android:fitsSystemWindows="true">
 
-        <!--<android.support.v7.widget.CardView-->
-            <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-
-            <!--card_view:cardPreventCornerOverlap="false">-->
-
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
@@ -172,8 +165,6 @@
         <View android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="@drawable/shape_elevation"/>
-
-        <!--</android.support.v7.widget.CardView>-->
 
     </android.support.design.widget.AppBarLayout>
 
