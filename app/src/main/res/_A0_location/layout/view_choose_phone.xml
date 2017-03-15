@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+
+        android:gravity="top|center_vertical"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@color/honest_green">
+
+        <ImageButton
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="left"
+
+            android:layout_margin="@dimen/round_padding"
+
+            android:background="@android:color/transparent"
+
+            android:src="@drawable/ic_arrow_back"
+
+            android:tint="@color/lemon_resonance_structure"/>
+
+        <ImageView
+
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="@dimen/double_round"
+
+            android:layout_width="match_parent"
+            android:layout_height="128dp"
+
+            android:src="@drawable/ic_smartphone_rounded"/>
+
+        <autocomplete.InstantAutocomplete
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/location_search_tv"
+
+            android:drawableRight="@drawable/ic_arrow_drop_down_black"
+            android:background="@color/dark_honest_green"
+
+            android:textColor="@color/angel_white"
+            android:textSize="17sp"
+            android:hint="เลือกหมายเลขโทรศัพท์"
+
+            android:focusable="false"
+            android:focusableInTouchMode="true"
+
+            android:padding="@dimen/round_padding"
+            android:layout_margin="@dimen/double_round"
+
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+
+            android:textColor="#009060"
+            android:textSize="17sp"
+            android:text="เลือกหมายเลขเครื่องโทรศัพท์เพื่อแสดงพิกัดของพนักงาน"
+
+            android:layout_marginBottom="@dimen/double_round"
+
+            android:drawablePadding="@dimen/round_padding"
+
+            android:padding="@dimen/double_round"/>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tobavity="center"
+
+    android:background="@color/stone_gray">
+
+    <include layout="@layout/zxing_capture"/>
+
+    <Button
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="@dimen/round_padding"
+        android:layout_marginEnd="@dimen/double_round"
+        android:id="@+id/zxing_back_button"
+
+        android:layout_alignParentEnd="true"
+
+        android:background="@drawable/ic_arrow_forward_36_white_fixed" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginTop="@dimen/round_padding"
+        android:layout_marginEnd="@dimen/round_padding"
+        android:text="(ข้ามขั้นตอนนี้)"
+        android:textSize="@dimen/font_app_name"
+        android:textColor="@color/angel_white"
+
+        android:gravity="center"
+
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/zxing_back_button"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="กรุณาสแกนบัตรพนักงานของท่าน"
+        android:textSize="27sp"
+        android:textColor="@color/angel_white"
+
+        android:gravity="center"
+
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

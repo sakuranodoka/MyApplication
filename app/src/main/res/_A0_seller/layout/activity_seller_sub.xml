@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:background="@color/little_light_gray"
+
+    android:paddingTop="@dimen/slice_align"
+    android:layout_marginTop="-4dp"
+
+    tools:context="com.example.administrator.myapplication.SellerSubActivity">
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/view_sub_seller_title"/>
+
+    <android.support.v7.widget.RecyclerView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:id="@+id/sellerSubRecyclerView"
+
+        android:layout_marginTop="@dimen/slice_align"
+
+        android:layout_marginBottom="24dp"
+
+        android:clipToPadding="false">
+    </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seller_extend_part"
+
+        android:layout_below="@id/sellerSubRecyclerView"
+
+        android:layout_marginTop="-24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:gravity="left|center"
+
+            android:layout_marginStart="@dimen/slice_align"
+
+            android:text="@string/test_value"
+            android:textColor="@color/stone_gray"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

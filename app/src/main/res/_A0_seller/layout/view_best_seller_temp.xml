@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:paddingRight="15dp"
+    android:paddingLeft="@dimen/round_padding"
+    android:paddingBottom="@dimen/round_padding"
+    android:padding="@dimen/round_padding"
+    android:layout_marginTop="@dimen/round_padding"
+
+    android:background="@color/angel_white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:layout_marginBottom="@dimen/round_padding"
+            android:textSize="25sp"
+            android:textColor="@color/space_gray"
+            android:text="อันดับที่ " />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+
+            android:paddingLeft="12dp"
+
+            android:id="@+id/sellRanking"
+
+            android:textSize="48sp"
+
+            android:textColor="@color/dark_honest_green"
+            android:text="7" />
+
+        <!--2-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <!--2.1-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+
+                android:text="MES1022"
+                android:id="@+id/collectionItemCode"
+                android:textColor="@color/dark_blue"
+                android:textSize="36sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@drawable/ic_more_horiz_gray_24dp" />
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent">-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+
+            <!--android:textStyle="bold"-->
+            <!--android:text="BAL : "-->
+            <!--android:textColor="@color/supreme_blue"-->
+            <!--android:textSize="18sp"/>-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+
+            <!--android:id="@+id/collection_bal"-->
+
+            <!--android:text="929"-->
+            <!--android:textColor="@color/space_gray"-->
+            <!--android:textSize="18sp"/>-->
+            <!--</LinearLayout>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right|center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textStyle="bold"
+                    android:text="ยอดขาย "
+                    android:textColor="@color/dark_honest_green"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:id="@+id/collectionNet"
+
+                    android:text="336,330"
+                    android:textColor="@color/space_gray"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textStyle="bold"
+                    android:text=" ฿."
+                    android:textColor="@color/dark_honest_green"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

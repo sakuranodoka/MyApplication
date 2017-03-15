@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+        <FrameLayout
+            android:layout_marginTop="35dp"
+            android:id="@+id/contentSearchUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="25dp"
+            android:layout_gravity="center|center">
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/spinnerSearchUser" />
+        </FrameLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cancelSearchUser"
+                android:padding="10dp"
+                android:text="ยกเลิก"
+                android:textSize="20sp"
+                android:background="#00ffffff"
+                android:layout_margin="15dp"
+                android:textColor="?attr/colorAccent" />
+
+            <Button
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/doneSearchUser"
+                android:padding="10dp"
+                android:text="เลือก"
+                android:textSize="20sp"
+                android:background="#00ffffff"
+                android:textColor="?attr/colorAccent"
+                />
+        </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardBackgroundColor="@android:color/transparent"
+
+    android:paddingBottom="@dimen/slice_align"
+
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:paddingTop="@dimen/round_padding"
+    android:paddingBottom="@dimen/round_padding"
+    android:paddingStart="@dimen/slice_align"
+    android:paddingEnd="@dimen/slice_align"
+
+    android:background="@color/angel_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/round_padding"
+
+            android:gravity="left"
+
+            android:id="@+id/sku"
+
+            android:text="MES102BGT6"
+
+            android:textColor="@color/supreme_blue"
+            android:textSize="23sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:visibility="gone"
+
+                android:id="@+id/sell_out_bar"
+
+                android:layout_gravity="center_vertical"
+
+                android:layout_marginEnd="@dimen/slice_align">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:text="ยอดขาย"
+                    android:textColor="@color/lemon_resonance_structure"
+                    android:textSize="@dimen/font_text_view"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_marginStart="@dimen/round_padding"
+                    android:layout_marginEnd="@dimen/round_padding"
+
+                    android:id="@+id/XBar"
+
+                    android:text="35"
+                    android:textColor="@color/stone_gray"
+                    android:textSize="@dimen/font_text_view"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:text="@string/currency_piece_th"
+                    android:textColor="@color/lemon_resonance_structure"
+                    android:textSize="@dimen/font_text_view"/>
+            </LinearLayout>
+
+            <Button
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+
+                android:background="@drawable/ic_chevron_right_gray_24dp"
+
+                android:id="@+id/more_info"
+                style="@style/Base.Widget.AppCompat.Button.Borderless" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+
+        android:paddingTop="@dimen/slice_align"
+        android:paddingStart="@dimen/round_padding"
+
+        android:layout_marginEnd="@dimen/slice_align">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|left">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:text="สต็อก"
+                    android:textColor="@color/lemon_resonance_structure"
+                    android:textSize="@dimen/font_text_view"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_marginStart="@dimen/round_padding"
+                    android:layout_marginEnd="@dimen/round_padding"
+
+                    android:id="@+id/storage"
+
+                    android:text="35"
+                    android:textColor="@color/stone_gray"
+                    android:textSize="@dimen/font_text_view"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:id="@+id/unit"
+
+                    android:text="@string/currency_piece_th"
+                    android:textColor="@color/lemon_resonance_structure"
+                    android:textSize="@dimen/font_text_view"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:orientation="horizontal"
+                android:gravity="right">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:textSize="@dimen/font_text_view"
+                    android:textColor="@color/rising_green"
+                    android:text="Day Cover " />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:layout_marginStart="@dimen/round_padding"
+                    android:layout_marginEnd="@dimen/round_padding"
+
+                    android:id="@+id/day_cover"
+
+                    android:textSize="@dimen/font_text_view"
+
+                    android:textColor="@color/stone_gray"
+                    android:text="999,999" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+
+                    android:id="@+id/unit_day_cover"
+
+                    android:text="@string/currency_date_th"
+                    android:textColor="@color/lemon_resonance_structure"
+                    android:textSize="@dimen/font_text_view"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+</android.support.v7.widget.CardView>
