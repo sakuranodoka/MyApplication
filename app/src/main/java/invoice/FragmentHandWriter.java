@@ -10,7 +10,7 @@ import com.example.administrator.myapplication.R;
  * Created by Administrator on 28/2/2560.
  */
 
-public class CanvasWritingFragment extends Fragment {
+public class FragmentHandWriter extends Fragment {
 
     @Override
     public void onAttach(Context context) {

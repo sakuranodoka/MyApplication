@@ -1,7 +1,6 @@
 package com.example.administrator.myapplication;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -10,8 +9,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -22,21 +19,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import invoice.InterfaceInvoice;
 import invoice.InvoiceData;
-import invoice.ServiceInvoice;
-import okhttp3.ResponseBody;
-import retrofit.InterfaceListen;
-import retrofit2.Retrofit;
-import retrofit2.http.Query;
-import rx.Observable;
 
 public class CanvasActivity extends AppCompatActivity {
 
@@ -55,7 +43,7 @@ public class CanvasActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_tracking);
+        setContentView(R.layout.activity_canvas);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
@@ -80,17 +68,17 @@ public class CanvasActivity extends AppCompatActivity {
 
                 //boolean error = captureSignature();
                 //if(!error){
-                    mView.setDrawingCacheEnabled(true);
-                    mSignature.save(mView);
-                    Bundle b = new Bundle();
+            mView.setDrawingCacheEnabled(true);
+            mSignature.save(mView);
+            Bundle b = new Bundle();
 
-                    b.putString("status", "done");
-                    b.putString(InvoiceData.ENCODED_IMAGE_PATH, encodeResult);
+            b.putString("status", "done");
+            b.putString(InvoiceData.ENCODED_IMAGE_PATH, encodeResult);
 
-                    Intent intent = new Intent();
-                    intent.putExtras(b);
-                    setResult(RESULT_OK ,intent);
-                    finish();
+            Intent intent = new Intent();
+            intent.putExtras(b);
+            setResult(RESULT_OK ,intent);
+            finish();
                 //}
             }
         });

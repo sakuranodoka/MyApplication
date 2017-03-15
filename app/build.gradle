@@ -15,12 +15,14 @@ android {
         main {
             res.srcDirs =
             [
-                    '/src/main/res/_R0_environment',
-                    '/src/main/res/_A0_seller',
-                    '/src/main/res/_A0_location',
-                    '/src/main/res/_A0_shop_info',
-                    '/src/main/res/_A1_invoice',
-                    '/src/main/res'
+                '/src/main/res',
+                '/src/main/res/_R0_environment',
+                '/src/main/res/_A0_seller',
+                '/src/main/res/_A0_location',
+                '/src/main/res/_A0_shop_info',
+                '/src/main/res/_A1_invoice',
+                '/src/main/res/_A0_authen'
+
             ]
         }
     }
@@ -34,6 +36,8 @@ android {
 
 repositories {
     mavenCentral()
+
+    jcenter()
 
     maven {
         url "https://raw.github.com/embarkmobile/zxing-android-minimal/mvn-repo/maven-repository/"
@@ -55,9 +59,10 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.+'
 
     // Barcode Reader
-    compile 'com.embarkmobile:zxing-android-minimal:2.0.0@aar'
-    compile 'com.embarkmobile:zxing-android-integration:2.0.0@aar'
-    compile 'com.google.zxing:core:3.0.1'
+    //compile 'com.embarkmobile:zxing-android-minimal:2.0.0@aar'
+    //compile 'com.embarkmobile:zxing-android-integration:2.0.0@aar'
+    compile 'com.journeyapps:zxing-android-embedded:3.4.0'
+    compile 'com.google.zxing:core:3.3.0'
 
     // Google Playservice
     compile 'com.google.android.gms:play-services-location:9.6.1'

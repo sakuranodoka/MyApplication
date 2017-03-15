@@ -23,7 +23,6 @@ import invoice.item.InvoiceBaseItem;
 import invoice.item.ItemInvoice;
 import invoice.item.ItemInvoicePreview;
 import invoice.item.ParcelInvoice;
-import invoice.item.ParcelableInvoice;
 import invoice.viewholder.InvoiceViewHolder;
 
 /**
@@ -52,11 +51,10 @@ public class FragmentInvoiceDetail extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.layout_recycler_view, container, false);
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViews);
 
         int orientation = this.getResources().getConfiguration().orientation;
-        if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+        if( orientation == Configuration.ORIENTATION_PORTRAIT ) {
             //code for portrait mode (แนวตั้ง)
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         } else {
@@ -65,34 +63,22 @@ public class FragmentInvoiceDetail extends Fragment {
         }
 
         List<InvoiceBaseItem> listItem = null;
-        if(b != null) {
-					 listItem = new ArrayList<>();
+        if( b != null ) {
+					  listItem = new ArrayList<>();
 
-					 if(b.containsKey(InvoiceData.INVOICE_PARCEL)) {
-							ParcelInvoice pi = Parcels.unwrap( b.getParcelable(InvoiceData.INVOICE_PARCEL) );
-							for(ItemInvoicePreview i : pi.getListInvoice()) {
-								 ItemInvoice item = new ItemInvoice(INVOICE_KEY_CODE);
-								 item.setInvoicePreview(i.getInvoicePreview());
-								 item.setInvoiceDate(i.getInvoiceDate());
-								 listItem.add(item);
-							}
-					 }
-//            if((b.containsKey(InvoiceData.INVOICE_PREVIEW)) && (b.containsKey(InvoiceData.INVOICE_DATE))) {
-//                String[] invoicePreviewList = b.getString(InvoiceData.INVOICE_PREVIEW).split( InvoiceData._DELIMITER_ );
-//                String[] invoicePreviewDate = b.getString(InvoiceData.INVOICE_DATE).split( InvoiceData._DELIMITER_ );
-//                for(int i = 0 ; i < invoicePreviewList.length ; i++ ) {
-//                    ItemInvoice item = new ItemInvoice(INVOICE_KEY_CODE);
-//                    item.setInvoicePreview(invoicePreviewList[i]);
-//                    item.setInvoiceDate(invoicePreviewDate[i]);
-//
-//                    listItem.add(item);
-//                }
-//            }
+					  if( b.containsKey(InvoiceData.INVOICE_PARCEL) ) {
+                ParcelInvoice pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+                for( ItemInvoicePreview i : pi.getListInvoice()) {
+                   ItemInvoice item = new ItemInvoice(INVOICE_KEY_CODE);
+                   item.setInvoicePreview(i.getInvoicePreview());
+                   item.setInvoiceDate(i.getInvoiceDate());
+                   listItem.add(item);
+                }
+            }
         }
         adapter = new InvoiceDetailAdapter(listItem);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-
         return rootView;
     }
 

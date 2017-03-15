@@ -9,10 +9,5 @@ import android.view.View;
 public interface InterfaceCamera {
     public void onCapture();
 
-    public void onBarcodeScan(int mode, @LayoutRes int layoutID);
-
-    int BARCODE_INVOICE_SC = 7667;
-    int BARCODE_PERSONAL_SC = 7632;
-
-    String E_O_S = "end_of_scan";
+    public void onBarcodeScan(int mode, String preview, @LayoutRes int layoutID);
 }
