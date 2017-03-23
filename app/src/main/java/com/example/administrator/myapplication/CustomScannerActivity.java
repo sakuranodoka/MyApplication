@@ -3,10 +3,16 @@ package com.example.administrator.myapplication;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +20,9 @@ import android.widget.TextView;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
+import fragment.FragmentExample;
+import fragment.FragmentToolbar;
+import invoice.FragmentToolbarScanner;
 import invoice.InvoiceData;
 
 /**
@@ -29,62 +38,80 @@ public class CustomScannerActivity extends AppCompatActivity implements
 
 	 private Bundle b = new Bundle();
 
-	 @Override
-	 protected void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			setContentView(R.layout.activity_custom_scanner);
+	@Override
+	public void setContentView(@LayoutRes int layoutResID) {
+		DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.layout_main, null);
+		FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.layout_content);
+		getLayoutInflater().inflate(layoutResID, frameLayout, true);
+		super.setContentView(fullLayout);
+	}
 
-			barcodeScannerView = (DecoratedBarcodeView)findViewById(R.id.zxing_barcode_scanner);
-			barcodeScannerView.setTorchListener(this);
-			barcodeScannerView.setStatusText("หมายเหตุ : กรุณาทาบเส้นสีแดงให้คลอบคลุมรหัสบาร์โค้ด");
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_custom_scanner);
 
-			b = getIntent().getExtras();
+		Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
+		setSupportActionBar(myToolbar);
 
-			//switchFlashlightButton = (Button)findViewById(R.id.switch_flashlight);
+		// Get a support ActionBar corresponding to this toolbar
+		ActionBar ab = getSupportActionBar();
 
-			// if the device does not have flashlight in its camera,
-			// then remove the switch flashlight button...
-			if( !hasFlash() ) {
-				 	//switchFlashlightButton.setVisibility(View.GONE);
-			}
+		// Enable the Up button
+		ab.setDisplayHomeAsUpEnabled(true);
 
-			capture = new CaptureManager(this, barcodeScannerView);
-			capture.initializeFromIntent(getIntent(), savedInstanceState);
-			capture.decode();
+		// Remove title name
+		ab.setDisplayShowTitleEnabled(false);
 
-			Button back = (Button) findViewById(R.id.backPressedState);
-			Button next = (Button) findViewById(R.id.nextPressedState);
+		b = getIntent().getExtras();
+		if(b != null && b.containsKey(InvoiceData.INVOICE_CASE) ) {
+			FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner( b.getInt(InvoiceData.INVOICE_CASE));
+			FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
+			fm.replace(R.id.layout_toolbar, fToolbarScanner);
+			fm.commit();
+	   }
 
-			if( b != null ) {
-				 	RelativeLayout ns = (RelativeLayout) findViewById(R.id.view_zxing_next_state);
-				 	if( ns != null && b.containsKey(InvoiceData.INVOICE_CASE) ) {
-						  switch( b.getInt(InvoiceData.INVOICE_CASE) ) {
-									case InvoiceData.INVOICE_CASE_INVOICE_USER_ID:
-										 back.setVisibility(View.GONE);
-										 break;
-									case InvoiceData.INVOICE_CASE_INVOICE_PREVIEW:
-									default:
-										 ns.setVisibility(View.GONE);
-										 break;
-							}
-				 	}
+		barcodeScannerView = (DecoratedBarcodeView) findViewById(R.id.zxing_barcode_scanner);
+		barcodeScannerView.setTorchListener(this);
+		barcodeScannerView.setStatusText("หมายเหตุ : กรุณาทาบเส้นสีแดงให้คลอบคลุมรหัสบาร์โค้ด");
 
-				 	TextView textScannerPreview = (TextView) findViewById(R.id.textScannerPreview);
-				 	if( textScannerPreview != null && b.containsKey(InvoiceData.INVOICE_PREVIEW ) ) {
-						 	textScannerPreview.setText(b.getString(InvoiceData.INVOICE_PREVIEW));
-					}
-			}
+		capture = new CaptureManager(this, barcodeScannerView);
+		capture.initializeFromIntent(getIntent(), savedInstanceState);
+		capture.decode();
 
-			View.OnClickListener onClick = new View.OnClickListener() {
-				 @Override
-				 public void onClick(View v) {
-						finish();
-				 }
-			};
+	//			Button back = (Button) findViewById(R.id.backPressedState);
+	//			Button next = (Button) findViewById(R.id.nextPressedState);
 
-			back.setOnClickListener(onClick);
-			next.setOnClickListener(onClick);
-	 }
+	//			if( b != null ) {
+	//				 	RelativeLayout ns = (RelativeLayout) findViewById(R.id.view_zxing_next_state);
+	//				 	if( ns != null && b.containsKey(InvoiceData.INVOICE_CASE) ) {
+	//						  switch( b.getInt(InvoiceData.INVOICE_CASE) ) {
+	//									case InvoiceData.INVOICE_CASE_INVOICE_USER_ID:
+	//										 back.setVisibility(View.GONE);
+	//										 break;
+	//									case InvoiceData.INVOICE_CASE_INVOICE_PREVIEW:
+	//									default:
+	//										 ns.setVisibility(View.GONE);
+	//										 break;
+	//							}
+	//				 	}
+	//
+	//				 	TextView textScannerPreview = (TextView) findViewById(R.id.textScannerPreview);
+	//				 	if( textScannerPreview != null && b.containsKey(InvoiceData.INVOICE_PREVIEW ) ) {
+	//						 	textScannerPreview.setText(b.getString(InvoiceData.INVOICE_PREVIEW));
+	//					}
+	//			}
+	//
+	//			View.OnClickListener onClick = new View.OnClickListener() {
+	//				 @Override
+	//				 public void onClick(View v) {
+	//						finish();
+	//				 }
+	//			};
+	//
+	//			back.setOnClickListener(onClick);
+	//			next.setOnClickListener(onClick);
+	}
 
 	 @Override
 	 protected void onResume() {
@@ -121,7 +148,13 @@ public class CustomScannerActivity extends AppCompatActivity implements
 			} else { b = new Bundle(); }
 	 }
 
-	 @Override
+	@Override
+	public boolean onSupportNavigateUp() {
+		onBackPressed();
+		return true;
+	}
+
+	@Override
 	 public boolean onKeyDown(int keyCode, KeyEvent event) {
 			return barcodeScannerView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
 	 }

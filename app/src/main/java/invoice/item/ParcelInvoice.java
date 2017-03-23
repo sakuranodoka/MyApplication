@@ -21,16 +21,18 @@ public class ParcelInvoice implements Serializable {
 	 public String longitude;
 	 public String userID;
 	 public String bitmap;
+	 public String userFullName;
+	 public String username;
 
 	 public ParcelInvoice() {}
 
-	 public ParcelInvoice(ArrayList<ItemInvoicePreview> listInvoice, String latitude, String longitude, String userID, String bitmap) {
-			this.listInvoice = listInvoice;
-			this.latitude = latitude;
-			this.longitude = longitude;
-			this.userID = userID;
-			this.bitmap = bitmap;
-	 }
+//	 public ParcelInvoice(ArrayList<ItemInvoicePreview> listInvoice, String latitude, String longitude, String userID, String bitmap) {
+//			this.listInvoice = listInvoice;
+//			this.latitude = latitude;
+//			this.longitude = longitude;
+//			this.userID = userID;
+//			this.bitmap = bitmap;
+//	 }
 
 	 public ArrayList<ItemInvoicePreview> getListInvoice() {
 			return listInvoice;
@@ -70,5 +72,31 @@ public class ParcelInvoice implements Serializable {
 
 	 public void setBitmap(String bitmap) {
 			this.bitmap = bitmap;
+	 }
+
+	 public String getUserFullName() {
+			return userFullName;
+	 }
+
+	 public void setUserFullName(String userFullName) {
+			this.userFullName = userFullName;
+	 }
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void clearData() {
+			listInvoice.clear();
+			latitude = "0.00";
+			longitude = "0.00";
+			userID = "-";
+			bitmap = "";
+			userFullName = "";
+			this.username = "";
 	 }
 }

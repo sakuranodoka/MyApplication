@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   xmlns:android="http://schemas.android.com/apk/res/android">
+
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/text_toolbar_header"
+       android:text="Hello World"
+       android:textSize="@dimen/font_app_name"
+       android:textColor="@color/angel_white"
+       android:background="@android:color/transparent"
+       android:gravity="start|center_vertical"
+       android:layout_marginTop="@dimen/round_padding"
+       android:layout_marginBottom="@dimen/round_padding"/>
+
+   <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/layout_forward"
+      android:visibility="gone">
+
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_toStartOf="@+id/btn_forward"
+          android:text="(ข้าม)"
+          android:textSize="@dimen/font_app_name"
+          android:textColor="@color/little_light_gray"
+          android:background="@android:color/transparent"
+          android:gravity="end|center_vertical"
+          android:layout_marginTop="@dimen/round_padding"
+          android:layout_marginBottom="@dimen/round_padding"
+          android:layout_marginEnd="@dimen/double_round"/>
+
+      <Button
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_marginEnd="@dimen/round_padding"
+          android:layout_centerInParent="true"
+          android:layout_alignParentEnd="true"
+          android:id="@+id/btn_forward"
+          android:background="@drawable/ic_arrow_forward_36_white_fixed"
+          style="@style/Widget.AppCompat.Button.Borderless"/>
+   </RelativeLayout>
+</RelativeLayout>

@@ -58,7 +58,6 @@ public class UserAdapter extends RecyclerView.Adapter {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_menu, parent, false);
             return new ViewHolderMenu(view);
         }
-
         return null;
     }
 
@@ -107,20 +106,14 @@ public class UserAdapter extends RecyclerView.Adapter {
                     @Override
                     public void onClick(View v) {
                         switch(itemMenu.getMenuMethod()) {
-                            case MenuMethod.T_PHOTO :
+                            case MenuMethod.T_PHOTO:
                                 interfaceCamera.onCapture();
                                 break;
                             case MenuMethod.T_BARCODE:
+                                interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
+                                break;
+                            case MenuMethod.T_SHOW_INVOICE:
 
-                                // test flow
-                                //Intent t = new Intent(viewHolderMenu.itemView.getContext(), CanvasActivity.class);
-                                //viewHolderMenu.itemView.getContext().startActivity(t);
-
-                                // normal flow
-                                // Reset ค่า End of scanning เพื่อที่จะให้ Scan ได้อีกครั้ง
-                                //if( b!= null )
-                                    //b.remove(interfaceCamera.E_O_S);
-                                interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT, R.layout.view_barcode);
                                 break;
                         }
                     }

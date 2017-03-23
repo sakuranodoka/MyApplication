@@ -27,11 +27,9 @@ import user.InterfaceCamera;
 
 public class ViewAuthenDialogFragment extends DialogFragment {
 
-    private InterfaceCamera interfaceCamera;
     private Bundle b;
 
-    public ViewAuthenDialogFragment(InterfaceCamera interfaceCamera, Bundle b) {
-			 this.interfaceCamera = interfaceCamera;
+    public ViewAuthenDialogFragment(Bundle b) {
 			 this.b = b;
     }
 
@@ -69,7 +67,7 @@ public class ViewAuthenDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 				 setRetainInstance(true);
 
-				 View v = inflater.inflate(R.layout.dialog_invoice, container, false);
+				 View v = inflater.inflate(R.layout.dialog_authen, container, false);
 
 				 ImageButton backPressedState = (ImageButton) v.findViewById(R.id.backPressedState);
 			 	 backPressedState.setOnClickListener(new View.OnClickListener() {
@@ -78,47 +76,12 @@ public class ViewAuthenDialogFragment extends DialogFragment {
 							 getDialog().dismiss();
 						}
 				 });
-
-				 Button btnMoreScan = (Button) v.findViewById(R.id.btn_more_scan);
-				 if(btnMoreScan != null) {
-						btnMoreScan.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									 getDialog().dismiss();
-									 interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT, R.layout.view_barcode);
-								}
-						});
-				 }
-
-				 Button btnMoreInfo = (Button) v.findViewById(R.id.btn_more_info);
-				 btnMoreInfo.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							 Intent t = new Intent(getActivity(), InvoiceInfoActivity.class);
-							 Bundle _b_ = b;
-							 t.putExtras(_b_);
-							 getActivity().startActivityForResult(t, 1929);
-						}
-				 });
-
-				 Button btnNext = (Button) v.findViewById(R.id.btn_next);
-				 btnNext.setOnClickListener(new View.OnClickListener() {
-				 @Override
-				 public void onClick(View v) {
-						getDialog().dismiss();
-						Intent t = new Intent(getActivity(), CanvasActivity.class);
-						getActivity().startActivityForResult(t, IntentKeycode.RESULT_CANVAS);
-				 }
-				 });
-
 				 return v;
     }
 
     @Override
     public void onDestroyView() {
         Dialog dialog = getDialog();
-        // thank stack
-        // handles https://code.google.com/p/android/issues/detail?id=17423
         if (dialog != null && getRetainInstance()) {
             dialog.setDismissMessage(null);
         }

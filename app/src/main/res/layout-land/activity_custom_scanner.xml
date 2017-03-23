@@ -1,61 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<!--<RelativeLayout-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:background="@color/stone_gray">-->
+<!--<Button-->
+<!--android:layout_width="36dp"-->
+<!--android:layout_height="36dp"-->
+<!--android:layout_margin="@dimen/round_padding"-->
+<!--android:id="@+id/backPressedState"-->
+<!--android:background="@drawable/ic_arrow_back_36_white_fixed"/>-->
+
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_centerHorizontal="true"-->
+<!--android:layout_centerInParent="true"-->
+<!--android:text="สแกนใบสั่งสินค้า"-->
+<!--android:textSize="@dimen/font_text_view"-->
+<!--android:textColor="@color/angel_white"-->
+<!--android:id="@+id/textScannerPreview"/>-->
+
+<!--<RelativeLayout-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content">-->
+
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_toStartOf="@+id/nextPressedState"-->
+<!--android:layout_centerVertical="true"-->
+<!--android:text="(ข้าม)"-->
+<!--android:textColor="@color/angel_white"-->
+<!--android:textSize="@dimen/font_text_view"/>-->
+
+<!--<Button-->
+<!--android:layout_width="36dp"-->
+<!--android:layout_height="36dp"-->
+<!--android:layout_margin="@dimen/round_padding"-->
+<!--android:layout_alignParentEnd="true"-->
+<!--android:id="@+id/nextPressedState"-->
+<!--android:background="@drawable/ic_arrow_forward_36_white_fixed"/>-->
+<!--</RelativeLayout>-->
+
+<!--</RelativeLayout>-->
+
+<com.journeyapps.barcodescanner.DecoratedBarcodeView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:background="@color/stone_gray">
-      <Button
-          android:layout_width="36dp"
-          android:layout_height="36dp"
-          android:layout_margin="@dimen/round_padding"
-          android:id="@+id/backPressedState"
-          android:background="@drawable/ic_arrow_back_36_white_fixed"/>
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerHorizontal="true"
-          android:layout_centerInParent="true"
-          android:text="สแกนใบสั่งสินค้า"
-          android:textSize="@dimen/font_text_view"
-          android:textColor="@color/angel_white"
-          android:id="@+id/textScannerPreview"/>
-
-      <RelativeLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:id="@+id/view_zxing_next_state">
-
-         <TextView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_toStartOf="@+id/nextPressedState"
-             android:layout_centerVertical="true"
-             android:text="(ข้าม)"
-             android:textColor="@color/angel_white"
-             android:textSize="@dimen/font_text_view"/>
-
-         <Button
-             android:layout_width="36dp"
-             android:layout_height="36dp"
-             android:layout_margin="@dimen/round_padding"
-             android:layout_alignParentEnd="true"
-             android:id="@+id/nextPressedState"
-             android:background="@drawable/ic_arrow_forward_36_white_fixed"/>
-      </RelativeLayout>
-
-   </RelativeLayout>
-
-   <com.journeyapps.barcodescanner.DecoratedBarcodeView
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:id="@+id/zxing_barcode_scanner"
-       app:zxing_preview_scaling_strategy="centerCrop"
-       app:zxing_use_texture_view="false"/>
-</LinearLayout>
+    android:layout_height="match_parent"
+    android:id="@+id/zxing_barcode_scanner"
+    app:zxing_preview_scaling_strategy="centerCrop"
+    app:zxing_use_texture_view="false"/>

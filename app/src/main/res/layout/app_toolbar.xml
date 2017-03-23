@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+   xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:app="http://schemas.android.com/apk/res-auto"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent">
+
+   <android.support.design.widget.CoordinatorLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+      <android.support.design.widget.AppBarLayout
+         android:layout_width="match_parent"
+         android:layout_height="?attr/actionBarSize"
+         android:background="@android:color/transparent">
+
+         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="enterAlwaysCollapsed">
+
+            <android.support.v7.widget.Toolbar
+               android:id="@+id/app_toolbar"
+               android:layout_width="match_parent"
+               android:layout_height="?attr/actionBarSize"
+               android:background="?attr/colorPrimary"
+               android:elevation="4dp"
+               android:theme="@style/CustomToolBarTheme"
+               app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+               <FrameLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:id="@+id/layout_toolbar"
+                   android:background="@android:color/transparent"></FrameLayout>
+            </android.support.v7.widget.Toolbar>
+         </android.support.design.widget.CollapsingToolbarLayout>
+      </android.support.design.widget.AppBarLayout>
+
+      <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          app:layout_behavior="@string/appbar_scrolling_view_behavior"
+          android:id="@+id/layout_content"></FrameLayout>
+   </android.support.design.widget.CoordinatorLayout>
+</merge>

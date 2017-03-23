@@ -1,5 +1,7 @@
 package AppBar;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,7 +22,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.administrator.myapplication.MainActivity;
 import com.example.administrator.myapplication.R;
+
+import authen.InterfaceAuthen;
 
 /**
  * Created by Administrator on 12/1/2560.
@@ -38,6 +43,8 @@ public class ApplicationBar implements NavigationView.OnNavigationItemSelectedLi
     private int type;
 
     private FABController _FAB_instance;
+
+	 	private int gravityCompat = 0;
 
     public ApplicationBar(AppCompatActivity activity, int type) {
         this.activity = activity;
@@ -90,6 +97,10 @@ public class ApplicationBar implements NavigationView.OnNavigationItemSelectedLi
             });
         }
     }
+
+	  public void setGravityCompat(int gravityCompat) {
+			 this.gravityCompat = gravityCompat;
+		}
 
     @NonNull
     @Nullable
@@ -158,8 +169,29 @@ public class ApplicationBar implements NavigationView.OnNavigationItemSelectedLi
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
         DrawerLayout drawer = (DrawerLayout) activity.findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.END);
+			 	if( gravityCompat != 0 ) {
+					 	switch(gravityCompat) {
+							 case GravityCompat.START:
+									drawer.closeDrawer(GravityCompat.START);
+									break;
+							 case GravityCompat.END:
+									drawer.closeDrawer(GravityCompat.END);
+									break;
+						}
+				} else {
+					 	drawer.closeDrawer(GravityCompat.END);
+				}
+
+			 	int id = item.getItemId();
+			 	switch(id) {
+					 case R.id.nav_logout :
+							if( activity instanceof authen.InterfaceAuthen.innerApp ) {
+								 ((InterfaceAuthen.innerApp) activity).onLogout();
+							}
+							break;
+				}
         return true;
     }
 }

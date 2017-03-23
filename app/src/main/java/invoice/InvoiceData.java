@@ -12,6 +12,7 @@ public class InvoiceData {
 	 public static final String INVOICE_DATE = "INVOICE_DATE";
 	 public static final String USER_ID = "USER_ID";
 	 public static final String ENCODED_IMAGE_PATH = "ENCODED_IMAGE_PATH";
+	 public static final String USER_FULLNAME = "USER_FULLNAME";
 	 public static final String LATITUDE = "LATITUDE";
 	 public static final String LONGITUDE = "LONGITUDE";
 

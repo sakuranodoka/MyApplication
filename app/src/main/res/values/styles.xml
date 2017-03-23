@@ -1,19 +1,43 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/supreme_blue</item>
-        <item name="colorPrimaryDark">@color/supreme_blue</item>
-        <item name="colorAccent">@color/lemon_wingless</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="ApplicationTheme" parent="Theme.AppCompat.Light.NoActionBar">
+      <item name="colorPrimary">@color/supreme_blue</item>
+      <item name="colorPrimaryDark">@color/supreme_blue</item>
+      <item name="colorAccent">@color/lemon_wingless</item>
     </style>
 
-    <style name="AppTheme.NoActionBar"/>
+   <!-- สีไอคอนโฮมสีขาว-->
+   <style name="CustomToolBarTheme" parent="ApplicationTheme">
+      <item name="spinBars">true</item>
+      <item name="color">@android:color/white</item>
+      <item name="android:textColorSecondary">@android:color/white</item>
+   </style>
 
-   <style name="MyEditTextTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorControlNormal">@color/angel_white</item>
-    </style>
+   <!--<style name="Base.Widget.AppCompat.ActionButton" parent="ApplicationTheme">-->
+      <!--<item name="android:minWidth">24dp</item>-->
+      <!--<item name="android:minHeight">24dp</item>-->
+   <!--</style>-->
+
+ <!-- Base application theme. -->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/supreme_blue</item>-->
+        <!--<item name="colorPrimaryDark">@color/supreme_blue</item>-->
+        <!--<item name="colorAccent">@color/lemon_wingless</item>-->
+        <!--&lt;!&ndash;<item name="windowActionBar">false</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="windowNoTitle">true</item>&ndash;&gt;-->
+    <!--</style>-->
+
+   <!--<style name="AppTheme.NoActionBar">-->
+      <!--<item name="windowActionBar">false</item>-->
+      <!--<item name="windowNoTitle">true</item>-->
+   <!--</style>-->
+
+    <!--<style name="AppTheme.NoActionBar"/>-->
+
+   <!--<style name="Theme.FixedSize" parent="@android:style/Theme.Holo.Light.DarkActionBar">-->
+      <!--<item name="actionBarSize">48dip</item>-->
+      <!--<item name="android:actionBarSize">48dip</item>-->
+   <!--</style>-->
 
 </resources>

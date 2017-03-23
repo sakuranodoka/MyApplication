@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<autocomplete.InstantAutocomplete
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/input_shop_searching"
+    android:paddingLeft="25dp"
+    android:paddingRight="10dp"
+    android:drawablePadding="@dimen/round_padding"
+    android:layout_marginTop="@dimen/round_padding"
+    android:layout_marginBottom="@dimen/round_padding"
+    android:layout_marginEnd="@dimen/round_padding"
+    android:gravity="center|center"
+    android:layout_gravity="center_vertical"
+    android:dropDownVerticalOffset="0dp"
+    android:dropDownWidth="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:nextFocusUp="@+id/search_box"
+    android:nextFocusLeft="@+id/search_box"
+    android:inputType="textAutoComplete|textAutoCorrect"
+    android:popupBackground="@color/angel_white"
+    android:textColor="@color/little_light_gray"
+    android:background="@color/dark_blue"
+    android:hint="ค้นหาร้านค้า"
+    android:drawableRight="@drawable/ic_search_black_24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</autocomplete.InstantAutocomplete>

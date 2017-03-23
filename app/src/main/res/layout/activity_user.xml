@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/little_light_gray"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
+    android:background="@color/shadow_gray"
+    android:paddingStart="@dimen/round_padding"
+    android:paddingEnd="@dimen/round_padding"
     tools:context="com.example.administrator.myapplication.UserActivity">
 
     <android.support.v7.widget.RecyclerView

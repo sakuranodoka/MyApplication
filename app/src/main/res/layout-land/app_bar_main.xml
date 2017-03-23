@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <android.support.design.widget.AppBarLayout
+       android:id="@+id/app_bar_layout"
+       android:layout_width="match_parent"
+       android:layout_height="?attr/actionBarSize"
+
+       android:orientation="vertical"
+
+       android:background="@android:color/transparent">
+
+      <android.support.design.widget.CollapsingToolbarLayout
+          android:id="@+id/collapsing_toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+
+          app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:layout_collapseMode="pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:layout_marginLeft="-9dp"
+
+
+
+                android:layout_gravity="center_vertical"
+
+                android:background="@color/supreme_blue"
+
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+               <LinearLayout
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+
+                   android:layout_marginEnd="@dimen/round_padding"
+
+                   android:orientation="vertical"
+
+                   android:gravity="center_vertical"
+
+                   android:visibility="visible"
+
+                   android:id="@+id/frontOptionLayout">
+
+                  <Button
+                      android:layout_width="32dp"
+                      android:layout_height="32dp"
+
+                      android:id="@+id/backPressedState"
+
+                      style="@style/Base.Widget.AppCompat.Button.Borderless"
+
+                      android:background="@drawable/ic_arrow_back_white_24dp" />
+               </LinearLayout>
+
+               <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:gravity="center_vertical"
+                   android:paddingRight="@dimen/round_padding"
+
+                   android:visibility="gone"
+
+                   android:id="@+id/shopSearchBar">
+
+                  <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+                  <LinearLayout
+                      android:focusable="true"
+                      android:focusableInTouchMode="true"
+                      android:layout_width="0px"
+                      android:layout_height="0px"
+                      android:id="@+id/llNrs"
+                      android:orientation="horizontal" />
+
+                  <autocomplete.InstantAutocomplete
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+
+                      android:id="@+id/search_box"
+
+                      android:paddingLeft="25dp"
+                      android:paddingRight="10dp"
+                      android:drawablePadding="@dimen/round_padding"
+
+                      android:layout_marginTop="@dimen/round_padding"
+                      android:layout_marginBottom="@dimen/round_padding"
+                      android:layout_marginStart="@dimen/double_round"
+
+                      android:gravity="center|center"
+                      android:layout_gravity="center_vertical"
+
+                      android:dropDownVerticalOffset="0dp"
+                      android:dropDownWidth="match_parent"
+
+                      android:focusable="true"
+                      android:focusableInTouchMode="true"
+                      android:nextFocusUp="@+id/search_box"
+                      android:nextFocusLeft="@+id/search_box"
+
+                      android:inputType="textAutoComplete|textAutoCorrect"
+
+                      android:popupBackground="@color/angel_white"
+                      android:textColor="@color/little_light_gray"
+
+                      android:background="@color/dark_blue"
+                      android:hint="ค้นหาร้านค้า"
+
+                      android:drawableRight="@drawable/ic_search_black_24dp">
+                  </autocomplete.InstantAutocomplete>
+
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+
+                      android:id="@+id/option_bar">
+
+                  </RelativeLayout>
+
+               </RelativeLayout>
+
+               <RelativeLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:gravity="left|center_vertical"
+
+                   android:visibility="visible"
+
+                   android:paddingRight="@dimen/round_padding"
+                   android:id="@+id/appNameBar">
+
+                  <TextView
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+
+                      android:layout_marginStart="@dimen/double_round"
+
+                      android:text="Activity"
+                      android:textSize="@dimen/font_app_name"
+                      android:textColor="@color/angel_white"
+                      android:id="@+id/textAppName"/>
+
+               </RelativeLayout>
+
+            </android.support.v7.widget.Toolbar>
+
+         </LinearLayout>
+
+      </android.support.design.widget.CollapsingToolbarLayout>
+
+      <View android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/shape_elevation"/>
+
+   </android.support.design.widget.AppBarLayout>
+
+   <FrameLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+
+       app:layout_anchor="@+id/app_bar_layout"
+
+       android:id="@+id/content">
+   </FrameLayout>
+
+   <android.support.design.widget.FloatingActionButton
+       android:src="@drawable/ic_search"
+
+       android:id="@+id/floatingActionButton"
+
+       app:fabSize="normal"
+
+       android:tint="@color/angel_white"
+
+       android:layout_margin="@dimen/double_round"
+
+       android:layout_gravity="right|bottom"
+
+       android:clickable="true"
+
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+
+</android.support.design.widget.CoordinatorLayout>
+
+

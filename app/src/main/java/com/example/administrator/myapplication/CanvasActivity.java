@@ -9,14 +9,23 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.support.annotation.LayoutRes;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,13 +33,16 @@ import android.widget.RelativeLayout;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 
+import AppBar.ApplicationBar;
+import fragment.FragmentToolbar;
 import invoice.InvoiceData;
 
 public class CanvasActivity extends AppCompatActivity {
 
     LinearLayout mContent;
     signature mSignature;
-    Button btnSignatureSubmit, btnSignatureClear;
+    Button btnSignatureClear;
+	 private Button btnSignatureSubmit;
     public static String tempDir;
     public int count = 1;
     public String current = null;
@@ -38,14 +50,45 @@ public class CanvasActivity extends AppCompatActivity {
     View mView;
     File mypath;
 
+    EditText inputUserFullname;
+
     String encodeResult = "";
+
+	@Override
+	public void setContentView(@LayoutRes int layoutResID) {
+		DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.layout_main, null);
+		FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.layout_content);
+		getLayoutInflater().inflate(layoutResID, frameLayout, true);
+		super.setContentView(fullLayout);
+	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_canvas);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+	    Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
+	    setSupportActionBar(myToolbar);
+
+	    // Get a support ActionBar corresponding to this toolbar
+	    ActionBar ab = getSupportActionBar();
+
+	    // Enable the Up button
+	    ab.setDisplayHomeAsUpEnabled(true);
+
+	    // Remove title name
+	    ab.setDisplayShowTitleEnabled(false);
+
+	    FragmentToolbar fToolbarScanner = new FragmentToolbar("กรุณาเซ็นต์ชื่อผู้รับ ในพื้นว่างด้านล่าง");
+	    FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
+	    fm.replace(R.id.layout_toolbar, fToolbarScanner);
+	    fm.commit();
+
+	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+		 LinearLayout layoutCanvasReset = (LinearLayout) findViewById(R.id.layout_canvas_reset);
+		 layoutCanvasReset.bringToFront();
+		 layoutCanvasReset.invalidate();
 
 //        tempDir = Environment.getExternalStorageDirectory() + "/" + getResources().getString(R.string.external_dir) + "/";
 //        ContextWrapper cw = new ContextWrapper(getApplicationContext());
@@ -61,7 +104,9 @@ public class CanvasActivity extends AppCompatActivity {
         mSignature.setBackgroundColor(Color.WHITE);
         mContent.addView(mSignature, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
-        btnSignatureSubmit = (Button)findViewById(R.id.btn_signature_submit);
+        inputUserFullname = (EditText) findViewById(R.id.input_user_fullname);
+
+        btnSignatureSubmit = (Button) findViewById(R.id.btn_signature_submit);
         btnSignatureSubmit.setEnabled(false);
         btnSignatureSubmit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -70,10 +115,16 @@ public class CanvasActivity extends AppCompatActivity {
                 //if(!error){
             mView.setDrawingCacheEnabled(true);
             mSignature.save(mView);
+
+            if (!validate()) {
+                return;
+            }
+
             Bundle b = new Bundle();
 
             b.putString("status", "done");
             b.putString(InvoiceData.ENCODED_IMAGE_PATH, encodeResult);
+						b.putString(InvoiceData.USER_FULLNAME, inputUserFullname.getText().toString());
 
             Intent intent = new Intent();
             intent.putExtras(b);
@@ -97,14 +148,26 @@ public class CanvasActivity extends AppCompatActivity {
         mView = mContent;
 
         mView.setDrawingCacheEnabled(true);
+    }
 
-        ImageButton backPressedState = (ImageButton) findViewById(R.id.backPressedState);
-        backPressedState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+	@Override
+	public boolean onSupportNavigateUp() {
+		onBackPressed();
+		return true;
+	}
+
+	public boolean validate() {
+        boolean valid = true;
+
+        String userFullName = inputUserFullname.getText().toString();
+
+        if (userFullName.isEmpty()) {
+            inputUserFullname.setError("กรุณาพิมพ์ชื่อของท่าน");
+            valid = false;
+        } else {
+            inputUserFullname.setError(null);
+        }
+        return valid;
     }
 
     public class signature extends View {

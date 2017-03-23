@@ -85,7 +85,7 @@ public class ViewInvoiceSwitchDialogFragment extends DialogFragment {
 								@Override
 								public void onClick(View v) {
 									 getDialog().dismiss();
-									 interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT, R.layout.view_barcode);
+									 interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
 								}
 						});
 				 }

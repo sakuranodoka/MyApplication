@@ -11,6 +11,7 @@ import java.util.List;
 import invoice.item.ItemInvoicePreview;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit.DataWrapper;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -28,11 +29,13 @@ import rx.Observable;
 public interface InterfaceInvoice {
 	 @Multipart
 	 @POST("/Application/uploadSignature.php")
-	 Observable<Object> sendBmPx1Server (
+	 Observable<List<DataWrapper>> sendBmPx1Server (
 			@Part("jsonItmInC4") RequestBody jsonItmInC4,
 			@Part("latitude") RequestBody latitude,
 			@Part("longitude") RequestBody longitude,
 			@Part("userID") RequestBody userID,
-			@Part("base64bMPx1") RequestBody base64bMPx1
+			@Part("base64bMPx1") RequestBody base64bMPx1,
+			@Part("userFullName") RequestBody userFullName,
+			@Part("username") RequestBody username
 	 );
 }

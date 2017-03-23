@@ -1,147 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-   android:layout_width="match_parent"
-   android:layout_height="match_parent"
-   android:background="@color/stone_gray"
-   xmlns:card_view="http://schemas.android.com/apk/res-auto"
-   xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/like_a_blck"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <RelativeLayout
-      android:layout_width="match_parent"
+   <!--<RelativeLayout-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="wrap_content"-->
+      <!--android:padding="@dimen/schema_padding"-->
+      <!--android:layout_marginBottom="@dimen/round_padding"-->
+      <!--android:background="@color/supreme_blue"-->
+      <!--android:id="@+id/layout_canvas_header">-->
+
+      <!--<ImageButton-->
+         <!--android:layout_width="24dp"-->
+         <!--android:layout_height="24dp"-->
+         <!--android:layout_centerVertical="true"-->
+         <!--android:layout_marginEnd="@dimen/slice_align"-->
+         <!--android:background="@android:color/transparent"-->
+         <!--android:src="@drawable/ic_arrow_back_36"-->
+         <!--android:tint="@color/angel_white"-->
+         <!--android:id="@+id/backPressedState"-->
+         <!--style="@style/Base.Widget.AppCompat.Button.Borderless"/>-->
+
+      <!--<TextView-->
+         <!--android:layout_width="match_parent"-->
+         <!--android:layout_height="wrap_content"-->
+         <!--android:layout_toEndOf="@+id/backPressedState"-->
+         <!--android:layout_centerVertical="true"-->
+         <!--android:layout_marginStart="@dimen/double_round"-->
+         <!--android:gravity="left|center"-->
+         <!--android:text="กรุณาเซ็นต์ชื่อผู้รับ ในพื้นว่างด้านล่าง"-->
+         <!--android:textColor="@color/angel_white"-->
+         <!--android:textSize="@dimen/font_app_name"/>-->
+
+      <!--<LinearLayout-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:orientation="horizontal"-->
+          <!--android:gravity="center"-->
+          <!--android:layout_alignParentRight="true"-->
+          <!--android:layout_centerInParent="true">-->
+
+         <!--<TextView-->
+             <!--android:layout_width="wrap_content"-->
+             <!--android:layout_height="match_parent"-->
+             <!--android:layout_gravity="center_horizontal"-->
+             <!--android:gravity="center"-->
+             <!--android:layout_marginEnd="@dimen/round_padding"-->
+             <!--android:text="(วาดใหม่)"-->
+             <!--android:textColor="@color/angel_white"-->
+             <!--android:textSize="@dimen/font_text_view"/>-->
+         <!--<Button-->
+             <!--android:layout_width="24dp"-->
+             <!--android:layout_height="24dp"-->
+             <!--android:gravity="center"-->
+             <!--android:background="@drawable/ic_clear_24"-->
+             <!--android:id="@+id/btn_signature_clear"/>-->
+      <!--</LinearLayout>-->
+   <!--</RelativeLayout>-->
+
+   <LinearLayout
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/double_round"
-      android:layout_marginEnd="@dimen/slice_align"
-      android:layout_marginBottom="@dimen/slice_align"
-      android:layout_marginTop="@dimen/double_round"
-      android:id="@+id/layout_canvas_header">
-
-      <ImageButton
-         android:layout_width="24dp"
-         android:layout_height="24dp"
-         android:layout_centerVertical="true"
-         android:background="@android:color/transparent"
-         android:src="@drawable/ic_arrow_back_36"
-         android:tint="@color/angel_white"
-         android:id="@+id/backPressedState"
-         style="@style/Base.Widget.AppCompat.Button.Borderless"/>
-
+      android:orientation="horizontal"
+      android:gravity="center"
+      android:layout_margin="@dimen/double_round"
+      android:id="@+id/layout_canvas_reset"
+      android:layout_alignParentRight="true">
       <TextView
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_toEndOf="@+id/backPressedState"
-         android:layout_centerVertical="true"
-         android:layout_marginStart="@dimen/double_round"
-         android:gravity="left|center_vertical"
-         android:text="กรุณาเซ็นต์ชื่อผู้รับ ในพื้นว่างด้านล่าง"
-         android:textColor="@color/angel_white"
-         android:textSize="@dimen/font_app_name"/>
-
-      <LinearLayout
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_alignParentRight="true">
-
-         <TextView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center_horizontal"
-             android:gravity="center_vertical"
-             android:layout_marginEnd="@dimen/round_padding"
-             android:text="(วาดใหม่)"
-             android:textColor="@color/angel_white"
-             android:textSize="20sp"/>
+         android:layout_width="wrap_content"
+         android:layout_height="match_parent"
+         android:layout_gravity="center_horizontal"
+         android:gravity="center"
+         android:layout_marginEnd="@dimen/round_padding"
+         android:text="(วาดใหม่)"
+         android:textColor="@color/solid_gray"
+         android:textSize="@dimen/font_text_view"/>
          <Button
-             android:layout_width="24dp"
-             android:layout_height="24dp"
-             android:gravity="center_horizontal"
-             android:background="@drawable/ic_clear_black_24dp"
-             android:id="@+id/btn_signature_clear"/>
-      </LinearLayout>
-
-   </RelativeLayout>
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:gravity="center"
+            android:background="@drawable/ic_clear_24"
+            android:id="@+id/btn_signature_clear"/>
+   </LinearLayout>
 
    <LinearLayout
       android:layout_height="match_parent"
       android:layout_width="match_parent"
-      android:layout_margin="@dimen/round_padding"
-      android:layout_below="@+id/layout_canvas_header"
+      android:clipChildren="false"
+      android:layout_marginTop="@dimen/round_padding"
+      android:layout_marginStart="@dimen/round_padding"
+      android:layout_marginEnd="@dimen/round_padding"
       android:layout_above="@+id/layout_canvas_footer"
       android:background="@color/angel_white"
       android:id="@+id/linearLayout"
       android:orientation="horizontal">
    </LinearLayout>
 
-   <LinearLayout
+   <RelativeLayout
       android:layout_height="wrap_content"
       android:layout_width="match_parent"
       android:layout_alignParentBottom="true"
+      android:layout_marginTop="@dimen/round_padding"
       android:layout_marginStart="@dimen/round_padding"
-      android:layout_marginEnd="@dimen/round_padding"
       android:layout_marginBottom="@dimen/round_padding"
+      android:layout_marginEnd="@dimen/round_padding"
+      android:background="@color/angel_white"
       android:id="@+id/layout_canvas_footer">
 
-      <EditText
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight=".7"
-         android:layout_marginEnd="@dimen/round_padding"
-         android:background="#425165"
-         android:gravity="left|center_vertical"
-         android:padding="@dimen/round_padding"
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/slice_align">
+         <EditText
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_marginEnd="125dp"
+             android:id="@+id/input_user_fullname"
+             android:inputType="text"
+             android:hint="พิมพ์ชื่อของท่าน (ผู้รับ)"
+             android:textColor="@color/lemon_resonance_structure"
+             android:textSize="@dimen/font_app_name"
+             android:textColorHint="@color/space_gray"/>
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.v7.widget.CardView
+         xmlns:card_view="http://schemas.android.com/apk/res-auto"
+         android:layout_height="wrap_content"
+         android:layout_width="wrap_content"
+         android:layout_alignParentEnd="true"
+         android:layout_centerInParent="true"
+         android:layout_marginEnd="@dimen/slice_align"
+         card_view:cardCornerRadius="0dp"
+         card_view:cardElevation="@dimen/slice_align"
+         card_view:cardPreventCornerOverlap="false"
+         card_view:cardBackgroundColor="@android:color/transparent">
+
+         <!--<Button-->
+          <!--android:layout_height="55dp"-->
+          <!--android:layout_width="48dp"-->
+
+          <!--android:layout_alignParentEnd="true"-->
+          <!--android:layout_centerInParent="true"-->
+          <!--android:layout_marginEnd="@dimen/round_padding"-->
+          <!--android:background="@drawable/btn_shadow"/>-->
+
+         <!--<Button-->
+            <!--android:layout_height="48dp"-->
+            <!--android:layout_width="48dp"-->
+
+            <!--android:elevation="7dp"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_marginEnd="@dimen/round_padding"-->
+            <!--android:background="@drawable/icon_done_green_48"-->
+            <!--android:id="@+id/btn_signature_submit"/>-->
+
+      <Button
+         android:layout_height="wrap_content"
+         android:layout_width="105dp"
+         android:text="บันทึก"
+         android:textSize="@dimen/font_text_view"
          android:textColor="@color/angel_white"
-         android:textSize="@dimen/font_app_name"
-         android:hint="พิมพ์ชื่อของท่าน (ผู้รับ)"
-         android:textColorHint="@color/little_light_gray"
-         android:drawableStart="@drawable/ic_keyboard_24_white_fixed"
-         android:drawablePadding="@dimen/double_round"/>
 
-      <!--<android.support.v7.widget.CardView-->
-         <!--android:layout_height="50dp"-->
-         <!--android:layout_width="0dp"-->
-         <!--android:layout_weight=".4"-->
-         <!--android:paddingStart="2dp"-->
-         <!--android:paddingEnd="2dp"-->
-         <!--android:layout_margin="@dimen/slice_align"-->
-         <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-         <!--card_view:cardCornerRadius="0dp"-->
-         <!--card_view:cardPreventCornerOverlap="false"-->
-         <!--card_view:cardBackgroundColor="@android:color/transparent">-->
+         android:background="@color/lemon_wingless"
+         android:id="@+id/btn_signature_submit"/>
 
-            <!--<Button-->
-               <!--android:layout_height="wrap_content"-->
-               <!--android:layout_width="0dp"-->
-               <!--android:layout_weight=".3"-->
-               <!--android:layout_marginEnd="@dimen/round_padding"-->
-               <!--android:background="@color/angel_white"-->
-               <!--android:text="วาดใหม่"-->
-               <!--android:textSize="@dimen/font_app_name"-->
-               <!--android:textColor="@color/stone_gray"-->
-               <!--android:id="@+id/btn_signature_clear"/>-->
-      <!--</android.support.v7.widget.CardView>-->
 
-      <!--<android.support.v7.widget.CardView-->
-         <!--android:layout_height="50dp"-->
-         <!--android:layout_width="0dp"-->
-         <!--android:layout_weight=".4"-->
-         <!--android:paddingStart="2dp"-->
-         <!--android:paddingEnd="2dp"-->
-         <!--android:layout_margin="@dimen/slice_align"-->
-         <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-         <!--card_view:cardCornerRadius="0dp"-->
-         <!--card_view:cardPreventCornerOverlap="false"-->
-         <!--card_view:cardBackgroundColor="@android:color/transparent">-->
+      </android.support.v7.widget.CardView>
 
-         <Button
-             android:layout_height="wrap_content"
-             android:layout_width="0dp"
-             android:layout_weight=".3"
-            android:background="@color/rising_green"
-            android:text="บันทึก"
-            android:textSize="@dimen/font_app_name"
-            android:textColor="@color/angel_white"
-            android:id="@+id/btn_signature_submit"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"/>
-      <!--</android.support.v7.widget.CardView>-->
-   </LinearLayout>
+      <!--<android.support.design.widget.FloatingActionButton-->
+          <!--android:id="@+id/btn_signature_submit"-->
+          <!--android:layout_width="wrap_content"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:layout_alignParentEnd="true"-->
+          <!--android:src="@drawable/ic_done_24_white_fixed"-->
+          <!--android:layout_margin="@dimen/fab_margin"  />-->
+   </RelativeLayout>
+
+
+
 </RelativeLayout>

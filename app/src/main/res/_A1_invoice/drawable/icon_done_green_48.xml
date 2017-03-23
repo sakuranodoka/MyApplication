@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+   <item>
+      <shape
+          android:shape="oval">
+
+         <solid
+             android:color="@color/lemon_light_fortune"/>
+
+         <size
+             android:width="120dp"
+             android:height="120dp"/>
+      </shape>
+   </item>
+   <item
+
+       android:drawable="@drawable/ic_done_24_white_fixed"
+       android:bottom="@dimen/slice_align"
+       android:left="@dimen/slice_align"
+       android:right="@dimen/slice_align"
+       android:top="@dimen/slice_align"/>
+</layer-list>

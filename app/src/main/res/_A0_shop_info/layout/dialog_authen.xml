@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       android:background="@android:color/transparent"
+       android:layout_gravity="center_horizontal|center_vertical">
+
+      <include layout="@layout/dialog_fragment_header"/>
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical"
+          android:padding="@dimen/double_round"
+          android:background="@color/stone_gray">
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+
+               xmlns:card_view="http://schemas.android.com/apk/res-auto"
+               card_view:cardPreventCornerOverlap="false"
+               card_view:cardElevation="@dimen/slice_align"
+               card_view:cardBackgroundColor="@android:color/transparent">
+
+               <EditText
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+
+                  android:gravity="start|center_vertical"
+                  android:padding="11dp"
+
+                  android:textSize="@dimen/font_text_view"
+                  android:textColor="@color/angel_white"
+
+                  android:hint="ชื่อผุ้ใช้งาน"
+                  android:textColorHint="@color/little_light_gray"
+
+
+                  android:background="@color/stone_gray_alternative"
+
+                  android:paddingEnd="@dimen/round_padding"
+                  android:drawablePadding="@dimen/double_round"
+                  android:drawableStart="@drawable/ic_person_24"/>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/slice_align"
+
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardElevation="@dimen/slice_align"
+                card_view:cardBackgroundColor="@android:color/transparent">
+
+               <EditText
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+
+                   android:gravity="start|center_vertical"
+                   android:padding="11dp"
+
+                   android:textSize="@dimen/font_text_view"
+                   android:textColor="@color/angel_white"
+
+                   android:hint="รหัสผ่าน"
+                   android:textColorHint="@color/little_light_gray"
+
+                   android:background="@color/stone_gray_alternative"
+
+                   android:paddingEnd="@dimen/round_padding"
+                   android:drawablePadding="@dimen/double_round"
+                   android:drawableStart="@drawable/ic_lock_24"/>
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+
+               android:layout_marginTop="@dimen/round_padding"
+
+               android:gravity="end">
+
+               <android.support.v7.widget.CardView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+
+                  android:layout_marginStart="@dimen/round_padding"
+
+                  xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                  card_view:cardPreventCornerOverlap="false"
+                  card_view:cardCornerRadius="0dp"
+                  card_view:cardElevation="@dimen/slice_align"
+                  card_view:cardBackgroundColor="@android:color/transparent">
+
+                  <Button
+                      android:layout_width="match_parent"
+                      android:layout_height="40dp"
+                      android:gravity="center"
+                      android:paddingStart="@dimen/double_round"
+                      android:paddingEnd="@dimen/double_round"
+                      android:text="สมัครสมาชิก"
+                      android:textSize="@dimen/font_text_view"
+                      android:textColor="@color/stone_gray_alternative"
+                      android:textColorHint="@color/little_light_gray"
+                      android:background="@color/angel_white"/>
+               </android.support.v7.widget.CardView>
+
+               <android.support.v7.widget.CardView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+
+                   android:layout_marginStart="@dimen/round_padding"
+
+                   xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                   card_view:cardPreventCornerOverlap="false"
+                   card_view:cardCornerRadius="0dp"
+                   card_view:cardElevation="@dimen/slice_align"
+                   card_view:cardBackgroundColor="@android:color/transparent">
+
+                  <Button
+                      android:layout_width="match_parent"
+                      android:layout_height="40dp"
+                      android:gravity="center"
+                      android:paddingStart="@dimen/double_round"
+                      android:paddingEnd="@dimen/double_round"
+                      android:text="เข้าสู่ระบบ"
+                      android:textSize="@dimen/font_text_view"
+                      android:textColor="@color/angel_white"
+                      android:textColorHint="@color/little_light_gray"
+                      android:background="@color/lemon_wingless"/>
+               </android.support.v7.widget.CardView>
+            </LinearLayout>
+         </LinearLayout>
+      </RelativeLayout>
+   </LinearLayout>
+</RelativeLayout>

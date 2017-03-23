@@ -24,15 +24,18 @@
     <color name="dark_blue">#0b5b91</color>
 
     <color name="jet_black">#222222</color>
+    <color name="solid_gray">#6e6e6e</color>
     <color name="space_gray">#949494</color>
-    <color name="shadow_gray">#f3f3f3</color>
+    <color name="shadow_gray">#f7f7f7</color>
     <color name="little_light_gray">#f3f3f3</color>
+    <color name="like_a_blck">#eaeaea</color>
     <color name="angel_white">#ffffff</color>
 
 
     <color name="fortune_green">#a4bb95</color>
     <color name="rising_green">#249780</color>
     <color name="stone_gray">#2E3846</color>
+    <color name="stone_gray_alternative">#425165</color>
     <color name="shadow_white">#EFE6F1</color>
 
     <!-- Lemon destruction -->

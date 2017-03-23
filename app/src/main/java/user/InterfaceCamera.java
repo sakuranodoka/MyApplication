@@ -9,5 +9,5 @@ import android.view.View;
 public interface InterfaceCamera {
     public void onCapture();
 
-    public void onBarcodeScan(int mode, String preview, @LayoutRes int layoutID);
+    public void onBarcodeScan(int mode, String preview);
 }

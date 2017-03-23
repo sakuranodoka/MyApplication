@@ -50,6 +50,8 @@ public class FragmentInvoiceDetail extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
+
         View rootView = inflater.inflate(R.layout.layout_recycler_view, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViews);
 
@@ -63,18 +65,17 @@ public class FragmentInvoiceDetail extends Fragment {
         }
 
         List<InvoiceBaseItem> listItem = null;
-        if( b != null ) {
-					  listItem = new ArrayList<>();
-
-					  if( b.containsKey(InvoiceData.INVOICE_PARCEL) ) {
-                ParcelInvoice pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-                for( ItemInvoicePreview i : pi.getListInvoice()) {
-                   ItemInvoice item = new ItemInvoice(INVOICE_KEY_CODE);
-                   item.setInvoicePreview(i.getInvoicePreview());
-                   item.setInvoiceDate(i.getInvoiceDate());
-                   listItem.add(item);
-                }
-            }
+        if(b != null) {
+	        listItem = new ArrayList<>();
+			  if(b.containsKey(InvoiceData.INVOICE_PARCEL)) {
+	           ParcelInvoice pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+	           for( ItemInvoicePreview i : pi.getListInvoice()) {
+	              ItemInvoice item = new ItemInvoice(INVOICE_KEY_CODE);
+	              item.setInvoicePreview(i.getInvoicePreview());
+	              item.setInvoiceDate(i.getInvoiceDate());
+	              listItem.add(item);
+		        }
+			  }
         }
         adapter = new InvoiceDetailAdapter(listItem);
         recyclerView.setAdapter(adapter);

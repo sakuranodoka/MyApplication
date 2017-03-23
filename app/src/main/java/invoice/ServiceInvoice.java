@@ -28,6 +28,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okio.BufferedSink;
+import retrofit.DataWrapper;
 import retrofit.InterfaceListen;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -89,7 +90,7 @@ public class ServiceInvoice {
                 .writeTimeout(unitTiming, TimeUnit.SECONDS)
                 .build();
 
-        final Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ServiceURL.PROCUCT_BASE_URL)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -98,16 +99,12 @@ public class ServiceInvoice {
 
         InterfaceInvoice interfaceInvoice = retrofit.create( InterfaceInvoice.class );
 
-        Observable<Object> observable = null;
+        Observable<List<DataWrapper>> observable = null;
         if( data == null ) {
         } else {
-            if( data instanceof List) {
-                RequestBody base64bMPx1 = RequestBody.create(MediaType.parse("text/plain"), (String) ((List) data).get(0));
-                //observable = interfaceInvoice.sendBmPx1Server( base64bMPx1 );
-							  observable = null;
-            } else if( data instanceof Bundle) {
+            if( data instanceof Bundle) {
 							 	// Clone Bundle
-								Bundle b = (Bundle) data;
+	                     Bundle b = (Bundle) data;
 
 							  // Unwrap Parcelable to Object
 							  ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
@@ -125,15 +122,21 @@ public class ServiceInvoice {
 
 							 	RequestBody userID = RequestBody.create(MediaType.parse("text/plain"), p.getUserID());
 
+							 	RequestBody userFullName = RequestBody.create(MediaType.parse("text/plain"), p.getUserFullName());
+
+	                     RequestBody username = RequestBody.create(MediaType.parse("text/plain"), p.getUsername());
+
 							  // Put data to interface
 							 	observable = interfaceInvoice.sendBmPx1Server(jsonItmInC4,
 												latitude,
 												longitude,
 												userID,
-												base64bMPx1);
+												base64bMPx1,
+												userFullName,
+										      username);
             }
-        }
 
-        this.styzf(observable, listener, retrofit);
+					 	this.styzf(observable, listener, retrofit);
+        }
     }
 }

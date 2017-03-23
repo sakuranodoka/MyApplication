@@ -2,85 +2,59 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:weightSum="2"
-    android:orientation="vertical"
-    tools:context="com.example.administrator.myapplication.MainActivity">
-
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/seasonal_orange">
-
+        android:background="@color/angel_white">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:id="@+id/users">
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
+                android:gravity="end">
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="User"
-                    android:gravity="top|right"
-                    android:paddingTop="25dp"
-                    android:paddingRight="25dp"
-                    android:textSize="35sp"
-                    android:textColor="@color/funny_dark_pink"/>
-
-                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:src="@drawable/ic_person_pink_24dp" />
-            </LinearLayout>
-
+                    android:text="Normal User"
+                    android:gravity="top|right"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="18dp"
+                    android:textSize="35sp"
+                    android:textColor="@color/jet_black"
+                    android:drawablePadding="@dimen/double_round"
+                    android:drawableStart="@drawable/ic_arrow_back_36"/>
+            </RelativeLayout>
         </LinearLayout>
-
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_weight="1"
-        android:gravity="left"
-
+        android:gravity="bottom"
         android:id="@+id/admin"
-
-        android:background="@color/funny_dark_pink">
-
-        <LinearLayout
+        android:background="@color/premier_blue">
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-
+            android:gravity="bottom">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Administrator"
-                android:gravity="top|left"
-                android:paddingTop="25dp"
-                android:paddingLeft="25dp"
+                android:gravity="bottom|start"
+                android:paddingBottom="@dimen/double_round"
+                android:paddingStart="18dp"
                 android:textSize="35sp"
-                android:textColor="@color/seasonal_orange"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:src="@drawable/ic_person_orange_24dp" />
-        </LinearLayout>
-
+                android:textColor="@color/angel_white"
+                android:drawablePadding="@dimen/double_round"
+                android:drawableEnd="@drawable/ic_arrow_forward_36_white_fixed"/>
+        </RelativeLayout>
     </LinearLayout>
-
-
 </LinearLayout>

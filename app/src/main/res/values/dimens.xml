@@ -1,27 +1,28 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="nav_header_vertical_spacing_port">0dp</dimen>
-    <dimen name="nav_header_vertical_spacing">16dp</dimen>
-    <dimen name="nav_header_height">200dp</dimen>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">12dp</dimen>
-    <dimen name="activity_vertical_margin">14dp</dimen>
-    <dimen name="activity_vertical_margin_land">14dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
+   <!-- Default screen margins, per the Android Design guidelines. -->
+   <dimen name="nav_header_vertical_spacing_port">0dp</dimen>
+   <dimen name="nav_header_vertical_spacing">16dp</dimen>
+   <dimen name="nav_header_height">200dp</dimen>
+   <!-- Default screen margins, per the Android Design guidelines. -->
+   <dimen name="activity_horizontal_margin">12dp</dimen>
+   <dimen name="activity_vertical_margin">14dp</dimen>
+   <dimen name="activity_vertical_margin_land">14dp</dimen>
+   <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="dialog_title_header">21sp</dimen>
-    <dimen name="dialog_button_fixed_height">52dp</dimen>
+   <dimen name="dialog_title_header">21sp</dimen>
+   <dimen name="dialog_button_fixed_height">52dp</dimen>
 
-    <dimen name="font_text_view">17sp</dimen>
-    <dimen name="font_app_name">22sp</dimen>
+   <dimen name="font_text_view">17sp</dimen>
+   <dimen name="font_app_name">22sp</dimen>
 
 
-    <dimen name="slice_align">4dp</dimen>
-    <dimen name="round_padding">7dp</dimen>
+   <dimen name="slice_align">4dp</dimen>
+   <dimen name="round_padding">7dp</dimen>
 
-    <dimen name="pagination_line">9dp</dimen>
+   <dimen name="pagination_line">9dp</dimen>
 
-    <dimen name="title_expanded">13dp</dimen>
-    <dimen name="double_round">14dp</dimen>
-    <dimen name="gate_margin">42dp</dimen>
+   <dimen name="schema_padding">12dp</dimen>
+   <dimen name="title_expanded">13dp</dimen>
+   <dimen name="double_round">14dp</dimen>
+   <dimen name="gate_margin">42dp</dimen>
 </resources>

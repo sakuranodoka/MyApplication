@@ -54,6 +54,8 @@ public class AppliedAppCompat extends AppCompatActivity {
         }
     }
 
-    protected void setApplicationToolbar() {  }
+    protected void setLayoutContent(int layoutResID) {
+
+    }
 
 }

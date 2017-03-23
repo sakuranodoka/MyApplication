@@ -213,12 +213,6 @@ public class MapsActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Subscribe
-    public void getMessage(MainActivity.TestData data) {
-        //Log.v("vvvvvv", "etestsetsetetset");
-        Toast.makeText(this, data.message, Toast.LENGTH_LONG).show();
-    }
-
-    @Subscribe
     public void getMessage(ParallelDataOne data) {
         //Toast.makeText(this, data.getHour()+" : "+data.getMinute() , Toast.LENGTH_SHORT).show();
         hourStart = data.getHour();
