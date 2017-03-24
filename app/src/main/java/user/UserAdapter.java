@@ -10,12 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.administrator.myapplication.InvoiceInfoActivity;
 import com.example.administrator.myapplication.R;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import authen.AuthenData;
 import invoice.InvoiceData;
+import invoice.item.ParcelInvoice;
 import user.user.item.ItemMenu;
 import user.user.item.ItemSection;
 import user.user.item.MenuMethod;
@@ -29,14 +34,14 @@ public class UserAdapter extends RecyclerView.Adapter {
 
     private static final int REQUEST_CAMERA = 9382;
 
-    public static int VIEW_SECTION = 0;
-    public static int VIEW_MENU = 1;
+    private static int VIEW_SECTION = 0;
+    private static int VIEW_MENU = 1;
 
-    private InterfaceCamera interfaceCamera = null;
+    private InterfaceUser interfaceUser = null;
     private Bundle b = null;
 
-    public void setInterfaceCamera(InterfaceCamera interfaceCamera) {
-        this.interfaceCamera = interfaceCamera;
+    public void setInterfaceUser(InterfaceUser interfaceUser) {
+        this.interfaceUser = interfaceUser;
     }
 
     public void setBundle(Bundle b) { this.b = b; }
@@ -101,20 +106,36 @@ public class UserAdapter extends RecyclerView.Adapter {
                 });
             }
 
-            if(interfaceCamera != null) {
-                viewHolderMenu.itemView.setOnClickListener(new View.OnClickListener() {
+            if(interfaceUser != null) {
+                viewHolderMenu.itemView.setOnClickListener(
+                		  new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         switch(itemMenu.getMenuMethod()) {
                             case MenuMethod.T_PHOTO:
-                                interfaceCamera.onCapture();
+                                interfaceUser.onCapture();
                                 break;
                             case MenuMethod.T_BARCODE:
-                                interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
+                                interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
                                 break;
                             case MenuMethod.T_SHOW_INVOICE:
+//                                 Bundle _b_ = new Bundle();
+//	                              // Set mode
+//                                 _b_.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
+//
+//	                              // Set username
+//	                              ParcelInvoice pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+//	                              _b_.putString(AuthenData.USERNAME, pi.getUsername());
+//
+//	                              Intent t = new Intent(viewHolderMenu.itemView.getContext(), InvoiceInfoActivity.class);
+//											t.putExtras(_b_);
+//
+//	                              viewHolderMenu.itemView.getContext().startActivity(t);
+	                              Bundle callbackState = new Bundle();
+	                              callbackState.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
 
-                                break;
+	                              interfaceUser.onIntentCallback(InvoiceInfoActivity.class, callbackState);
+                                 break;
                         }
                     }
                 });

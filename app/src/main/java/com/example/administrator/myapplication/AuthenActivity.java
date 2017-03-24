@@ -26,25 +26,6 @@ public class AuthenActivity extends AppliedAppCompat implements InterfaceReplace
 			super(R.layout.layout_blank);
 	 }
 
-//	 private InterfaceReplace interfaceReplace = new InterfaceReplace() {
-//			@Override
-//			public void replacing(int fragmentNext) {
-//				 ft = getSupportFragmentManager().beginTransaction();
-//				 switch(fragmentNext) {
-//						case FragmentScope.AUTH :
-//							 FragmentAuthen fragmentAuthen = new FragmentAuthen(b, interfaceReplace);
-//							 ft.replace(R.id.blankFrameLayout, fragmentAuthen);
-//							 break;
-//						case FragmentScope.SIGN_UP :
-//							 FragmentSignUp fragmentSignUp = new FragmentSignUp(b, interfaceReplace);
-//							 ft.replace(R.id.blankFrameLayout, fragmentSignUp);
-//							 break;
-//						default:break;
-//				 }
-//				 ft.commit();
-//			}
-//	 };
-
 	 private int fragmentMode;
 	 private String fragmentModeTag = "authen";
 

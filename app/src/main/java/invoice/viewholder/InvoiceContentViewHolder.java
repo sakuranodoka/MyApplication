@@ -10,13 +10,13 @@ import com.example.administrator.myapplication.R;
  * Created by Administrator on 6/3/2560.
  */
 
-public class InvoiceViewHolder extends RecyclerView.ViewHolder {
+public class InvoiceContentViewHolder extends RecyclerView.ViewHolder {
 
     public Object textViewInvoicePreview;
     public Object textViewInvoiceDate;
     public Object btnRemove;
 
-    public InvoiceViewHolder(View itemView) {
+    public InvoiceContentViewHolder(View itemView) {
         super(itemView);
 
         textViewInvoicePreview = itemView.findViewById(R.id.text_view_invoice_preview);

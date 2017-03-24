@@ -12,14 +12,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.example.administrator.myapplication.CanvasActivity;
 import com.example.administrator.myapplication.InvoiceInfoActivity;
 import com.example.administrator.myapplication.R;
 
 import intent.IntentKeycode;
-import user.InterfaceCamera;
+import user.InterfaceUser;
 
 /**
  * Created by Administrator on 24/2/2560.
@@ -27,11 +26,11 @@ import user.InterfaceCamera;
 
 public class ViewInvoiceSwitchDialogFragment extends DialogFragment {
 
-    private InterfaceCamera interfaceCamera;
+    private InterfaceUser interfaceUser;
     private Bundle b;
 
-    public ViewInvoiceSwitchDialogFragment(InterfaceCamera interfaceCamera, Bundle b) {
-			 this.interfaceCamera = interfaceCamera;
+    public ViewInvoiceSwitchDialogFragment(InterfaceUser interfaceUser, Bundle b) {
+			 this.interfaceUser = interfaceUser;
 			 this.b = b;
     }
 
@@ -85,7 +84,7 @@ public class ViewInvoiceSwitchDialogFragment extends DialogFragment {
 								@Override
 								public void onClick(View v) {
 									 getDialog().dismiss();
-									 interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
+									 interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
 								}
 						});
 				 }
@@ -96,6 +95,7 @@ public class ViewInvoiceSwitchDialogFragment extends DialogFragment {
 						public void onClick(View v) {
 							 Intent t = new Intent(getActivity(), InvoiceInfoActivity.class);
 							 Bundle _b_ = b;
+							 _b_.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_INNER_APP);
 							 t.putExtras(_b_);
 							 getActivity().startActivityForResult(t, 1929);
 						}

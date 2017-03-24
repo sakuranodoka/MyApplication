@@ -21,6 +21,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
 import rx.Observable;
+import seller.pojo.SellerCollectionPOJO;
 
 /**
  * Created by Administrator on 1/3/2560.
@@ -38,4 +39,9 @@ public interface InterfaceInvoice {
 			@Part("userFullName") RequestBody userFullName,
 			@Part("username") RequestBody username
 	 );
+
+	@GET("/Application/getInvoiceInfo.php")
+	Observable<List<InvoicePOJO>> getInvoiceInfo (
+		  @Query("username") String username
+	);
 }

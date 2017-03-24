@@ -2,10 +2,6 @@ package invoice.item;
 
 import java.io.Serializable;
 
-/**
- * Created by Administrator on 7/3/2560.
- */
-
 public class ItemInvoicePreview implements Serializable {
 
 	 private String InvoicePreview;

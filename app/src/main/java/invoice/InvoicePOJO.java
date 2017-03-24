@@ -5,20 +5,28 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by Administrator on 6/3/2560.
- */
-
 public class InvoicePOJO {
-    @SerializedName("status")
+    @SerializedName("info_invoice")
     @Expose
-    private String status;
+    public String infoInvoice;
 
-    public String getStatus() {
-        return status;
+    @SerializedName("info_time")
+    @Expose
+    public String infoTime;
+
+    public String getInfoInvoice() {
+        return infoInvoice;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setInfoInvoice(String infoInvoice) {
+        this.infoInvoice = infoInvoice;
+    }
+
+    public String getInfoTime() {
+        return infoTime;
+    }
+
+    public void setInfoTime(String infoTime) {
+        this.infoTime = infoTime;
     }
 }

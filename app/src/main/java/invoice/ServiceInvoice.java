@@ -102,41 +102,40 @@ public class ServiceInvoice {
         Observable<List<DataWrapper>> observable = null;
         if( data == null ) {
         } else {
-            if( data instanceof Bundle) {
-							 	// Clone Bundle
-	                     Bundle b = (Bundle) data;
+            if(data instanceof Bundle) {
+					// Clone Bundle
+					Bundle b = (Bundle) data;
 
-							  // Unwrap Parcelable to Object
-							  ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+					// Unwrap Parcelable to Object
+					ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
 
-							 	Gson gson = new GsonBuilder().create();
-							 	JsonArray cVzsFx = gson.toJsonTree(p.getListInvoice()).getAsJsonArray();
-							 	RequestBody jsonItmInC4 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), cVzsFx.toString());
+					Gson gson = new GsonBuilder().create();
+					JsonArray cVzsFx = gson.toJsonTree(p.getListInvoice()).getAsJsonArray();
+					RequestBody jsonItmInC4 = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), cVzsFx.toString());
 
-							 // Create Request body From Bitmap String
-							  RequestBody base64bMPx1 = RequestBody.create(MediaType.parse("text/plain"), p.getBitmap());
+					// Create Request body From Bitmap String
+					RequestBody base64bMPx1 = RequestBody.create(MediaType.parse("text/plain"), p.getBitmap());
 
-							 	RequestBody latitude = RequestBody.create(MediaType.parse("text/plain"), p.getLatitude());
+					RequestBody latitude = RequestBody.create(MediaType.parse("text/plain"), p.getLatitude());
 
-							 	RequestBody longitude = RequestBody.create(MediaType.parse("text/plain"), p.getLongitude());
+					RequestBody longitude = RequestBody.create(MediaType.parse("text/plain"), p.getLongitude());
 
-							 	RequestBody userID = RequestBody.create(MediaType.parse("text/plain"), p.getUserID());
+					RequestBody userID = RequestBody.create(MediaType.parse("text/plain"), p.getUserID());
 
-							 	RequestBody userFullName = RequestBody.create(MediaType.parse("text/plain"), p.getUserFullName());
+					RequestBody userFullName = RequestBody.create(MediaType.parse("text/plain"), p.getUserFullName());
 
-	                     RequestBody username = RequestBody.create(MediaType.parse("text/plain"), p.getUsername());
+					RequestBody username = RequestBody.create(MediaType.parse("text/plain"), p.getUsername());
 
-							  // Put data to interface
-							 	observable = interfaceInvoice.sendBmPx1Server(jsonItmInC4,
-												latitude,
-												longitude,
-												userID,
-												base64bMPx1,
-												userFullName,
-										      username);
+					// Put data to interface
+					observable = interfaceInvoice.sendBmPx1Server(jsonItmInC4,
+									latitude,
+									longitude,
+									userID,
+									base64bMPx1,
+									userFullName,
+							      username);
             }
-
-					 	this.styzf(observable, listener, retrofit);
+	        this.styzf(observable, listener, retrofit);
         }
     }
 }

@@ -5,7 +5,8 @@ package retrofit;
  */
 
 public abstract class RetrofitAbstract {
-	 public static final int RETROFIT_INVOICE = 92;
-	 public static final int RETROFIT_AUTHEN = 93;
-	 public static final int RETROFIT_SIGN_UP = 94;
+	public static final int RETROFIT_INVOICE = 92;
+	public static final int RETROFIT_AUTHEN = 93;
+	public static final int RETROFIT_SIGN_UP = 94;
+	public static final int RETROFIT_PRE_INVOICE = 95;
 }

@@ -2,7 +2,6 @@ package authen;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -10,16 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageButton;
 
-import com.example.administrator.myapplication.CanvasActivity;
-import com.example.administrator.myapplication.InvoiceInfoActivity;
 import com.example.administrator.myapplication.R;
-
-import intent.IntentKeycode;
-import invoice.InvoiceData;
-import user.InterfaceCamera;
 
 /**
  * Created by Administrator on 24/2/2560.

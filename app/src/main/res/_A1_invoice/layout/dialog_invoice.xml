@@ -74,16 +74,12 @@
                         android:text="สแกนใบสั่งสินค้าเพิ่มเติม"
                         android:textSize="@dimen/font_text_view"
                         android:textColor="@color/solid_gray"
-
                         android:id="@+id/btn_more_scan"
-
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
-
                         android:padding="@dimen/double_round"
-
                         android:background="@color/angel_white"
-
+                        android:elevation="0dp"
                         android:paddingEnd="@dimen/round_padding"
                         android:drawablePadding="@dimen/double_round"
                         android:drawableStart="@drawable/ic_add_24"
@@ -99,16 +95,12 @@
                         android:text="แสดงรายการที่สแกนแล้ว"
                         android:textSize="@dimen/font_text_view"
                         android:textColor="@color/solid_gray"
-
                         android:id="@+id/btn_more_info"
-
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
-
                         android:padding="@dimen/double_round"
-
                         android:background="@color/angel_white"
-
+                        android:elevation="0dp"
                         android:paddingEnd="@dimen/round_padding"
                         android:drawablePadding="@dimen/double_round"
                         android:drawableStart="@drawable/ic_list_24"
@@ -126,6 +118,7 @@
                         android:layout_marginTop="3dp"
                         android:layout_marginBottom="3dp"
                         android:background="@color/angel_white"
+                        android:elevation="0dp"
                         android:padding="@dimen/double_round"
                         android:paddingEnd="@dimen/round_padding"
                         android:drawablePadding="@dimen/double_round"

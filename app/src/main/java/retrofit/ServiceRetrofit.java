@@ -3,10 +3,6 @@ package retrofit;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-
 import org.parceler.Parcels;
 
 import java.util.List;
@@ -18,11 +14,10 @@ import authen.AuthenticatePOJO;
 import authen.InterfaceAuthen;
 import invoice.InterfaceInvoice;
 import invoice.InvoiceData;
+import invoice.InvoicePOJO;
 import invoice.item.ParcelInvoice;
 import log.LogIndentify;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -83,7 +78,7 @@ public class ServiceRetrofit {
 
 			switch(mode) {
 				 case RetrofitAbstract.RETROFIT_AUTHEN :
-						InterfaceAuthen interfaceAuthen = retrofit.create( InterfaceAuthen.class );
+						InterfaceAuthen interfaceAuthen = retrofit.create(InterfaceAuthen.class);
 						if(data instanceof Bundle) {
 							 Bundle x = (Bundle) data;
 							 Observable<List<AuthenticatePOJO>> ex = interfaceAuthen.authenticate(x.getString(AuthenData.USERNAME), x.getString(AuthenData.PASSWORD));
@@ -91,20 +86,27 @@ public class ServiceRetrofit {
 						}
 						break;
 				 case RetrofitAbstract.RETROFIT_SIGN_UP :
-						InterfaceAuthen interfaceSignup = retrofit.create( InterfaceAuthen.class );
+						InterfaceAuthen interfaceSignup = retrofit.create(InterfaceAuthen.class);
 						if(data instanceof Bundle) {
 							 Bundle x = (Bundle) data;
 							 Observable<List<AuthenticatePOJO>> ex = interfaceSignup.register(x.getString(AuthenData.FULLNAME), x.getString(AuthenData.USERNAME), x.getString(AuthenData.PASSWORD));
 							 observable = ex;
-								//interfaceSignup.register(x.getString(AuthenData.FULLNAME), x.getString(AuthenData.USERNAME), x.getString(AuthenData.PASSWORD));
 						}
 						break;
 				 case RetrofitAbstract.RETROFIT_INVOICE :
-						InterfaceInvoice interfaceInvoice = retrofit.create( InterfaceInvoice.class );
-						if(data instanceof Bundle) {
-							 observable = null;
-						}
+						InterfaceInvoice interfaceInvoice = retrofit.create(InterfaceInvoice.class);
+						if(data instanceof Bundle)
+							observable = null;
 						break;
+				 case RetrofitAbstract.RETROFIT_PRE_INVOICE:
+					   InterfaceInvoice interfacePreInvoice = retrofit.create(InterfaceInvoice.class);
+						if(data instanceof Bundle) {
+							Bundle x = (Bundle) data;
+							ParcelInvoice p = Parcels.unwrap(x.getParcelable(InvoiceData.INVOICE_PARCEL));
+							Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(p.getUsername());
+							observable = ex;
+						}
+				 	   break;
 			}
 			this.styzf(observable, listener, retrofit);
 	 }

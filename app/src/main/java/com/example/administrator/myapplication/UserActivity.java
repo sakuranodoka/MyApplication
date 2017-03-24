@@ -1,13 +1,10 @@
 package com.example.administrator.myapplication;
 
-import android.*;
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
@@ -25,7 +22,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +36,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -54,13 +51,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import AppBar.ApplicationBar;
-import AppBar.BarType;
 import authen.AuthenData;
-import authen.InterfaceAuthen;
-import authen.ViewAuthenDialogFragment;
 import dialog.DialogFragmentData;
-import fragment.FragmentExample;
 import fragment.FragmentToolbar;
 import intent.IntentKeycode;
 import invoice.InvoiceData;
@@ -71,10 +63,9 @@ import invoice.item.ParcelInvoice;
 import okhttp3.ResponseBody;
 import retrofit.InterfaceListen;
 import retrofit2.Retrofit;
-import user.InterfaceCamera;
+import user.InterfaceUser;
 import user.UserAdapter;
 import user.UserBaseItem;
-import user.user.item.ItemBill;
 import user.user.item.ItemMenu;
 import user.user.item.ItemSection;
 import user.user.item.MenuMethod;
@@ -158,7 +149,7 @@ public class UserActivity extends AppCompatActivity implements
 			userAdapter = new UserAdapter();
 			userRecyclerView.setAdapter(userAdapter);
 
-			userAdapter.setInterfaceCamera(interfaceCamera);
+			userAdapter.setInterfaceUser(interfaceUser);
 			userAdapter.setBundle(b);
 
 			List<UserBaseItem> userBaseItems = new ArrayList<>();
@@ -193,8 +184,7 @@ public class UserActivity extends AppCompatActivity implements
 //			itemMenu.setImageResourceColor( ContextCompat.getColor(getApplicationContext(), R.color.lemon_wingless));
 //			itemMenu.setDetailName("ถ่ายภาพประกอบรายละเอียดของสินค้า");
 //			itemMenu.setIntent(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
-//			userBaseItems.add(itemMenu);
-
+//			userBaseItems.add(itemMenu
 			userAdapter.setRecyclerAdapter(userBaseItems);
 			userAdapter.notifyDataSetChanged();
 
@@ -329,7 +319,7 @@ public class UserActivity extends AppCompatActivity implements
 											  pi.setBitmap(data.getExtras().getString(InvoiceData.ENCODED_IMAGE_PATH));
 											 	pi.setUserFullName(data.getExtras().getString(InvoiceData.USER_FULLNAME));
 										}
-                    interfaceCamera.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_USER_ID, InvoiceData.INVOICE_PREVIEW_USER_ID);
+                    interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_USER_ID, InvoiceData.INVOICE_PREVIEW_USER_ID);
                 } else {
                     Log.e("system tracking", "canvas data is null");
                 }
@@ -404,7 +394,7 @@ public class UserActivity extends AppCompatActivity implements
 
 	 	protected void async() {
 			 if(b != null && pi != null) {
-					 //new ServiceInvoice().callServer(interfaceListen, 0, b);
+					 new ServiceInvoice().callServer(interfaceListen, 0, b);
 				 pi.clearData();
 				 Parcelable wrapped = Parcels.wrap(pi);
 				 b.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
@@ -430,7 +420,7 @@ public class UserActivity extends AppCompatActivity implements
 			 public void onFailure(Throwable t) {}
 		};
 
-    protected InterfaceCamera interfaceCamera = new InterfaceCamera() {
+    protected InterfaceUser interfaceUser = new InterfaceUser() {
         @Override
         public void onCapture() {
             int REQUEST_CAMERA = 17;
@@ -449,19 +439,30 @@ public class UserActivity extends AppCompatActivity implements
                     , "กรุณาเลือกแอปพลิเคชันกล้อง"), REQUEST_CAMERA);
         }
 
-        @Override
-        public void onBarcodeScan(int mode, String preview) {
-					 if(b != null) {
-						 b.putInt(InvoiceData.INVOICE_CASE, mode);
-					 }
+		@Override
+		public void onBarcodeScan(int mode, String preview) {
+			if(b != null) {
+			   b.putInt(InvoiceData.INVOICE_CASE, mode);
+			}
+			Intent t = new Intent(UserActivity.this, CustomScannerActivity.class);
+			Bundle zxingBn = new Bundle();
+			zxingBn.putInt(InvoiceData.INVOICE_CASE, mode);
+			zxingBn.putString(InvoiceData.INVOICE_PREVIEW, preview);
+			t.putExtras(zxingBn);
+			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
+		}
 
-					 Intent t = new Intent(UserActivity.this, CustomScannerActivity.class);
-					 Bundle zxingBn = new Bundle();
-					 zxingBn.putInt(InvoiceData.INVOICE_CASE, mode);
-					 zxingBn.putString(InvoiceData.INVOICE_PREVIEW, preview);
-					 t.putExtras(zxingBn);
-					 startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
-        }
+	    @Override
+	    public void onIntentCallback(Class<?> target, Bundle callbackState) {
+		    Intent t = new Intent(UserActivity.this, target);
+		    if(target.equals(InvoiceInfoActivity.class)) {
+			    //Log.e("CALL BACK STATE", "test call back state");
+			    b.putInt(InvoiceData.INVOICE_INFO_TAG, callbackState.getInt(InvoiceData.INVOICE_INFO_TAG));
+		    }
+
+		    t.putExtras(b);
+		    startActivity(t);
+	    }
     };
 
     private void showInvoiceSwitchDialogFragment(Bundle b) {
@@ -470,11 +471,11 @@ public class UserActivity extends AppCompatActivity implements
             mPendingShowDialog = true;
             Log.e("dialog state", "2-times set show with mIsStateAlreadySaved is true.");
         } else {
-            if( b != null ) {
-							 	b.putInt(DialogFragmentData.DIALOG_FRAGMENT_TAG, DialogFragmentData.DIALOG_FRAGMENT_TAG_INVOICE);
-							 	FragmentManager fm = getSupportFragmentManager();
-								ViewInvoiceSwitchDialogFragment dialogFragment = new ViewInvoiceSwitchDialogFragment(interfaceCamera, b);
-								dialogFragment.show(fm, TAG_NAME);
+            if(b != null ) {
+				   b.putInt(DialogFragmentData.DIALOG_FRAGMENT_TAG, DialogFragmentData.DIALOG_FRAGMENT_TAG_INVOICE);
+				   FragmentManager fm = getSupportFragmentManager();
+					ViewInvoiceSwitchDialogFragment dialogFragment = new ViewInvoiceSwitchDialogFragment(interfaceUser, b);
+					dialogFragment.show(fm, TAG_NAME);
             } else {
                 Log.e("error" , "System error because bundle is null when dialog is setting up open individual away.");
             }
@@ -520,10 +521,25 @@ public class UserActivity extends AppCompatActivity implements
 			super.onResume();
 			Log.e("system", "resume");
 
-			if( sp != null && sp.getString(AuthenData.USERNAME, "").equals("")) {
-				  Intent t = new Intent(this, AuthenActivity.class);
-				  t.putExtras(b);
-				  startActivityForResult(t, IntentKeycode.RESULT_AUTHEN);
+			if(sp != null && sp.getString(AuthenData.USERNAME, "").equals("")) {
+				Intent t = new Intent(this, AuthenActivity.class);
+				t.putExtras(b);
+				startActivityForResult(t, IntentKeycode.RESULT_AUTHEN);
+			} else {
+				if(b != null) {
+					if(b.containsKey(InvoiceData.INVOICE_PARCEL)) {
+						pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+					} else {
+						pi = new ParcelInvoice();
+					}
+					pi.setUsername(sp.getString(AuthenData.USERNAME, ""));
+
+					Parcelable wrapped = Parcels.wrap(pi);
+					b.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
+
+					pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+					Toast.makeText(this, pi.getUsername(), Toast.LENGTH_SHORT).show();
+				}
 			}
 	 }
 
@@ -533,18 +549,17 @@ public class UserActivity extends AppCompatActivity implements
         mIsStateAlreadySaved = false;
         if( mPendingShowDialog ) {
             mPendingShowDialog = false;
-
-					 	if( b != null && b.containsKey(DialogFragmentData.DIALOG_FRAGMENT_TAG) ) {
-							 	switch( b.getInt(DialogFragmentData.DIALOG_FRAGMENT_TAG) ) {
-									 case DialogFragmentData.DIALOG_FRAGMENT_TAG_INVOICE :
-											showInvoiceSwitchDialogFragment(b);
-											Log.e("dialog state", "Resume fragments with mPendingShowDialog is true");
-											break;
-									 default:
-											Log.e("dialog state", "Error");
-											break;
-								}
-						}
+			   if(b != null && b.containsKey(DialogFragmentData.DIALOG_FRAGMENT_TAG) ) {
+					switch( b.getInt(DialogFragmentData.DIALOG_FRAGMENT_TAG) ) {
+						 case DialogFragmentData.DIALOG_FRAGMENT_TAG_INVOICE :
+								showInvoiceSwitchDialogFragment(b);
+								Log.e("dialog state", "Resume fragments with mPendingShowDialog is true");
+								break;
+						 default:
+								Log.e("dialog state", "Error");
+								break;
+					}
+				}
         }
     }
 
@@ -650,7 +665,6 @@ public class UserActivity extends AppCompatActivity implements
 				 editor.apply();
 
 				 Toast.makeText(this, "ขอบคุณที่ใช้บริการ", Toast.LENGTH_LONG).show();
-
 				 onResume();
 			}
 	 }
