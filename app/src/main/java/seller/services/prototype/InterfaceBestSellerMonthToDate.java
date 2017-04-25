@@ -9,9 +9,6 @@ import rx.Observable;
 import seller.pojo.SellerBestSellerMonthToDatePOJO;
 import seller.pojo.SellerBestSellerPOJO;
 
-/**
- * Created by Administrator on 18/1/2560.
- */
 public interface InterfaceBestSellerMonthToDate {
 
     @GET("/Application/getBestSellerMonthToDate.php")

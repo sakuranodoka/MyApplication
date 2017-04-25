@@ -47,7 +47,7 @@ public class SetShopAutoCompleteView {
 
     public void setView(final AppCompatActivity activity, final boolean autoShowKeyboard) {
 
-        acTextView = (AutoCompleteTextView) activity.findViewById(R.id.search_box);
+        acTextView = (AutoCompleteTextView) activity.findViewById(R.id.input_shop_searching);
 
         final Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ServiceURL.PROCUCT_BASE_URL )
@@ -96,6 +96,7 @@ public class SetShopAutoCompleteView {
                             @Override
                             public void onClick(View v) {
                                 if(showing) {
+
                                     acTextView.showDropDown();
                                 } else {
                                     acTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_clear_black_24dp, 0);

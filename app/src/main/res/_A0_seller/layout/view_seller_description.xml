@@ -41,7 +41,7 @@
                         <!--android:layout_gravity="center"-->
                         <!--style="@style/Base.Widget.AppCompat.Button.Borderless"-->
 
-                        <!--android:background="@drawable/icon_info_green"/>-->
+                        <!--android:shapxamplebackground="@drawable/icon_info_green"/>-->
 
                     <autocomplete.InstantAutocomplete
                         android:layout_width="match_parent"

@@ -3,13 +3,13 @@
 <!--<RelativeLayout-->
 <!--android:layout_width="match_parent"-->
 <!--android:layout_height="wrap_content"-->
-<!--android:background="@color/stone_gray">-->
+<!--android:shapxamplebackground="@color/stone_gray">-->
 <!--<Button-->
 <!--android:layout_width="36dp"-->
 <!--android:layout_height="36dp"-->
 <!--android:layout_margin="@dimen/round_padding"-->
 <!--android:id="@+id/backPressedState"-->
-<!--android:background="@drawable/ic_arrow_back_36_white_fixed"/>-->
+<!--android:shapxamplebackground="@drawable/ic_arrow_back_36_white_fixed"/>-->
 
 <!--<TextView-->
 <!--android:layout_width="wrap_content"-->
@@ -40,7 +40,7 @@
 <!--android:layout_margin="@dimen/round_padding"-->
 <!--android:layout_alignParentEnd="true"-->
 <!--android:id="@+id/nextPressedState"-->
-<!--android:background="@drawable/ic_arrow_forward_36_white_fixed"/>-->
+<!--android:shapxamplebackground="@drawable/ic_arrow_forward_36_white_fixed"/>-->
 <!--</RelativeLayout>-->
 
 <!--</RelativeLayout>-->

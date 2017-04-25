@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class ItemInvoiceDateDAO {
 	@SerializedName("title")
-	private String title;
+	private String title = "";
 
 	@SerializedName("id")
-	private String id;
+	private String id = "";
 
 	public String getTitle() {
 		return title;

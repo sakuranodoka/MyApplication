@@ -36,210 +36,187 @@ import retrofit.RetrofitAbstract;
 import retrofit.ServiceRetrofit;
 import retrofit2.Retrofit;
 
-/**
- * Created by Administrator on 16/3/2560.
- */
-
 public class FragmentAuthen extends Fragment {
+	private Bundle instanceState;
 
-	 private Bundle b;
-	 private Bundle instanceState;
+	private static final String TAG = "LoginActivity";
 
-	 private static final String TAG = "LoginActivity";
-	 private static final int REQUEST_SIGNUP = 0;
+	private EditText _emailText;
+	private EditText _passwordText;
+	private Button _loginButton;
 
-	 private EditText _emailText;
-	 private EditText _passwordText;
-	 private Button _loginButton;
+	private TextView _signupLink;
 
-	 private TextView _signupLink;
+	private ProgressDialog progressDialog;
 
-	 private ProgressDialog progressDialog;
+	private InterfaceReplace interfaceReplace;
 
-	 private InterfaceReplace interfaceReplace;
+	public FragmentAuthen() {
+		super();
+	}
 
-	 private final String USERNAME_TAG = "USERNAME_TAG";
-	 private final String PASSWORD_TAG = "PASSWORD_TAG";
+	public FragmentAuthen(Bundle b, InterfaceReplace interfaceReplace) {
+		super();
+		this.interfaceReplace = interfaceReplace;
+	}
 
-	 public FragmentAuthen() {
-			super();
-			this.b = null;
-	 }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putAll(instanceState);
+	}
 
-	 public FragmentAuthen(Bundle b, InterfaceReplace interfaceReplace) {
-			super();
-			this.b = b;
-			this.interfaceReplace = interfaceReplace;
-	 }
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		hideKeyBoard();
+	}
 
-	 @Override
-	 public void onSaveInstanceState(Bundle outState) {
-//			if(instanceState != null) {
-//				 outState.putString(AuthenData.USERNAME, _emailText.getText().toString());
-//				 outState.putString(AuthenData.PASSWORD, _passwordText.getText().toString());
-//			}
-			//outState.putAll(instanceState);
-			super.onSaveInstanceState(outState);
-			outState.putAll(instanceState);
-	 }
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.activity_authen, container, false);
 
-	 @Override
-	 public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
-			hideKeyBoard();
-	 }
+		ButterKnife.inject(rootView);
 
-	 @Nullable
-	 @Override
-	 public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.activity_authen, container, false);
+		rootView.findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+		login();
+		}
+		});
 
-			ButterKnife.inject(rootView);
+		_emailText = (EditText) rootView.findViewById(R.id.input_email);
+		_passwordText = (EditText) rootView.findViewById(R.id.input_password);
 
-			rootView.findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
-				 @Override
-				 public void onClick(View v) {
-						login();
-				 }
-			});
+		if(savedInstanceState != null) {
+			_emailText.setText(savedInstanceState.getString(AuthenData.USERNAME));
+			_passwordText.setText(savedInstanceState.getString(AuthenData.PASSWORD));
+			instanceState = savedInstanceState;
+		} else {
+			instanceState = new Bundle();
+		}
 
-			_emailText = (EditText) rootView.findViewById(R.id.input_email);
-			_passwordText = (EditText) rootView.findViewById(R.id.input_password);
+		_loginButton = (Button) rootView.findViewById(R.id.btn_login);
+		_signupLink = (TextView) rootView.findViewById(R.id.link_signup);
+		_signupLink.setOnClickListener(new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+		interfaceReplace.replacing(FragmentScope.SIGN_UP);
+		}
+		});
 
-			if(savedInstanceState != null) {
-				 _emailText.setText(savedInstanceState.getString(AuthenData.USERNAME));
-				 _passwordText.setText(savedInstanceState.getString(AuthenData.PASSWORD));
-				 instanceState = savedInstanceState;
-			} else {
-				 instanceState = new Bundle();
+		return rootView;
+	}
+
+	public void login() {
+		Log.d(TAG, "Login");
+
+		if(!validate()) {
+			onLoginFailed();
+			return;
+		}
+		_loginButton.setEnabled(false);
+
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setIndeterminate(true);
+		progressDialog.setMessage("กำลังเข้าสู่ระบบ...");
+		progressDialog.show();
+
+		if(instanceState != null) {
+			instanceState.putString(AuthenData.USERNAME, _emailText.getText().toString());
+			instanceState.putString(AuthenData.PASSWORD, _passwordText.getText().toString());
+		}
+
+		// TODO: Implement your own authentication logic here.
+
+		new android.os.Handler().postDelayed(
+		new Runnable() {
+			public void run() {
+				async();
 			}
+		}, 2000);
+	}
 
-			_loginButton = (Button) rootView.findViewById(R.id.btn_login);
-			_signupLink = (TextView) rootView.findViewById(R.id.link_signup);
-			_signupLink.setOnClickListener(new View.OnClickListener() {
-				 @Override
-				 public void onClick(View v) {
-						interfaceReplace.replacing(FragmentScope.SIGN_UP);
-				 }
-			});
+	public boolean validate() {
+		boolean valid = true;
+		String email = _emailText.getText().toString();
+		String password = _passwordText.getText().toString();
 
-			return rootView;
-	 }
+		if(email.isEmpty()) {
+			_emailText.setError("กรุณากรอก Username");
+			valid = false;
+		} else
+			_emailText.setError(null);
 
-	 public void login() {
-			Log.d(TAG, "Login");
+		if(password.isEmpty()) {// || password.length() < 4 || password.length() > 10) {
+			_passwordText.setError("กรุณากรอก Password ");
+			valid = false;
+		} else
+			_passwordText.setError(null);
+		return valid;
+	}
 
-			if (!validate()) {
-				 onLoginFailed();
-				 return;
-			}
+	public void onLoginSuccess(Bundle sc) {
+		_loginButton.setEnabled(true);
+		Toast.makeText(getContext(), "ยินดีต้อนรับ", Toast.LENGTH_LONG).show();
+		interfaceReplace.onLoginSuccess(sc);
+	}
 
-			_loginButton.setEnabled(false);
+	public void onLoginFailed() {
+		hideKeyBoard();
+		Toast.makeText(getContext(), "ชื่อผู้ใช้หรือรหัสผ่านผิดพลาด", Toast.LENGTH_LONG).show();
+		_loginButton.setEnabled(true);
+	}
 
-			progressDialog = new ProgressDialog(getActivity());
-			progressDialog.setIndeterminate(true);
-			progressDialog.setMessage("กำลังเข้าสู่ระบบ...");
-			progressDialog.show();
+	private void hideKeyBoard() {
+		final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+	}
 
-			if(instanceState != null) {
-				 instanceState.putString(AuthenData.USERNAME, _emailText.getText().toString());
-				 instanceState.putString(AuthenData.PASSWORD, _passwordText.getText().toString());
-			}
+	private void async() {
+		new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_AUTHEN, instanceState);
+	}
 
-			// TODO: Implement your own authentication logic here.
+	private InterfaceListen interfaceListen = new InterfaceListen() {
+		@Override
+		public void onResponse(Object data, Retrofit retrofit) {
+			progressDialog.dismiss();
 
-			new android.os.Handler().postDelayed(
-				 new Runnable() {
-					 public void run() {
-							async();
-					 }
-				 }, 2000);
-	 }
+			List<AuthenticatePOJO> pojo = (List<AuthenticatePOJO>) data;
 
-	 public boolean validate() {
-			boolean valid = true;
+			Log.e("status authen", pojo.get(0).getStatus());
+			if(pojo.get(0).getStatus().equals("success")) {
+				Bundle sc = new Bundle();
+				sc.putString(AuthenData.FULLNAME, pojo.get(0).getName());
+				sc.putString(AuthenData.USERNAME, pojo.get(0).getUsername());
+				sc.putInt(AuthenData.USER_ROLE, pojo.get(0).getUser_role());
+				onLoginSuccess(sc);
+			} else
+				onLoginFailed();
 
-			String email = _emailText.getText().toString();
-			String password = _passwordText.getText().toString();
+		}
 
-			if (email.isEmpty()) {
-				 _emailText.setError("กรุณากรอก Username");
-				 valid = false;
-			} else {
-				 _emailText.setError(null);
-			}
+		@Override
+		public void onBodyError(ResponseBody responseBodyError) {
 
-			if (password.isEmpty()) {// || password.length() < 4 || password.length() > 10) {
-				 _passwordText.setError("กรุณากรอก Password ");
-				 valid = false;
-			} else {
-				 _passwordText.setError(null);
-			}
+		}
 
-			return valid;
-	 }
+		@Override
+		public void onBodyErrorIsNull() {
 
-	 public void onLoginSuccess(Bundle sc) {
-			_loginButton.setEnabled(true);
-			Toast.makeText(getContext(), "ยินดีต้อนรับ", Toast.LENGTH_LONG).show();
-			interfaceReplace.onLoginSuccess(sc);
-	 }
+		}
 
-	 public void onLoginFailed() {
-			hideKeyBoard();
-			Toast.makeText(getContext(), "ชื่อผู้ใช้หรือรหัสผ่านผิดพลาด", Toast.LENGTH_LONG).show();
-			_loginButton.setEnabled(true);
-	 }
+		@Override
+		public void onFailure(Throwable t) {
 
-	 private void hideKeyBoard() {
-			final InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-	 }
+		}
+	};
 
-	 private void async() {
-			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_AUTHEN, instanceState);
-	 }
-
-	 private InterfaceListen interfaceListen = new InterfaceListen() {
-			@Override
-			public void onResponse(Object data, Retrofit retrofit) {
-				 progressDialog.dismiss();
-
-				 List<AuthenticatePOJO> pojo = (List<AuthenticatePOJO>) data;
-
-				 Log.e("status authen", pojo.get(0).getStatus());
-				 if(pojo.get(0).getStatus().equals("success")) {
-						Bundle sc = new Bundle();
-						sc.putString(AuthenData.FULLNAME, pojo.get(0).getName());
-						sc.putString(AuthenData.USERNAME, pojo.get(0).getUsername());
-						onLoginSuccess(sc);
-				 } else {
-						onLoginFailed();
-				 }
-			}
-
-			@Override
-			public void onBodyError(ResponseBody responseBodyError) {
-
-			}
-
-			@Override
-			public void onBodyErrorIsNull() {
-
-			}
-
-			@Override
-			public void onFailure(Throwable t) {
-
-			}
-	 };
-
-	 @Override
-	 public void onAttach(Context context) {
-			super.onAttach(context);
-			if (context instanceof InterfaceReplace) {
-				 interfaceReplace = ((InterfaceReplace) context);
-			}
-	 }
-
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		if (context instanceof InterfaceReplace)
+			interfaceReplace = ((InterfaceReplace) context);
+	}
 }

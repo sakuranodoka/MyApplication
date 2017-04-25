@@ -23,17 +23,13 @@ import retrofit2.http.Query;
 import rx.Observable;
 import seller.pojo.SellerCollectionPOJO;
 
-/**
- * Created by Administrator on 1/3/2560.
- */
-
 public interface InterfaceInvoice {
 	 @Multipart
 	 @POST("/Application/uploadSignature.php")
 	 Observable<List<DataWrapper>> sendBmPx1Server (
 			@Part("jsonItmInC4") RequestBody jsonItmInC4,
-			@Part("latitude") RequestBody latitude,
-			@Part("longitude") RequestBody longitude,
+//			@Part("latitude") RequestBody latitude,
+//			@Part("longitude") RequestBody longitude,
 			@Part("userID") RequestBody userID,
 			@Part("base64bMPx1") RequestBody base64bMPx1,
 			@Part("userFullName") RequestBody userFullName,
@@ -42,6 +38,7 @@ public interface InterfaceInvoice {
 
 	@GET("/Application/getInvoiceInfo.php")
 	Observable<List<InvoicePOJO>> getInvoiceInfo (
-		  @Query("username") String username
+		  @Query("username") String username,
+		  @Query("timestack") String timestack
 	);
 }

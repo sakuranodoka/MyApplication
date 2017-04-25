@@ -19,10 +19,23 @@
         android:textColor="@color/stone_gray"
         android:textSize="@dimen/font_text_view"/>
 
+
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_below="@id/text_view_invoice_preview"
+       android:paddingStart="@dimen/slice_align"
+       android:paddingTop="@dimen/slice_align"
+       android:id="@+id/text_view_invoice_address"
+       android:gravity="left|center"
+       android:text="เขตบางโคล่ กรุงเทพมหานคร"
+       android:textColor="@color/space_gray"
+       android:textSize="@dimen/font_text_view"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_view_invoice_preview"
+        android:layout_below="@id/text_view_invoice_address"
         android:paddingStart="@dimen/slice_align"
         android:paddingTop="@dimen/slice_align"
         android:id="@+id/text_view_invoice_date"

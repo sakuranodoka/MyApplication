@@ -19,14 +19,6 @@
           android:padding="@dimen/slice_align"
           android:background="@color/lemon_light_fortune">
 
-         <!--<ImageView-->
-             <!--android:layout_width="36dp"-->
-             <!--android:layout_height="36dp"-->
-             <!--android:layout_marginStart="@dimen/slice_align"-->
-             <!--android:src="@drawable/icon_setting_green_36"-->
-             <!--android:layout_alignParentStart="true"-->
-             <!--android:layout_centerInParent="true"/>-->
-
          <TextView
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"

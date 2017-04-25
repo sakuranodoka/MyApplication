@@ -86,9 +86,7 @@ public class UserAdapter extends RecyclerView.Adapter {
             viewHolderMenu.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.angel_white));
 
             if( itemMenu.getImageResourceColor() != 0 ) {
-
                 viewHolderMenu.imageSource.setColorFilter( ContextCompat.getColor(holder.itemView.getContext(), R.color.angel_white) , PorterDuff.Mode.SRC_ATOP);
-
                 GradientDrawable bgShape = (GradientDrawable) viewHolderMenu.imageSource.getBackground();
                 bgShape.setColor( itemMenu.getImageResourceColor() );
                 bgShape.setSize(120, 120);
@@ -107,8 +105,7 @@ public class UserAdapter extends RecyclerView.Adapter {
             }
 
             if(interfaceUser != null) {
-                viewHolderMenu.itemView.setOnClickListener(
-                		  new View.OnClickListener() {
+                viewHolderMenu.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         switch(itemMenu.getMenuMethod()) {
@@ -116,26 +113,27 @@ public class UserAdapter extends RecyclerView.Adapter {
                                 interfaceUser.onCapture();
                                 break;
                             case MenuMethod.T_BARCODE:
-                                interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
+                                //interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
+                                interfaceUser.setShowDialog();
                                 break;
                             case MenuMethod.T_SHOW_INVOICE:
-//                                 Bundle _b_ = new Bundle();
-//	                              // Set mode
-//                                 _b_.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
-//
-//	                              // Set username
-//	                              ParcelInvoice pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-//	                              _b_.putString(AuthenData.USERNAME, pi.getUsername());
-//
-//	                              Intent t = new Intent(viewHolderMenu.itemView.getContext(), InvoiceInfoActivity.class);
-//											t.putExtras(_b_);
-//
-//	                              viewHolderMenu.itemView.getContext().startActivity(t);
-	                              Bundle callbackState = new Bundle();
-	                              callbackState.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
+                    //                                 Bundle _b_ = new Bundle();
+                    //	                              // Set mode
+                    //                                 _b_.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
+                    //
+                    //	                              // Set username
+                    //	                              ParcelInvoice pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+                    //	                              _b_.putString(AuthenData.USERNAME, pi.getUsername());
+                    //
+                    //	                              Intent t = new Intent(viewHolderMenu.itemView.getContext(), InvoiceInfoActivity.class);
+                    //											t.putExtras(_b_);
+                    //
+                    //	                              viewHolderMenu.itemView.getContext().startActivity(t);
+                            Bundle callbackState = new Bundle();
+                            callbackState.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
 
-	                              interfaceUser.onIntentCallback(InvoiceInfoActivity.class, callbackState);
-                                 break;
+                            interfaceUser.onIntentCallback(InvoiceInfoActivity.class, callbackState);
+                            break;
                         }
                     }
                 });

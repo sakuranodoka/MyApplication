@@ -11,8 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.myapplication.R;
@@ -23,6 +27,8 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import autocomplete.InstantAutocomplete;
 import invoice.item.InvoiceBaseItem;
@@ -33,6 +39,13 @@ import invoice.item.ItemInvoicePreview;
 import invoice.item.ParcelInvoice;
 import invoice.viewholder.InvoiceContentViewHolder;
 import invoice.viewholder.InvoiceHeaderViewHolder;
+import location.LocationData;
+import location.pojo.GeoCoderPOJO;
+import okhttp3.ResponseBody;
+import retrofit.InterfaceListen;
+import retrofit.RetrofitAbstract;
+import retrofit.ServiceRetrofit;
+import retrofit2.Retrofit;
 import seller.titlebar.SellerTitleDAO;
 
 public class FragmentInvoiceDetail extends Fragment {
@@ -44,11 +57,14 @@ public class FragmentInvoiceDetail extends Fragment {
 
     private Bundle b = null;
 
+	 private InterfaceInvoiceInfo interfaceInvoiceInfo = null;
+
     private final String DAY_NOW = "TODAY";
     private final String DAY_7 = "D7";
     private final String DAY_15 = "D15";
     private final String DAY_30 = "D30";
     private final String DAY_ALL = "ALL";
+	 private final String DAY_TAG = "DAY_TAG";
     private final String INVOICE_DATE_OPTIONAL = "\n" +
             "[\n" +
             "    {\n" +
@@ -73,9 +89,12 @@ public class FragmentInvoiceDetail extends Fragment {
         super();
     }
 
-    public FragmentInvoiceDetail(Bundle b) {
+    public FragmentInvoiceDetail(Bundle b, InterfaceInvoiceInfo interfaceInvoiceInfo) {
         super();
         this.b = b;
+	     if(this.b != null && !this.b.containsKey(InvoiceData.INVOICE_DAY_TAG))
+	     this.b.putString(InvoiceData.INVOICE_DAY_TAG, DAY_NOW);
+	     this.interfaceInvoiceInfo = interfaceInvoiceInfo;
     }
 
     @Nullable
@@ -84,29 +103,49 @@ public class FragmentInvoiceDetail extends Fragment {
         setRetainInstance(true);
 
         View rootView = inflater.inflate(R.layout.layout_recycler_view, container, false);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViews);
 
         List<InvoiceBaseItem> listItem = null;
         if(b != null) {
-            listItem = new ArrayList<>();
-            Gson gson = new Gson();
-            List<ItemInvoiceDateDAO> listDateDAO = new ArrayList<>();
-            try {
-                java.lang.reflect.Type listType = new TypeToken<ArrayList<ItemInvoiceDateDAO>>(){}.getType();
-                listDateDAO = gson.fromJson(INVOICE_DATE_OPTIONAL, listType);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("error", "Parse Failed GSON" + e.getMessage());
-            }
-            ItemInvoiceDateDropdown dropdown = new ItemInvoiceDateDropdown(INVOICE_CONTENT_HEADER);
-            dropdown.setDateTag(listDateDAO);
-            listItem.add(dropdown);
+	         listItem = new ArrayList<>();
+	         if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
+		         Gson gson = new Gson();
+		         List<ItemInvoiceDateDAO> listDateDAO = new ArrayList<>();
+		         try {
+			         java.lang.reflect.Type listType = new TypeToken<ArrayList<ItemInvoiceDateDAO>>() {
+			         }.getType();
+			         listDateDAO = gson.fromJson(INVOICE_DATE_OPTIONAL, listType);
+		         } catch (Exception e) {
+			         e.printStackTrace();
+			         Log.e("error", "Parse Failed GSON" + e.getMessage());
+		         }
+		         ItemInvoiceDateDropdown dropdown = new ItemInvoiceDateDropdown(INVOICE_CONTENT_HEADER);
+		         dropdown.setDateTag(listDateDAO);
 
-            if(b.containsKey(InvoiceData.INVOICE_PARCEL)) {
-                ParcelInvoice pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+		         listItem.add(dropdown);
+	         }
+
+	         Boolean isDataNull = true;
+
+	         ParcelInvoice pi = null;
+            if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
+	            // แยก Parcel เพราะว่ากลัวซ้ำกับ list ที่เลือก ใน dialog ดูมั่วๆๆๆๆ หะ 5555
+					isDataNull = false;
+	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+            }
+
+            if(pi == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
+					isDataNull = false;
+	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+            }
+
+            if(!isDataNull) {
                 for(ItemInvoicePreview i : pi.getListInvoice()) {
                     ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
                     item.setInvoicePreview(i.getInvoicePreview());
+	                 item.setInvoiceLocality(i.getInvoiceLocality());
+	                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
                     item.setInvoiceDate(i.getInvoiceDate());
                     listItem.add(item);
                 }
@@ -160,8 +199,18 @@ public class FragmentInvoiceDetail extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if(!listItem.isEmpty()) {
                 if(holder instanceof InvoiceHeaderViewHolder) {
-                    ItemInvoiceDateDropdown item = (ItemInvoiceDateDropdown) listItem.get(position);
+
+                    final ItemInvoiceDateDropdown item = (ItemInvoiceDateDropdown) listItem.get(position);
                     final InvoiceHeaderViewHolder vh = (InvoiceHeaderViewHolder) holder;
+
+	                 if(b != null && b.containsKey(InvoiceData.INVOICE_DAY_TAG)) {
+		                 for(ItemInvoiceDateDAO daoItem : item.getDateTag()) {
+		                     if(b.getString(InvoiceData.INVOICE_DAY_TAG).equals( daoItem.getId())) {
+			                     vh.dropdownCustomDate.setText(daoItem.getTitle());
+			                     break;
+		                     }
+		                 }
+	                 }
 
                     ArrayAdapter<ItemInvoiceDateDAO> dropdownData = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice, item.getDateTag());
                     vh.dropdownCustomDate.setAdapter(dropdownData);
@@ -172,20 +221,42 @@ public class FragmentInvoiceDetail extends Fragment {
                         }
                     });
 
+	                vh.dropdownCustomDate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                         @Override
+                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//	                         int size = listItem.size();
+//	                         if (size > 0) {
+//		                         for (int i = 0; i < size; i++) {
+//			                         listItem.remove(0);
+//		                         }
+//		                         notifyItemRangeRemoved(0, size);
+//	                         }
+	                        interfaceInvoiceInfo.onOptionalChange(item.getDateTag().get(position).getId());
+                         }
+	                });
+
                 } else if(holder instanceof InvoiceContentViewHolder) {
-                    ItemInvoice item = (ItemInvoice) listItem.get(position);
+						ItemInvoice item = (ItemInvoice) listItem.get(position);
 
-                    InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
-                    TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
-                    textViewInvoicePreview.setText(item.getInvoicePreview());
+						InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
+						TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
+						textViewInvoicePreview.setText(item.getInvoicePreview());
 
-                    TextView textViewInvoiceDate = (TextView) vh.textViewInvoiceDate;
-                    textViewInvoiceDate.setText(item.getInvoiceDate());
+						TextView textViewInvoiceDate = (TextView) vh.textViewInvoiceDate;
+						textViewInvoiceDate.setText(item.getInvoiceDate());
 
-                    if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
-                        ImageButton btnRemove = (ImageButton) vh.btnRemove;
-                        btnRemove.setVisibility(View.GONE);
-                    }
+						if(b != null) {
+							if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
+		                  ImageButton btnRemove = (ImageButton) vh.btnRemove;
+		                  btnRemove.setVisibility(View.GONE);
+
+								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
+								textViewInvoiceAddress.setText(item.getInvoiceSubLocality()+" "+item.getInvoiceLocality());
+	                  } else if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
+								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
+								textViewInvoiceAddress.setVisibility(View.GONE);
+							}
+						}
                 }
             }
         }

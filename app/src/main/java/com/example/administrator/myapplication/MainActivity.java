@@ -1,6 +1,11 @@
 package com.example.administrator.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.NavigationView;
@@ -16,9 +21,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import authen.AuthenData;
+import authen.AuthenMethod;
 import fragment.FragmentExample;
-
+import fragment.FragmentToolbar;
+import intent.IntentKeycode;
+import location.LocationData;
+import location.pojo.GeoCoderPOJO;
+import okhttp3.ResponseBody;
+import retrofit.InterfaceListen;
+import retrofit.RetrofitAbstract;
+import retrofit.ServiceRetrofit;
+import retrofit2.Retrofit;
+import system.SystemData;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -26,6 +47,8 @@ public class MainActivity extends AppCompatActivity
 
 	 //user : infoshop
     // Pass : !nf0sh@p
+
+	private SharedPreferences sp;
 
 	@Override
 	public void setContentView(@LayoutRes int layoutResID) {
@@ -38,7 +61,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			setContentView(R.layout.view_login);
+			//setContentView(R.layout.view_login);
+	      setContentView(R.layout.layout_blank);
+
+			Configuration config = new Configuration();
+
+			config.locale = new Locale("th");
+			getResources().updateConfiguration(config, null);
 
 			Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
 			setSupportActionBar(myToolbar);
@@ -47,24 +76,36 @@ public class MainActivity extends AppCompatActivity
 			ActionBar ab = getSupportActionBar();
 
 			// Enable the Up button
-			ab.setDisplayHomeAsUpEnabled(true);
+			//ab.setDisplayHomeAsUpEnabled(true);
 
 	      // Remove title name
-			ab.setDisplayShowTitleEnabled(false);
+			//ab.setDisplayShowTitleEnabled(false);
 
-			FragmentExample fExample = new FragmentExample();
+			FragmentToolbar fToolbar = new FragmentToolbar();
 			FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
-			fm.replace(R.id.layout_toolbar, fExample);
+			fm.replace(R.id.layout_toolbar, fToolbar);
 			fm.commit();
 
-			LinearLayout llUsers = (LinearLayout) findViewById(R.id.users);
-			llUsers.setOnClickListener(new View.OnClickListener() {
-			   @Override
-			   public void onClick(View v) {
-			       Intent t = new Intent(MainActivity.this, UserActivity.class);
-			       startActivity(t);
-			   }
-			});
+			sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
+
+			//Log.e("APP VERSION", sp.getString(SystemData.SHARED_App_Version_KEY, "Empty"));
+			//Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show();
+
+//	    if(sp != null && sp.getString(AuthenData.USERNAME, "").equals("")) {
+//		    Intent t = new Intent(this, AuthenActivity.class);
+//		    t.putExtras(b);
+//		    startActivityForResult(t, IntentKeycode.RESULT_AUTHEN);
+//	    } else {
+
+//			LinearLayout llUsers = (LinearLayout) findViewById(R.id.users);
+//			llUsers.setOnClickListener(new View.OnClickListener() {
+//			   @Override
+//			   public void onClick(View v) {
+//			       //Intent t = new Intent(MainActivity.this, UserActivity.class);
+//				   Intent t = new Intent(MainActivity.this, GuideActivity.class);
+//			       startActivity(t);
+//			   }
+//			});
 //
 //			LinearLayout llAdmin = (LinearLayout) findViewById(R.id.admin);
 //			llAdmin.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +115,41 @@ public class MainActivity extends AppCompatActivity
 //			       startActivity(t);
 //			   }
 //			});
+
+//	    Bundle gBundle = new Bundle();
+//	    gBundle.putString(LocationData.lat, "9.92");
+//	    gBundle.putString(LocationData.lng, "100.51");
+//
+//	    new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_GEOCODING, gBundle);
     }
+
+    private InterfaceListen interfaceListen = new InterfaceListen() {
+	    @Override
+	    public void onResponse(Object data, Retrofit retrofit) {
+		    if(data instanceof GeoCoderPOJO) {
+			    GeoCoderPOJO geoCoderData = (GeoCoderPOJO) data;
+			    if(geoCoderData.getResults().size() > 0) {
+				    Log.e("tambol", geoCoderData.getResults().get(1).getAddressComponents().get(1).getLongName());
+				    Log.e("tambol", geoCoderData.getResults().get(1).getAddressComponents().get(2).getLongName());
+			    }
+		    }
+	    }
+
+	    @Override
+	    public void onBodyError(ResponseBody responseBodyError) {
+
+	    }
+
+	    @Override
+	    public void onBodyErrorIsNull() {
+
+	    }
+
+	    @Override
+	    public void onFailure(Throwable t) {
+
+	    }
+    };
 
     @Override
     protected void onPause() {
@@ -83,18 +158,65 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        super.onResume();
+	    super.onResume();
+	    if(sp != null && sp.getString(AuthenData.USERNAME, "").equals("")) {
+		    Intent t = new Intent(this, AuthenActivity.class);
+		    startActivityForResult(t, IntentKeycode.RESULT_AUTHEN);
+	    } else {
+		    switch( sp.getInt(AuthenData.USER_ROLE, 0)) {
+			    case 1:
+				    startActivity(new Intent(MainActivity.this, EBusinessActivity.class));
+				    break;
+			    case 2:
+				    startActivity(new Intent(MainActivity.this, GuideActivity.class));
+				    break;
+			    default:
+				    Intent t = new Intent(this, AuthenActivity.class);
+				    startActivityForResult(t, IntentKeycode.RESULT_AUTHEN);
+               Log.e("error", "role is 0");
+//				    if(AuthenMethod.setLogout(sp)) {
+//					    Log.e("active", "set log out (auto)");
+//				    }
+//			    	Log.e("error", "role is 0");
+			    	break;
+		    }
+	    }
     }
 
     @Override
     protected void onStart() {
-        //googleApiClient.connect();
         super.onStart();
-
         Log.i("status", "App Start");
     }
 
-    @Override
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == IntentKeycode.RESULT_AUTHEN) {
+			if(sp != null) {
+				SharedPreferences.Editor editor = sp.edit();
+				if(data != null) {
+					Bundle sc = data.getExtras();
+					editor.putString(AuthenData.USERNAME, sc.getString(AuthenData.USERNAME));
+					editor.putString(AuthenData.FULLNAME, sc.getString(AuthenData.FULLNAME));
+					editor.putInt(AuthenData.USER_ROLE, sc.getInt(AuthenData.USER_ROLE));
+
+					switch(sc.getInt(AuthenData.USER_ROLE)) {
+						case 1:
+			            startActivity(new Intent(MainActivity.this, EBusinessActivity.class));
+							break;
+						case 2:
+			            startActivity(new Intent(MainActivity.this, GuideActivity.class));
+							break;
+					}
+					Log.e("sp status", sc.getString(AuthenData.FULLNAME));
+				}
+				editor.apply();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
     protected void onStop() {
         super.onStop();
     }
@@ -113,7 +235,6 @@ public class MainActivity extends AppCompatActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

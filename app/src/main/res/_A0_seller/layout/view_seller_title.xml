@@ -71,7 +71,7 @@
 
                 <!--android:padding="@dimen/round_padding"-->
 
-                <!--android:background="@color/dark_honest_green"-->
+                <!--android:shapxamplebackground="@color/dark_honest_green"-->
 
                 <!--android:id="@+id/option" />-->
 

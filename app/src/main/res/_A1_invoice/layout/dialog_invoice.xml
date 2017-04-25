@@ -11,32 +11,35 @@
         android:background="@android:color/transparent"
         android:layout_gravity="center_horizontal|center_vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:padding="@dimen/double_round"
-            android:background="@color/lemon_wingless">
+            android:background="@drawable/shapxamplebackground">
 
             <ImageButton
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="@android:color/transparent"
                 android:tint="@color/angel_white"
-                android:src="@drawable/ic_arrow_back_36"
+                android:src="@drawable/ic_arrow_back_24"
                 android:id="@+id/backPressedState"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
                 style="@style/Base.Widget.AppCompat.Button.Borderless" />
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/backPressedState"
+                android:layout_centerInParent="true"
                 android:layout_marginStart="@dimen/double_round"
-                android:gravity="center|left"
                 android:id="@+id/view_dialog_title"
                 android:text="เลือกเมนูใดเมนูหนึ่งด้านล่าง"
                 android:textColor="@color/angel_white"
                 android:textSize="@dimen/dialog_title_header"/>
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,34 +47,21 @@
             android:orientation="vertical"
             android:background="@color/shadow_gray"
             android:paddingTop="@dimen/slice_align"
-            android:paddingBottom="@dimen/slice_align"
-            android:paddingStart="@dimen/round_padding"
-            android:paddingEnd="@dimen/round_padding">
-
-            <!--<android.support.v7.widget.CardView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-
-               <!--android:layout_margin="3dp"-->
-
-                <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
-                <!--card_view:cardPreventCornerOverlap="false"-->
-                <!--card_view:cardElevation="@dimen/slice_align"-->
-                <!--card_view:cardBackgroundColor="@android:color/transparent">-->
+            android:paddingBottom="@dimen/slice_align">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <Button
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
 
                         android:gravity="start|center_vertical"
                         android:paddingStart="@dimen/double_round"
 
-                        android:text="สแกนใบสั่งสินค้าเพิ่มเติม"
+                        android:text="สแกนใบสั่งสินค้า"
                         android:textSize="@dimen/font_text_view"
                         android:textColor="@color/solid_gray"
                         android:id="@+id/btn_more_scan"
@@ -81,18 +71,17 @@
                         android:background="@color/angel_white"
                         android:elevation="0dp"
                         android:paddingEnd="@dimen/round_padding"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:drawablePadding="@dimen/double_round"
                         android:drawableStart="@drawable/ic_add_24"
                         android:drawableEnd="@drawable/ic_chevron_24_black_fixed" />
 
-                    <Button
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
                         android:gravity="start|center_vertical"
                         android:paddingStart="@dimen/double_round"
-
-                        android:text="แสดงรายการที่สแกนแล้ว"
+                        android:text="แสดงรายการแสกนที่ยังไม่ได้บันทึก"
                         android:textSize="@dimen/font_text_view"
                         android:textColor="@color/solid_gray"
                         android:id="@+id/btn_more_info"
@@ -102,11 +91,12 @@
                         android:background="@color/angel_white"
                         android:elevation="0dp"
                         android:paddingEnd="@dimen/round_padding"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:drawablePadding="@dimen/double_round"
                         android:drawableStart="@drawable/ic_list_24"
                         android:drawableEnd="@drawable/ic_chevron_24_black_fixed" />
 
-                    <Button
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="start|center_vertical"
@@ -121,6 +111,7 @@
                         android:elevation="0dp"
                         android:padding="@dimen/double_round"
                         android:paddingEnd="@dimen/round_padding"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         android:drawablePadding="@dimen/double_round"
                         android:drawableStart="@drawable/ic_done_24"
                         android:drawableEnd="@drawable/ic_chevron_24_black_fixed" />

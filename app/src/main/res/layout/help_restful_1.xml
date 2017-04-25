@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/double_round"
+    android:background="#fcd277">
+
+   <RelativeLayout
+       android:layout_width="wrap_content"
+       android:layout_height="255dp"
+       android:layout_centerInParent="true">
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/relative_1">
+         <ImageView
+             android:layout_width="94dp"
+             android:layout_height="94dp"
+             android:id="@+id/help_restful_camera_alt"
+             android:padding="@dimen/double_round"
+             android:src="@drawable/ic_camera_helpful"
+             android:tint="#c99630"
+             android:background="@drawable/rounded_yellow_bc"/>
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_toEndOf="@+id/help_restful_camera_alt"
+             android:layout_centerInParent="true"
+             android:gravity="center|right"
+
+             android:padding="@dimen/round_padding"
+             android:textSize="@dimen/font_app_name"
+             android:textColor="#d2a03c"
+             android:text="สแกนใบสั่งสินค้าด้วยอุปกรณ์กล้องของท่าน"/>
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/relative_2"
+          android:layout_alignParentBottom="true">
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_toStartOf="@+id/help_restful_barcode_alt"
+             android:layout_centerInParent="true"
+             android:gravity="center|left"
+             android:padding="@dimen/round_padding"
+             android:textSize="@dimen/font_app_name"
+             android:textColor="#d2a03c"
+             android:text="ใบสั่งสินค้านั้นต้องมีลักษณะเป็นบาร์โค้ด (Barcode)"/>
+
+         <ImageView
+             android:layout_width="94dp"
+             android:layout_height="94dp"
+             android:layout_alignParentEnd="true"
+             android:id="@+id/help_restful_barcode_alt"
+             android:padding="@dimen/double_round"
+             android:src="@drawable/ic_barcode_helpful"
+             android:tint="#c99630"
+             android:background="@drawable/rounded_yellow_bc"/>
+      </RelativeLayout>
+   </RelativeLayout>
+
+   <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
+      android:layout_alignParentBottom="true"
+      android:layout_marginBottom="@dimen/round_padding">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:gravity="center">
+
+         <ImageView
+             android:layout_width="24dp"
+             android:layout_height="24dp"
+             android:src="@drawable/rounded_yellow_bc"
+             android:tint="#708d8d"/>
+
+         <ImageView
+             android:layout_width="24dp"
+             android:layout_height="24dp"
+             android:layout_marginStart="@dimen/double_round"
+             android:src="@drawable/rounded_yellow_bc"
+             android:tint="#ecb443"/>
+         <!--<ImageView-->
+             <!--android:layout_width="24dp"-->
+             <!--android:layout_height="24dp"-->
+             <!--android:layout_marginStart="@dimen/double_round"-->
+             <!--android:src="@drawable/rounded_yellow_bc"-->
+             <!--android:tint="#ecb443"/>-->
+      </LinearLayout>
+
+   </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/double_round"
+    android:background="#2abb9c">
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentTop="true"
+       android:gravity="end|center">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:layout_marginStart="@dimen/round_padding"
+          android:layout_marginEnd="@dimen/round_padding"
+          android:id="@+id/text_view_skip"
+          android:text="(ต่อไป)"
+          android:textColor="@color/angel_white"
+          android:textSize="25sp"/>
+
+      <ImageButton
+          android:layout_width="36dp"
+          android:layout_height="36dp"
+          android:layout_toEndOf="@+id/text_view_skip"
+          android:id="@+id/icon_skip"
+          android:background="@android:color/transparent"
+          android:src="@drawable/ic_arrow_forward_36_white_fixed"/>
+   </RelativeLayout>
+
+   <RelativeLayout
+       android:layout_width="wrap_content"
+       android:layout_height="268dp"
+       android:layout_centerInParent="true">
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:id="@+id/relative_1">
+         <ImageView
+             android:layout_width="94dp"
+             android:layout_height="94dp"
+             android:layout_marginStart="30dp"
+             android:id="@+id/help_restful_camera_alt"
+             android:padding="@dimen/double_round"
+             android:src="@drawable/ic_create"
+             android:tint="#36485c"
+             android:background="@drawable/rounded_navy_bc"/>
+
+         <ImageView
+             android:layout_width="94dp"
+             android:layout_height="94dp"
+             android:layout_alignParentEnd="true"
+             android:layout_marginEnd="30dp"
+             android:padding="@dimen/double_round"
+             android:src="@drawable/ic_vertical_align_bottom"
+             android:tint="#36485c"
+             android:background="@drawable/rounded_navy_bc"/>
+      </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/relative_2"
+          android:padding="@dimen/round_padding"
+          android:layout_alignParentBottom="true">
+
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_toStartOf="@+id/help_restful_barcode_alt"
+             android:layout_centerInParent="true"
+             android:gravity="center|left"
+             android:padding="@dimen/round_padding"
+             android:textSize="@dimen/font_app_name"
+             android:textColor="#36485c"
+             android:text="นำอุปกรณ์ของท่านให้ผู้รับเซ็นต์รับสินค้า หากท่านมีบัตรพนักงาน ให้สแกนบัตรพนักงานของท่านด้วย"/>
+      </RelativeLayout>
+   </RelativeLayout>
+
+   <RelativeLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+       android:layout_alignParentBottom="true"
+       android:layout_marginBottom="@dimen/round_padding">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:gravity="center">
+
+         <ImageView
+             android:layout_width="24dp"
+             android:layout_height="24dp"
+             android:src="@drawable/rounded_yellow_bc"
+             android:tint="#239d84"/>
+
+         <ImageView
+             android:layout_width="24dp"
+             android:layout_height="24dp"
+             android:layout_marginStart="@dimen/double_round"
+             android:src="@drawable/rounded_yellow_bc"
+             android:tint="#708d8d"/>
+
+         <!--<ImageView-->
+             <!--android:layout_width="24dp"-->
+             <!--android:layout_height="24dp"-->
+             <!--android:layout_marginStart="@dimen/double_round"-->
+             <!--android:src="@drawable/rounded_yellow_bc"-->
+             <!--android:tint="#239d84"/>-->
+      </LinearLayout>
+
+   </RelativeLayout>
+</RelativeLayout>

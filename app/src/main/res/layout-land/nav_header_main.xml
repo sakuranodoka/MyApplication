@@ -16,7 +16,7 @@
         android:layout_width="85dp"
         android:layout_height="85dp"
         android:paddingTop="0dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_style" />
 
     <TextView
         android:layout_width="match_parent"

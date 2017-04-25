@@ -10,7 +10,7 @@
         <!--android:layout_height="120dp"-->
         <!--android:id="@+id/a"-->
         <!--android:gravity="center"-->
-        <!--android:background="@color/dark_honest_green"-->
+        <!--android:shapxamplebackground="@color/dark_honest_green"-->
         <!--android:scaleType="fitCenter" />-->
     <LinearLayout
         android:layout_width="match_parent"

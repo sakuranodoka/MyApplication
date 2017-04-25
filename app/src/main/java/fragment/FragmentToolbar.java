@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import com.example.administrator.myapplication.R;
 
-/**
- * Created by Administrator on 22/3/2560.
- */
-
 public class FragmentToolbar extends Fragment {
 
 	public FragmentToolbar() {}

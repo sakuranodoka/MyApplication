@@ -7,5 +7,7 @@ public interface InterfaceUser {
 
     void onBarcodeScan(int mode, String preview);
 
+    void setShowDialog();
+
     void onIntentCallback(Class<?> target, Bundle callbackState);
 }

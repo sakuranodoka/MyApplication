@@ -25,6 +25,18 @@
         android:layout_below="@id/text_view_invoice_preview"
         android:paddingStart="@dimen/slice_align"
         android:paddingTop="@dimen/slice_align"
+        android:id="@+id/text_view_invoice_address"
+        android:gravity="left|center"
+        android:text="เขตบางโคล่ กรุงเทพมหานคร"
+        android:textColor="@color/space_gray"
+        android:textSize="@dimen/font_text_view"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_view_invoice_address"
+        android:paddingStart="@dimen/slice_align"
+        android:paddingTop="@dimen/slice_align"
         android:id="@+id/text_view_invoice_date"
         android:gravity="left|center"
         android:text="13 พฤศจิกายน 2559 20:39:53 น."
@@ -39,5 +51,4 @@
         android:id="@+id/btn_remove"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_clear_24" />
-
 </RelativeLayout>

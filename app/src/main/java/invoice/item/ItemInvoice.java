@@ -1,9 +1,5 @@
 package invoice.item;
 
-/**
- * Created by Administrator on 6/3/2560.
- */
-
 public class ItemInvoice extends InvoiceBaseItem {
 
     public ItemInvoice(int type) { super(type); }
@@ -17,6 +13,10 @@ public class ItemInvoice extends InvoiceBaseItem {
     public String invoiceLongitude;
 
     public String invoiceUserID;
+
+	 public String invoiceSubLocality;
+
+	 public String invoiceLocality;
 
     public String getInvoicePreview() {
         return invoicePreview;
@@ -57,4 +57,20 @@ public class ItemInvoice extends InvoiceBaseItem {
     public void setInvoiceUserID(String invoiceUserID) {
         this.invoiceUserID = invoiceUserID;
     }
+
+	public String getInvoiceSubLocality() {
+		return invoiceSubLocality;
+	}
+
+	public void setInvoiceSubLocality(String invoiceSubLocality) {
+		this.invoiceSubLocality = invoiceSubLocality;
+	}
+
+	public String getInvoiceLocality() {
+		return invoiceLocality;
+	}
+
+	public void setInvoiceLocality(String invoiceLocality) {
+		this.invoiceLocality = invoiceLocality;
+	}
 }

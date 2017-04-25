@@ -6,13 +6,10 @@ import android.widget.TextView;
 
 import com.example.administrator.myapplication.R;
 
-/**
- * Created by Administrator on 6/3/2560.
- */
-
 public class InvoiceContentViewHolder extends RecyclerView.ViewHolder {
 
     public Object textViewInvoicePreview;
+    public Object textViewInvoiceAddress;
     public Object textViewInvoiceDate;
     public Object btnRemove;
 
@@ -20,6 +17,7 @@ public class InvoiceContentViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         textViewInvoicePreview = itemView.findViewById(R.id.text_view_invoice_preview);
+        textViewInvoiceAddress = itemView.findViewById(R.id.text_view_invoice_address);
         textViewInvoiceDate = itemView.findViewById(R.id.text_view_invoice_date);
         btnRemove = itemView.findViewById(R.id.btn_remove);
     }

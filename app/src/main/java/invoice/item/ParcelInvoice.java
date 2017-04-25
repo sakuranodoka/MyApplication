@@ -8,10 +8,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Administrator on 7/3/2560.
- */
-
 @Parcel
 public class ParcelInvoice implements Serializable {
 
@@ -25,14 +21,6 @@ public class ParcelInvoice implements Serializable {
 	 public String username;
 
 	 public ParcelInvoice() {}
-
-//	 public ParcelInvoice(ArrayList<ItemInvoicePreview> listInvoice, String latitude, String longitude, String userID, String bitmap) {
-//			this.listInvoice = listInvoice;
-//			this.latitude = latitude;
-//			this.longitude = longitude;
-//			this.userID = userID;
-//			this.bitmap = bitmap;
-//	 }
 
 	 public ArrayList<ItemInvoicePreview> getListInvoice() {
 			return listInvoice;

@@ -111,7 +111,7 @@
                     <!--android:textSize="@dimen/font_text_view"-->
                     <!--android:textColor="@color/fortune_green"-->
 
-                    <!--android:background="@color/shadow_white"/>-->
+                    <!--android:shapxamplebackground="@color/shadow_white"/>-->
 
                 <Button
                     android:layout_width="wrap_content"

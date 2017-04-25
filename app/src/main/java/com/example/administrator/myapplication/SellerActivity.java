@@ -4,8 +4,10 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import java.util.List;
 import AppBar.ApplicationBar;
 import AppBar.BarType;
 import autocomplete.InstantAutocomplete;
+import fragment.FragmentExample;
 import seller.TypeSellerReport;
 import seller.pojo.SellerBestSellerMonthToDatePOJO;
 import seller.pojo.SellerStockKeeperPOJO;
@@ -56,7 +59,7 @@ public class SellerActivity extends AppCompatActivity
         InterfaceOnShop
 {
 
-    private final FragmentManager fm = getSupportFragmentManager();
+//    private final FragmentManager fm = getSupportFragmentManager();
 
     private RecyclerView sellerRecyclerView;
 
@@ -68,43 +71,67 @@ public class SellerActivity extends AppCompatActivity
 
     protected SellerData sellerData;
 
+//    @Override
+//    public void setContentView(@LayoutRes int layoutResID) {
+//
+//        DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(layoutResID, null);
+//
+//        FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.content);
+//
+//        getLayoutInflater().inflate(R.layout.activity_seller, frameLayout, true);
+//
+//        super.setContentView(fullLayout);
+//
+//        new ApplicationBar(this, BarType.TYPE_SHOP_SEARCH).setShopBar();
+//
+//        setTitle();
+//    }
+
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
-
-        DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(layoutResID, null);
-
-        FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.content);
-
-        getLayoutInflater().inflate(R.layout.activity_seller, frameLayout, true);
-
+        DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.layout_main, null);
+        FrameLayout frameLayout = (FrameLayout) fullLayout.findViewById(R.id.layout_content);
+        getLayoutInflater().inflate(layoutResID, frameLayout, true);
         super.setContentView(fullLayout);
-
-        new ApplicationBar(this, BarType.TYPE_SHOP_SEARCH).setShopBar();
-
-        setTitle();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 
-        this.sellerData = null;
+		setContentView(R.layout.activity_seller);
 
-        setContentView(R.layout.activity_main);
+		Toolbar myToolbar = (Toolbar) findViewById(R.id.app_toolbar);
+		setSupportActionBar(myToolbar);
 
-        sellerRecyclerView = (RecyclerView) findViewById(R.id.sellerRecyclerView);
+		ActionBar ab = getSupportActionBar();
 
-        CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+		// Enable the Up button
+		ab.setDisplayHomeAsUpEnabled(true);
 
-        //sellerRecyclerView.setLayoutManager( new LinearLayoutManager(this) );
-        sellerRecyclerView.setLayoutManager( customLayoutManager );
+		// Remove title name
+		ab.setDisplayShowTitleEnabled(false);
 
-        sellerRecyclerView.setNestedScrollingEnabled(false);
+		FragmentExample fExample = new FragmentExample();
+		FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
+		fm.replace(R.id.layout_toolbar, fExample);
+		fm.commit();
 
-        sellerAdapter = new SellerAdapter(this);
+	   setTitle();
 
-        sellerRecyclerView.setAdapter(sellerAdapter);
+	   this.sellerData = null;
 
+		sellerRecyclerView = (RecyclerView) findViewById(R.id.sellerRecyclerView);
+
+		CustomLinearLayoutManager customLayoutManager = new CustomLinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+
+		sellerRecyclerView.setLayoutManager( customLayoutManager );
+
+		sellerRecyclerView.setNestedScrollingEnabled(false);
+
+		sellerAdapter = new SellerAdapter(this);
+
+		sellerRecyclerView.setAdapter(sellerAdapter);
     }
 
     @Override

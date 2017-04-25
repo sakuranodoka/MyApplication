@@ -18,7 +18,7 @@
 
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:background="@color/honest_green"-->
+        <!--android:shapxamplebackground="@color/honest_green"-->
         <!--android:padding="@dimen/round_padding">-->
 
         <!--<ImageView-->
@@ -36,7 +36,7 @@
 
             <!--android:id="@+id/address_search_tv"-->
 
-            <!--android:background="@color/dark_honest_green"-->
+            <!--android:shapxamplebackground="@color/dark_honest_green"-->
             <!--android:drawableEnd="@drawable/ic_arrow_drop_down_black"-->
             <!--android:hint="ค้นหาหมายเลขโทรศัพท์"-->
             <!--android:gravity="center"-->
