@@ -36,9 +36,11 @@ public interface InterfaceInvoice {
 			@Part("username") RequestBody username
 	 );
 
-	@GET("/Application/getInvoiceInfo.php")
+	//@GET("/Application/getInvoiceInfo.php")
+	@GET("/Application/tracking/services/getInvoiceInfo.php")
 	Observable<List<InvoicePOJO>> getInvoiceInfo (
 		  @Query("username") String username,
-		  @Query("timestack") String timestack
+		  @Query("timestack") String timestack,
+		  @Query("limit") String limit
 	);
 }

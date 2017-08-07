@@ -125,8 +125,17 @@ public class ServiceRetrofit {
 						optional.append("TODAY");
 					}
 
+					StringBuilder limit = new StringBuilder(128);
+					if(x.containsKey(InvoiceData.INVOICE_LIMIT)) {
+						limit.append(x.getString(InvoiceData.INVOICE_LIMIT));
+					} else {
+						limit.append("1");
+					}
+
+					Log.e("LIMIT", limit.toString());
+
 					ParcelInvoice p = Parcels.unwrap(x.getParcelable(InvoiceData.INVOICE_PARCEL));
-					Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(p.getUsername(), optional.toString());
+					Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(p.getUsername(), optional.toString(), limit.toString());
 					observable = ex;
 				}
 			   break;

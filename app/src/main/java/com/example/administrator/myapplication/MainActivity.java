@@ -163,12 +163,15 @@ public class MainActivity extends AppCompatActivity
 		    Intent t = new Intent(this, AuthenActivity.class);
 		    startActivityForResult(t, IntentKeycode.RESULT_AUTHEN);
 	    } else {
-		    switch( sp.getInt(AuthenData.USER_ROLE, 0)) {
+		    switch(sp.getInt(AuthenData.USER_ROLE, 0)) {
 			    case 1:
 				    startActivity(new Intent(MainActivity.this, EBusinessActivity.class));
 				    break;
 			    case 2:
-				    startActivity(new Intent(MainActivity.this, GuideActivity.class));
+			    	//UserActivity.class
+				    //startActivity(new Intent(MainActivity.this, GuideActivity.class));
+				    startActivity(new Intent(MainActivity.this, UserActivity.class));
+				    //startActivity(new Intent(MainActivity.this, BillListActivity.class));
 				    break;
 			    default:
 				    Intent t = new Intent(this, AuthenActivity.class);

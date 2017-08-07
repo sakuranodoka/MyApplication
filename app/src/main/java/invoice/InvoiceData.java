@@ -34,4 +34,5 @@ public class InvoiceData {
 		public static final int INVOICE_INFO_INNER_APP = 2326;
 		public static final int INVOICE_INFO_WITH_USER_ID = 2327;
 		public static final String INVOICE_DAY_TAG = "INVOICE_DAY_TAG";
+		public static final String INVOICE_LIMIT = "INVOICE_LIMIT";
 }

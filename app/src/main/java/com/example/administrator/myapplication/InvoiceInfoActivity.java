@@ -133,6 +133,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	protected void async() {
 		if(this.b != null) {
+			b.putString(InvoiceData.INVOICE_LIMIT, "1");
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
 		}
 	}

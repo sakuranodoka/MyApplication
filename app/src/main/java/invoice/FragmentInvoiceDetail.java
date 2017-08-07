@@ -1,9 +1,13 @@
 package invoice;
 
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.myapplication.R;
 import com.google.gson.Gson;
@@ -25,6 +30,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Handler;
@@ -39,6 +45,7 @@ import invoice.item.ItemInvoicePreview;
 import invoice.item.ParcelInvoice;
 import invoice.viewholder.InvoiceContentViewHolder;
 import invoice.viewholder.InvoiceHeaderViewHolder;
+import invoice.viewholder.ProgressBarViewHolder;
 import location.LocationData;
 import location.pojo.GeoCoderPOJO;
 import okhttp3.ResponseBody;
@@ -50,14 +57,71 @@ import seller.titlebar.SellerTitleDAO;
 
 public class FragmentInvoiceDetail extends Fragment {
 
-    private RecyclerView recyclerView;
-    private InvoiceDetailAdapter adapter;
-    public static final int INVOICE_CONTENT_HEADER = 0;
-    public static final int INVOICE_CONTENT_VIEW = 1;
+   private RecyclerView recyclerView;
+   private InvoiceDetailAdapter adapter;
+   public static final int INVOICE_CONTENT_HEADER = 0;
+   public static final int INVOICE_CONTENT_VIEW = 1;
+	public static final int INVOICE_CONTENT_LOADER = 2;
+
+	private static int limited = 1;
+
+	private static boolean isloading = false;
+
+	// let inside data
+	private List<InvoiceBaseItem> listItem = new ArrayList<>();
 
     private Bundle b = null;
 
 	 private InterfaceInvoiceInfo interfaceInvoiceInfo = null;
+
+	private final InterfaceListen interfaceListen = new InterfaceListen() {
+		@Override
+		public void onResponse(Object data, Retrofit retrofit) {
+
+			isloading = false;
+
+			if(listItem.size() != 0) {
+				listItem.remove(listItem.size() - 1);
+				adapter.notifyDataSetChanged();
+			}
+
+			ParcelInvoice pi = new ParcelInvoice();
+
+			List<InvoicePOJO> pojoList = (List<InvoicePOJO>) data;
+
+			ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
+			for (InvoicePOJO i : pojoList) {
+				/*ItemInvoicePreview temp = new ItemInvoicePreview();
+				temp.setInvoicePreview(i.getInfoInvoice());
+				temp.setInvoiceSublocality(i.getInfoSubLocality());
+				temp.setInvoiceLocality(i.getInfoLocality());
+				temp.setInvoiceDate(i.getInfoTime());
+				listInvoice.add(temp);*/
+
+				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+				item.setInvoicePreview(i.getInfoInvoice());
+				item.setInvoiceLocality(i.getInfoLocality());
+				item.setInvoiceSubLocality(i.getInfoSubLocality());
+				item.setInvoiceDate(i.getInfoTime());
+				listItem.add(item);
+
+//				Log.e("DATA_S", i.getInfoInvoice().toString());
+			}
+
+			adapter.notifyDataSetChanged();
+
+			//pi.setListInvoice(listInvoice);
+		}
+
+		@Override
+		public void onBodyError(ResponseBody responseBodyError) {}
+
+		@Override
+		public void onBodyErrorIsNull() {}
+
+		@Override
+		public void onFailure(Throwable t) {}
+	};
 
     private final String DAY_NOW = "TODAY";
     private final String DAY_7 = "D7";
@@ -106,14 +170,13 @@ public class FragmentInvoiceDetail extends Fragment {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViews);
 
-        List<InvoiceBaseItem> listItem = null;
+        listItem = new ArrayList<>();
         if(b != null) {
-	         listItem = new ArrayList<>();
 	         if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
 		         Gson gson = new Gson();
 		         List<ItemInvoiceDateDAO> listDateDAO = new ArrayList<>();
 		         try {
-			         java.lang.reflect.Type listType = new TypeToken<ArrayList<ItemInvoiceDateDAO>>() {
+			         Type listType = new TypeToken<ArrayList<ItemInvoiceDateDAO>>() {
 			         }.getType();
 			         listDateDAO = gson.fromJson(INVOICE_DATE_OPTIONAL, listType);
 		         } catch (Exception e) {
@@ -157,7 +220,8 @@ public class FragmentInvoiceDetail extends Fragment {
         int orientation = this.getResources().getConfiguration().orientation;
         if( orientation == Configuration.ORIENTATION_PORTRAIT ) {
             //code for portrait mode (แนวตั้ง)
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+	         LinearLayoutManager lm = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(lm);
         } else {
             //code for landscape mode (แนวนอน)
             final GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
@@ -172,8 +236,75 @@ public class FragmentInvoiceDetail extends Fragment {
             });
             recyclerView.setLayoutManager(gridLayoutManager);
         }
-        adapter.notifyDataSetChanged();
-        return rootView;
+
+	    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			 private boolean isUserScrolling = false;
+			 private boolean isListGoingUp = true;
+
+			 @Override
+			 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				 super.onScrollStateChanged(recyclerView, newState);
+				 //detect is the topmost item visible and is user scrolling? if true then only execute
+				 if (newState == RecyclerView.SCROLL_STATE_DRAGGING && !isloading) {
+					 isUserScrolling = true;
+					 if(isListGoingUp) {
+						 if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+							 final LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
+							 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
+								 android.os.Handler handler = new android.os.Handler();
+								 handler.postDelayed(new Runnable() {
+									 @Override
+									 public void run() {
+										 if (isListGoingUp) {
+											 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
+												 Toast.makeText(getContext(),"exeute something", Toast.LENGTH_SHORT).show();
+												 InvoiceBaseItem temp = new InvoiceBaseItem(INVOICE_CONTENT_LOADER);
+
+												 listItem.add(temp);
+
+												 adapter.notifyDataSetChanged();
+
+												 limited = limited+15;
+
+												 isloading = true;
+
+												 async();
+
+												 Log.e("ON_DOWN", "TRUE");
+											 }
+										 }
+									 }
+								 },50);
+							 }
+						 } else if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+
+							 // } else {}
+							 //my recycler view is actually inverted so I have to write this condition instead
+
+						 }
+					 }
+					 //}
+				 }
+			 }
+
+		    @Override
+		    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+			    super.onScrolled(recyclerView, dx, dy);
+			    if(isUserScrolling) {
+				    if(dy > 0) {
+					    //means user finger is moving up but the list is going down
+					    isListGoingUp = true;
+				    } else {
+					    //means user finger is moving down but the list is going up
+					    isListGoingUp = false;
+				    }
+			    }
+		    }
+	     });
+
+	    adapter.notifyDataSetChanged();
+
+       return rootView;
     }
 
     public class InvoiceDetailAdapter extends RecyclerView.Adapter {
@@ -191,12 +322,15 @@ public class FragmentInvoiceDetail extends Fragment {
             } else if(viewType == INVOICE_CONTENT_VIEW) {
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.view_invoice_info, parent, false);
                 return new InvoiceContentViewHolder(view);
+            } else if(viewType == INVOICE_CONTENT_LOADER) {
+	            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_progressbar, parent, false);
+	            return new ProgressBarViewHolder(view);
             }
             return null;
         }
 
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+       @Override
+       public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if(!listItem.isEmpty()) {
                 if(holder instanceof InvoiceHeaderViewHolder) {
 
@@ -257,11 +391,17 @@ public class FragmentInvoiceDetail extends Fragment {
 								textViewInvoiceAddress.setVisibility(View.GONE);
 							}
 						}
+                } else if(holder instanceof ProgressBarViewHolder) {
+
                 }
             }
         }
 
-        @Override
+
+
+
+
+	    @Override
         public int getItemCount() {
             if(this.listItem != null) {
                 return this.listItem.size();
@@ -279,4 +419,11 @@ public class FragmentInvoiceDetail extends Fragment {
             }
         }
     }
+
+	protected void async() {
+		if(this.b != null) {
+			b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
+			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
+		}
+	}
 }

@@ -195,9 +195,10 @@ public class UserActivity extends AppCompatActivity implements
 		itemMenu = new ItemMenu();
 		itemMenu.setMenuMethod(MenuMethod.T_SHOW_INVOICE);
 		itemMenu.setImageSource(R.drawable.ic_list_24);
-		itemMenu.setMenuName("ประวัติการรับมอบใบสั่งสินค้า");
+		itemMenu.setMenuName("รายการบิลล์");
 		itemMenu.setImageResourceColor( ContextCompat.getColor(getApplicationContext(), R.color.lemon_light_fortune));
-		itemMenu.setDetailName("แสดงใบสั่งสินค้าทั้งหมดที่ท่านได้บันทึกไปแล้ว");
+		//itemMenu.setDetailName("แสดงใบสั่งสินค้าทั้งหมดที่ท่านได้บันทึกไปแล้ว");
+		itemMenu.setDetailName("แสดงบิลล์ที่รอการสแกนทั้งหมด");
 		userBaseItems.add(itemMenu);
 
 		itemMenu = new ItemMenu();
@@ -463,6 +464,7 @@ public class UserActivity extends AppCompatActivity implements
 
 	protected void async() {
 		if(b != null && sp != null && !sp.getString(AuthenData.USERNAME, "").equals("")) {
+
 			sqlite = dbHelper.getWritableDatabase();
 //			cursor = sqlite.rawQuery("SELECT "
 //					  + dbHelper.COL_INVOICE + ", "
@@ -775,8 +777,8 @@ public class UserActivity extends AppCompatActivity implements
 		if(b != null) {
 			b.putString(InvoiceData.LATITUDE, location.getLatitude()+"");
 			b.putString(InvoiceData.LONGITUDE, location.getLongitude()+"");
-			Log.e("lat", location.getLatitude()+"");
-			Log.e("lng",location.getLongitude()+"");
+			//Log.e("lat", location.getLatitude()+"");
+			//Log.e("lng",location.getLongitude()+"");
 		}
 	}
 
