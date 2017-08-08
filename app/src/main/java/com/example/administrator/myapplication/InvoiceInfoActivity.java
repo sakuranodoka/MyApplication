@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -15,7 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
@@ -39,6 +42,7 @@ import retrofit.RetrofitAbstract;
 import retrofit.ServiceRetrofit;
 import retrofit2.Retrofit;
 import sqlite.DbHelper;
+import toolbars.ToolbarOptions;
 
 public class InvoiceInfoActivity extends AppCompatActivity {
 
@@ -79,7 +83,18 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		// Remove title name
 		ab.setDisplayShowTitleEnabled(false);
 
-		FragmentToolbar fToolbar = new FragmentToolbar("รายการใบสั่งสินค้า");
+		ToolbarOptions callbacks = new ToolbarOptions() {
+			@Override
+			public void response(Bundle response) {
+				Log.e("COMING", "CLICKED");
+				if (response.containsKey(".....")) {
+
+				}
+			}
+		};
+
+		Bundle dataCallbacks = new Bundle();
+		FragmentToolbar fToolbar = new FragmentToolbar("รายการใบสั่งสินค้า", callbacks, dataCallbacks);
 		fm.replace(R.id.layout_toolbar, fToolbar);
 		fm.commit();
 

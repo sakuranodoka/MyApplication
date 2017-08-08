@@ -5,7 +5,7 @@
               android:layout_height="wrap_content"
               android:background="@color/angel_white"
 
-              android:layout_marginBottom="@dimen/slice_align">
+              android:layout_margin="@dimen/slice_align">
 
    <ProgressBar
        android:layout_width="wrap_content"

@@ -67,6 +67,8 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	private static boolean isloading = false;
 
+	private static boolean canloadmore = true;
+
 	// let inside data
 	private List<InvoiceBaseItem> listItem = new ArrayList<>();
 
@@ -97,6 +99,10 @@ public class FragmentInvoiceDetail extends Fragment {
 				temp.setInvoiceLocality(i.getInfoLocality());
 				temp.setInvoiceDate(i.getInfoTime());
 				listInvoice.add(temp);*/
+
+				if(i.getInfoInvoice().equals("0000")) {
+					canloadmore = false;
+				}
 
 				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
 				item.setInvoicePreview(i.getInfoInvoice());
@@ -186,7 +192,7 @@ public class FragmentInvoiceDetail extends Fragment {
 		         ItemInvoiceDateDropdown dropdown = new ItemInvoiceDateDropdown(INVOICE_CONTENT_HEADER);
 		         dropdown.setDateTag(listDateDAO);
 
-		         listItem.add(dropdown);
+		         //listItem.add(dropdown);
 	         }
 
 	         Boolean isDataNull = true;
@@ -205,6 +211,10 @@ public class FragmentInvoiceDetail extends Fragment {
 
             if(!isDataNull) {
                 for(ItemInvoicePreview i : pi.getListInvoice()) {
+							if(i.getInvoicePreview().equals("0000")) {
+								canloadmore = false;
+							}
+
                     ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
                     item.setInvoicePreview(i.getInvoicePreview());
 	                 item.setInvoiceLocality(i.getInvoiceLocality());
@@ -268,9 +278,11 @@ public class FragmentInvoiceDetail extends Fragment {
 
 												 isloading = true;
 
-												 async();
+												 if(canloadmore) {
+													 async();
+												 }
 
-												 Log.e("ON_DOWN", "TRUE");
+//												 Log.e("ON_DOWN", "TRUE");
 											 }
 										 }
 									 }
@@ -396,10 +408,6 @@ public class FragmentInvoiceDetail extends Fragment {
                 }
             }
         }
-
-
-
-
 
 	    @Override
         public int getItemCount() {
