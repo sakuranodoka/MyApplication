@@ -82,6 +82,8 @@
           android:screenOrientation="portrait"/>
       <activity android:name=".BillListActivity">
       </activity>
+      <activity android:name=".AppliedSearchActivity">
+      </activity>
    </application>
 
 </manifest>

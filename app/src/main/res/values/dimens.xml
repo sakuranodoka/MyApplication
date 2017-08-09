@@ -18,6 +18,7 @@
 
    <dimen name="slice_align">4dp</dimen>
    <dimen name="round_padding">7dp</dimen>
+   <dimen name="half_little">10dp</dimen>
 
    <dimen name="pagination_line">9dp</dimen>
 

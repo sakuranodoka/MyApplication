@@ -6,9 +6,11 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -16,19 +18,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import org.parceler.Parcels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import AppBar.ApplicationBar;
 import AppBar.BarType;
 import authen.AuthenData;
+import datepicker.DatePickerFragment;
 import fragment.FragmentToolbar;
+import intent.IntentKeycode;
+import intent.IntentParcel;
 import invoice.FragmentInvoiceDetail;
 import invoice.InterfaceInvoiceInfo;
 import invoice.InvoiceData;
@@ -86,14 +93,24 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		ToolbarOptions callbacks = new ToolbarOptions() {
 			@Override
 			public void response(Bundle response) {
-				Log.e("COMING", "CLICKED");
-				if (response.containsKey(".....")) {
 
+				if (response.containsKey(IntentKeycode.INTENT)) {
+					// from parcelable --> setTo(...)
+					String intentkeys = response.getString(IntentKeycode.INTENT);
+
+					IntentParcel p = Parcels.unwrap(response.getParcelable(IntentKeycode.INTENT));
+
+					Intent t = new Intent(InvoiceInfoActivity.this, p.getTo());
+					startActivityForResult(t, IntentKeycode.RESULT_INVOICE_SEARCH);
 				}
 			}
 		};
 
 		Bundle dataCallbacks = new Bundle();
+		IntentParcel p = new IntentParcel();
+		p.setTo(AppliedSearchActivity.class);
+
+		dataCallbacks.putParcelable(IntentKeycode.INTENT, Parcels.wrap(p));
 		FragmentToolbar fToolbar = new FragmentToolbar("รายการใบสั่งสินค้า", callbacks, dataCallbacks);
 		fm.replace(R.id.layout_toolbar, fToolbar);
 		fm.commit();
@@ -223,6 +240,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	@Override

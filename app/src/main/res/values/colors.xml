@@ -19,6 +19,7 @@
     <color name="dark_honest_green">#3cab7a</color>
     <color name="sky_light_blue">#79c7dd</color>
     <color name="dark_sky_light_blue">#62a1b3</color>
+    <color name="soft_supreme_blue">#46a4e4</color>
     <color name="supreme_blue">#0e76bd</color>
     <color name="premier_blue">#0e76bd</color>
     <color name="dark_blue">#0b5b91</color>
@@ -26,6 +27,7 @@
     <color name="jet_black">#222222</color>
     <color name="solid_gray">#6e6e6e</color>
     <color name="space_gray">#949494</color>
+    <color name="middle_gray">#bcbcbc</color>
     <color name="shadow_gray">#f7f7f7</color>
     <color name="little_light_gray">#f3f3f3</color>
     <color name="like_a_blck">#eaeaea</color>
