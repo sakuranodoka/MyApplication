@@ -9,14 +9,20 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import org.parceler.Parcels;
 
 import datepicker.DatePickerFragment;
 import fragment.FragmentToolbar;
 import intent.IntentKeycode;
+import invoice.InvoiceData;
+import invoice.ParcelQuery;
 
 public class AppliedSearchActivity extends AppCompatActivity {
 
@@ -51,7 +57,8 @@ public class AppliedSearchActivity extends AppCompatActivity {
 		fm.replace(R.id.layout_toolbar, fToolbar);
 		fm.commit();
 
-		TextView datepicker = (TextView) findViewById(R.id.edit_text_date_picker);
+		final EditText bill = (EditText) findViewById(R.id.edit_text_bill_search);
+		final TextView datepicker = (TextView) findViewById(R.id.edit_text_date_picker);
 		datepicker.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -64,10 +71,16 @@ public class AppliedSearchActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				Intent t = new Intent();
+				String d = datepicker.getText().toString();
+				String b = bill.getText().toString();
 
-				
+				ParcelQuery pq = new ParcelQuery();
+				pq.setBill(b);
+				pq.setDatetime(d);
 
-				t.putExtra("some_key", "String data");
+				//Log.e("COLLECTION", b+" "+d);
+
+				t.putExtra(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 				setResult(IntentKeycode.RESULT_INVOICE_CALLBACKS, t);
 
 				finish();
@@ -79,11 +92,6 @@ public class AppliedSearchActivity extends AppCompatActivity {
 		DialogFragment newFragment = new DatePickerFragment();
 		newFragment.show(getSupportFragmentManager(), "datePicker");
 	}
-
-//	Intent resultIntent = new Intent();
-//// TODO Add extras or a data URI to this intent as appropriate.
-//resultIntent.putExtra("some_key", "String data");
-//	setResult(Activity.RESULT_OK, resultIntent);
 
 	@Override
 	public boolean onSupportNavigateUp() {

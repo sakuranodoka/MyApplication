@@ -1,6 +1,7 @@
 package invoice;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 import autocomplete.InstantAutocomplete;
+import intent.IntentKeycode;
 import invoice.item.InvoiceBaseItem;
 import invoice.item.ItemInvoice;
 import invoice.item.ItemInvoiceDateDAO;
@@ -63,7 +65,7 @@ public class FragmentInvoiceDetail extends Fragment {
    public static final int INVOICE_CONTENT_VIEW = 1;
 	public static final int INVOICE_CONTENT_LOADER = 2;
 
-	private static int limited = 1;
+	private static int limited = 0;
 
 	private static boolean isloading = false;
 
@@ -72,9 +74,9 @@ public class FragmentInvoiceDetail extends Fragment {
 	// let inside data
 	private List<InvoiceBaseItem> listItem = new ArrayList<>();
 
-    private Bundle b = null;
+   private Bundle b = null;
 
-	 private InterfaceInvoiceInfo interfaceInvoiceInfo = null;
+	private InterfaceInvoiceInfo interfaceInvoiceInfo = null;
 
 	private final InterfaceListen interfaceListen = new InterfaceListen() {
 		@Override
@@ -100,15 +102,20 @@ public class FragmentInvoiceDetail extends Fragment {
 				temp.setInvoiceDate(i.getInfoTime());
 				listInvoice.add(temp);*/
 
+				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+
 				if(i.getInfoInvoice().equals("0000")) {
 					canloadmore = false;
+					item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...2");
+					item.setInvoiceLocality("-");
+					item.setInvoiceSubLocality("-");
+					item.setInvoiceDate("ไม่บันทึกเวลา");
+				} else {
+					item.setInvoicePreview(i.getInfoInvoice());
+					item.setInvoiceLocality(i.getInfoLocality());
+					item.setInvoiceSubLocality(i.getInfoSubLocality());
+					item.setInvoiceDate(i.getInfoTime());
 				}
-
-				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-				item.setInvoicePreview(i.getInfoInvoice());
-				item.setInvoiceLocality(i.getInfoLocality());
-				item.setInvoiceSubLocality(i.getInfoSubLocality());
-				item.setInvoiceDate(i.getInfoTime());
 				listItem.add(item);
 
 //				Log.e("DATA_S", i.getInfoInvoice().toString());
@@ -194,7 +201,6 @@ public class FragmentInvoiceDetail extends Fragment {
 
 		         //listItem.add(dropdown);
 	         }
-
 	         Boolean isDataNull = true;
 
 	         ParcelInvoice pi = null;
@@ -211,15 +217,27 @@ public class FragmentInvoiceDetail extends Fragment {
 
             if(!isDataNull) {
                 for(ItemInvoicePreview i : pi.getListInvoice()) {
-							if(i.getInvoicePreview().equals("0000")) {
-								canloadmore = false;
-							}
+	                 /*if(i.getInvoicePreview().equals("0000")) {
+		                 canloadmore = false;
+						  }*/
 
-                    ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-                    item.setInvoicePreview(i.getInvoicePreview());
+	                ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+							if(i.getInvoicePreview().equals("0000")) {
+								 //canloadmore = false;
+								 item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...1");
+								 item.setInvoiceLocality("-");
+								 item.setInvoiceSubLocality("-");
+								 item.setInvoiceDate("ไม่บันทึกเวลา");
+							} else {
+								 item.setInvoicePreview(i.getInvoicePreview());
+								 item.setInvoiceLocality(i.getInvoiceLocality());
+								 item.setInvoiceSubLocality(i.getInvoiceSublocality());
+								 item.setInvoiceDate(i.getInvoiceDate());
+							}
+                    /*item.setInvoicePreview(i.getInvoicePreview());
 	                 item.setInvoiceLocality(i.getInvoiceLocality());
 	                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
-                    item.setInvoiceDate(i.getInvoiceDate());
+                    item.setInvoiceDate(i.getInvoiceDate());*/
                     listItem.add(item);
                 }
             }
@@ -274,28 +292,24 @@ public class FragmentInvoiceDetail extends Fragment {
 
 												 adapter.notifyDataSetChanged();
 
-												 limited = limited+15;
+												 limited = limited + 15;
 
 												 isloading = true;
 
 												 if(canloadmore) {
+													 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 													 async();
 												 }
-
-//												 Log.e("ON_DOWN", "TRUE");
 											 }
 										 }
 									 }
 								 },50);
 							 }
 						 } else if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
-
 							 // } else {}
 							 //my recycler view is actually inverted so I have to write this condition instead
-
 						 }
 					 }
-					 //}
 				 }
 			 }
 
@@ -312,8 +326,7 @@ public class FragmentInvoiceDetail extends Fragment {
 				    }
 			    }
 		    }
-	     });
-
+	    });
 	    adapter.notifyDataSetChanged();
 
        return rootView;
@@ -430,8 +443,16 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	protected void async() {
 		if(this.b != null) {
-			b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
+			//b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
 		}
+	}
+
+	public void clearance() {
+		limited = 0;
+		canloadmore = true;
+		isloading = false;
+		listItem.clear();
+		adapter.notifyDataSetChanged();
 	}
 }

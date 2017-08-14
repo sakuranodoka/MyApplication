@@ -15,6 +15,7 @@ import authen.InterfaceAuthen;
 import invoice.InterfaceInvoice;
 import invoice.InvoiceData;
 import invoice.InvoicePOJO;
+import invoice.ParcelQuery;
 import invoice.item.ParcelInvoice;
 import location.LocationData;
 import location.pojo.GeoCoderPOJO;
@@ -114,28 +115,51 @@ public class ServiceRetrofit {
 			case RetrofitAbstract.RETROFIT_PRE_INVOICE:
 			   InterfaceInvoice interfacePreInvoice = retrofit.create(InterfaceInvoice.class);
 				if(data instanceof Bundle) {
-					Bundle x = (Bundle) data;
+					Bundle b = (Bundle) data;
 
-					StringBuilder optional = new StringBuilder(128);
-					if(x.containsKey(InvoiceData.INVOICE_DAY_TAG)) {
+					StringBuilder bill = new StringBuilder(128);
+					StringBuilder timestack = new StringBuilder(128);
 
-						optional.append(x.getString(InvoiceData.INVOICE_DAY_TAG));
-						Log.e("Day_Tag", optional.toString());
-					} else {
-						optional.append("TODAY");
+					if(b.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
+						ParcelQuery pq = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+						if(pq.getBill() != null)
+							bill.append(pq.getBill());
+						else bill.append("");
+
+						if(pq.getDatetime() != null)
+							timestack.append(pq.getDatetime());
+						else timestack.append("");
 					}
 
-					StringBuilder limit = new StringBuilder(128);
-					if(x.containsKey(InvoiceData.INVOICE_LIMIT)) {
-						limit.append(x.getString(InvoiceData.INVOICE_LIMIT));
+					/*StringBuilder timestack = new StringBuilder(128);
+					if(x.containsKey(InvoiceData.INVOICE_DAY_TAG)) {
+						timestack.append(x.getString(InvoiceData.INVOICE_DAY_TAG));
 					} else {
-						limit.append("1");
+						timestack.append("");
+					}
+
+					StringBuilder bill = new StringBuilder(128);
+					if(x.containsKey(InvoiceData.INVOICE_BILL)) {
+						bill.append(x.getString(InvoiceData.INVOICE_BILL));
+					} else {
+						bill.append("");
+					}*/
+
+					StringBuilder limit = new StringBuilder(128);
+					if(b.containsKey(InvoiceData.INVOICE_LIMIT)) {
+						limit.append(b.getString(InvoiceData.INVOICE_LIMIT));
+					} else {
+						limit.append("0");
 					}
 
 					Log.e("LIMIT", limit.toString());
 
-					ParcelInvoice p = Parcels.unwrap(x.getParcelable(InvoiceData.INVOICE_PARCEL));
-					Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(p.getUsername(), optional.toString(), limit.toString());
+					ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+					Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(
+							  p.getUsername(),
+							  bill.toString(),
+							  timestack.toString(),
+							  limit.toString());
 					observable = ex;
 				}
 			   break;

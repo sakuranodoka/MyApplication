@@ -40,6 +40,7 @@ import invoice.FragmentInvoiceDetail;
 import invoice.InterfaceInvoiceInfo;
 import invoice.InvoiceData;
 import invoice.InvoicePOJO;
+import invoice.ParcelQuery;
 import invoice.item.ItemInvoice;
 import invoice.item.ItemInvoicePreview;
 import invoice.item.ParcelInvoice;
@@ -54,6 +55,8 @@ import toolbars.ToolbarOptions;
 public class InvoiceInfoActivity extends AppCompatActivity {
 
 	private FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
+
+	FragmentInvoiceDetail fragmentInvoiceDetail = null;
 
 	private Bundle b = new Bundle();
 
@@ -123,6 +126,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 		if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG)) {
 			if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
+				// Last version
+				/*
 				// ลบเพื่อจะได้ไม่ซ้ำซ้อนใน Fragment
 				b.remove(InvoiceData.INVOICE_PARCEL_CONTENT);
 
@@ -156,8 +161,19 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				FragmentInvoiceDetail fragmentInvoiceDetail = new FragmentInvoiceDetail(temp, interfaceInvoiceInfo);
 				fm = getSupportFragmentManager().beginTransaction();
 				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
-				fm.commit();
+				fm.commit();*/
 			} else if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
+
+				// Set limited
+				b.putString(InvoiceData.INVOICE_LIMIT, "0");
+
+				ParcelQuery pq = new ParcelQuery();
+				pq.setBill("");
+				pq.setDatetime("");
+				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+
+				Log.e("SYSTEM", "ROTATE");
+
 				async();
 			}
 		}
@@ -165,7 +181,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	protected void async() {
 		if(this.b != null) {
-			b.putString(InvoiceData.INVOICE_LIMIT, "1");
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
 		}
 	}
@@ -179,6 +194,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 			} else {
 				Log.e("error", "bundle is null.");
 			}
+		}
+
+		@Override
+		public void onRequestClearLance() {
+
 		}
 	};
 
@@ -203,10 +223,10 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 				fm = getSupportFragmentManager().beginTransaction();
 
-				FragmentInvoiceDetail fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
+				fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
 				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
 				fm.commit();
-			}
+		}
 
 		@Override
 		public void onBodyError(ResponseBody responseBodyError) {}
@@ -232,19 +252,47 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		if(savedInstanceState != null) {
 			b = savedInstanceState;
 
-			if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG)) {
+			if(b != null) {
+//				for (String key: b.keySet())
+//				{
+//					Log.e ("myApplication", key + " is a key in the bundle");
+//				}
+				//async();
+			}
+
+			/*if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG)) {
 				if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID)
 					async();
 				else {
 					// Retain
 				}
-			}
+			}*/
 		}
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		switch(resultCode) {
+			case IntentKeycode.RESULT_INVOICE_CALLBACKS :
+				Bundle temp = data.getExtras();
+				ParcelQuery pq = null;
+				if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
+					b.putString(InvoiceData.INVOICE_LIMIT, "0");
+
+					Log.e("SUCCESSFULLY", "WRAP BILL OR DATE FRPM APPLIED SEARCH ACTIVITY");
+
+					// กำหนด บิลล์ และ วันที่ เรียบร้อยแล้ว
+					pq = Parcels.unwrap(temp.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+
+					b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+
+					fragmentInvoiceDetail.clearance();
+
+					async();
+				}
+				break;
+		}
 	}
 
 	@Override

@@ -37,10 +37,18 @@ public interface InterfaceInvoice {
 	 );
 
 	//@GET("/Application/getInvoiceInfo.php")
+//	@GET("/Application/tracking/services/getInvoiceInfo.php")
+//	Observable<List<InvoicePOJO>> getInvoiceInfo (
+//		  @Query("username") String username,
+//		  @Query("timestack") String timestack,
+//		  @Query("limit") String limit
+//	);
+
 	@GET("/Application/tracking/services/getInvoiceInfo.php")
 	Observable<List<InvoicePOJO>> getInvoiceInfo (
-		  @Query("username") String username,
-		  @Query("timestack") String timestack,
-		  @Query("limit") String limit
+			  @Query("username") String username,
+			  @Query("bill") String bill,
+			  @Query("timestack") String timestack,
+			  @Query("limit") String limit
 	);
 }
