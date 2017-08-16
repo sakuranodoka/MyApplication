@@ -110,6 +110,9 @@ public class FragmentInvoiceDetail extends Fragment {
 					item.setInvoiceLocality("-");
 					item.setInvoiceSubLocality("-");
 					item.setInvoiceDate("ไม่บันทึกเวลา");
+
+					int limits = Integer.parseInt(b.getString(InvoiceData.INVOICE_LIMIT));
+					b.putString(InvoiceData.INVOICE_LIMIT, (limits-15)+"");
 				} else {
 					item.setInvoicePreview(i.getInfoInvoice());
 					item.setInvoiceLocality(i.getInfoLocality());
@@ -117,13 +120,8 @@ public class FragmentInvoiceDetail extends Fragment {
 					item.setInvoiceDate(i.getInfoTime());
 				}
 				listItem.add(item);
-
-//				Log.e("DATA_S", i.getInfoInvoice().toString());
 			}
-
 			adapter.notifyDataSetChanged();
-
-			//pi.setListInvoice(listInvoice);
 		}
 
 		@Override
@@ -136,13 +134,13 @@ public class FragmentInvoiceDetail extends Fragment {
 		public void onFailure(Throwable t) {}
 	};
 
-    private final String DAY_NOW = "TODAY";
-    private final String DAY_7 = "D7";
-    private final String DAY_15 = "D15";
-    private final String DAY_30 = "D30";
-    private final String DAY_ALL = "ALL";
-	 private final String DAY_TAG = "DAY_TAG";
-    private final String INVOICE_DATE_OPTIONAL = "\n" +
+   private final String DAY_NOW = "TODAY";
+   private final String DAY_7 = "D7";
+   private final String DAY_15 = "D15";
+   private final String DAY_30 = "D30";
+   private final String DAY_ALL = "ALL";
+	private final String DAY_TAG = "DAY_TAG";
+   private final String INVOICE_DATE_OPTIONAL = "\n" +
             "[\n" +
             "    {\n" +
             "      \"title\" : \"เฉพาะวันนี้\"\n," +
@@ -168,9 +166,10 @@ public class FragmentInvoiceDetail extends Fragment {
 
     public FragmentInvoiceDetail(Bundle b, InterfaceInvoiceInfo interfaceInvoiceInfo) {
         super();
+
         this.b = b;
-	     if(this.b != null && !this.b.containsKey(InvoiceData.INVOICE_DAY_TAG))
-	     this.b.putString(InvoiceData.INVOICE_DAY_TAG, DAY_NOW);
+	     //if(this.b != null && !this.b.containsKey(InvoiceData.INVOICE_DAY_TAG))
+		     //this.b.putString(InvoiceData.INVOICE_DAY_TAG, DAY_NOW);
 	     this.interfaceInvoiceInfo = interfaceInvoiceInfo;
     }
 
@@ -280,12 +279,42 @@ public class FragmentInvoiceDetail extends Fragment {
 							 final LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
 							 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
 								 android.os.Handler handler = new android.os.Handler();
+
+								 if (isListGoingUp) {
+									 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
+										 Toast.makeText(getContext(),"กำลังประมวลผล ... ", Toast.LENGTH_SHORT).show();
+										 InvoiceBaseItem temp = new InvoiceBaseItem(INVOICE_CONTENT_LOADER);
+
+										 listItem.add(temp);
+
+										 adapter.notifyDataSetChanged();
+
+										 limited = limited + 15;
+
+										 isloading = true;
+
+										 handler.postDelayed(new Runnable() {
+											 @Override
+											 public void run() {
+												 if(canloadmore) {
+													 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
+													 async();
+												 }
+											 }
+									   },500);
+								   }
+								 }
+							 }
+						 } else if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
+							 final GridLayoutManager lm = (GridLayoutManager) recyclerView.getLayoutManager();
+							 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
+								 android.os.Handler handler = new android.os.Handler();
 								 handler.postDelayed(new Runnable() {
 									 @Override
 									 public void run() {
 										 if (isListGoingUp) {
 											 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
-												 Toast.makeText(getContext(),"exeute something", Toast.LENGTH_SHORT).show();
+												 Toast.makeText(getContext(),"ำลังประมวลผล ... ", Toast.LENGTH_SHORT).show();
 												 InvoiceBaseItem temp = new InvoiceBaseItem(INVOICE_CONTENT_LOADER);
 
 												 listItem.add(temp);
@@ -305,9 +334,6 @@ public class FragmentInvoiceDetail extends Fragment {
 									 }
 								 },50);
 							 }
-						 } else if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
-							 // } else {}
-							 //my recycler view is actually inverted so I have to write this condition instead
 						 }
 					 }
 				 }
@@ -462,6 +488,7 @@ public class FragmentInvoiceDetail extends Fragment {
 		canloadmore = true;
 		isloading = false;
 		listItem.clear();
-		adapter.notifyDataSetChanged();
+		if(adapter != null)
+			adapter.notifyDataSetChanged();
 	}
 }

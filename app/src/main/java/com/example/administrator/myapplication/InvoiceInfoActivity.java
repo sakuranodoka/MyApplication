@@ -70,7 +70,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	private FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
 
-	FragmentInvoiceDetail fragmentInvoiceDetail = null;
+	private FragmentInvoiceDetail fragmentInvoiceDetail = null;
 
 	private Bundle b = new Bundle();
 
@@ -179,13 +179,17 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 			} else if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
 
 				// Set limited
-				b.putString(InvoiceData.INVOICE_LIMIT, "0");
+				/*b.putString(InvoiceData.INVOICE_LIMIT, "0");
 
 				ParcelQuery pq = new ParcelQuery();
 				pq.setBill("");
 				pq.setDatetime("");
 				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 
+				async();*/
+			}
+
+			if(savedInstanceState == null) {
 				async();
 			}
 		}
@@ -240,10 +244,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 				fm = getSupportFragmentManager().beginTransaction();
 
-				if(fragmentInvoiceDetail != null)
-					fragmentInvoiceDetail.clearance();
-
 				fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
+				fragmentInvoiceDetail.clearance();
 				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
 				fm.commit();
 		}
@@ -261,17 +263,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if(b != null) {
-			if(fragmentInvoiceDetail != null) {
-				Log.e("Fragment", "NOT NULL1");
-			} else {
-				Log.e("Fragment", "NULL1");
-			}
-//				fragmentInvoiceDetail.clearance();
-
-			//b.putString(InvoiceData.INVOICE_LIMIT, "0");
-
-
-
+			b.putString(InvoiceData.INVOICE_LIMIT, "0");
 			outState.putAll(b);
 		}
 		super.onSaveInstanceState(outState);
@@ -281,14 +273,10 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
-		if(fragmentInvoiceDetail != null) {
-			Log.e("Fragment", "NOT NULL2");
-		} else {
-			Log.e("Fragment", "NULL2");
-		}
-
 		if(savedInstanceState != null) {
 			b = savedInstanceState;
+
+			async();
 
 			if(b != null) {
 //				for (String key: b.keySet())
@@ -297,14 +285,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 //				}
 				//async();
 			}
-
-			/*if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG)) {
-				if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID)
-					async();
-				else {
-					// Retain
-				}
-			}*/
 		}
 	}
 
@@ -313,7 +293,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		Log.e("CODE", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
-
 		if(resultCode == RESULT_OK) {
 			switch(requestCode) {
 				case IntentKeycode.RESULT_INVOICE_SEARCH :
@@ -328,9 +307,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 						b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 
-						//if(fragmentInvoiceDetail != null)
-							//fragmentInvoiceDetail.clearance();
-
 						async();
 					}
 					break;
@@ -338,27 +314,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		} else {
 			Log.e("STATE", "PRESSED BACK");
 		}
-//
-//		switch(resultCode) {
-//			case IntentKeycode.RESULT_INVOICE_CALLBACKS :
-//				Bundle temp = data.getExtras();
-//				ParcelQuery pq = null;
-//				if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
-//					b.putString(InvoiceData.INVOICE_LIMIT, "0");
-//
-//					Log.e("SUCCESSFULLY", "WRAP BILL OR DATE FRPM APPLIED SEARCH ACTIVITY");
-//
-//					// กำหนด บิลล์ และ วันที่ เรียบร้อยแล้ว
-//					pq = Parcels.unwrap(temp.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
-//
-//					b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
-//
-//					fragmentInvoiceDetail.clearance();
-//
-//					async();
-//				}
-//				break;
-//		}
 	}
 
 	@Override

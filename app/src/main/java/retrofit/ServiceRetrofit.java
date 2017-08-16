@@ -129,21 +129,10 @@ public class ServiceRetrofit {
 						if(pq.getDatetime() != null)
 							timestack.append(pq.getDatetime());
 						else timestack.append("");
-					}
-
-					/*StringBuilder timestack = new StringBuilder(128);
-					if(x.containsKey(InvoiceData.INVOICE_DAY_TAG)) {
-						timestack.append(x.getString(InvoiceData.INVOICE_DAY_TAG));
-					} else {
-						timestack.append("");
-					}
-
-					StringBuilder bill = new StringBuilder(128);
-					if(x.containsKey(InvoiceData.INVOICE_BILL)) {
-						bill.append(x.getString(InvoiceData.INVOICE_BILL));
 					} else {
 						bill.append("");
-					}*/
+						timestack.append("");
+					}
 
 					StringBuilder limit = new StringBuilder(128);
 					if(b.containsKey(InvoiceData.INVOICE_LIMIT)) {
