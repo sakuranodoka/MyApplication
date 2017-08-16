@@ -411,9 +411,18 @@ public class FragmentInvoiceDetail extends Fragment {
 
 								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
 								textViewInvoiceAddress.setText(item.getInvoiceSubLocality()+" "+item.getInvoiceLocality());
+
+								RelativeLayout layout = (RelativeLayout) vh.relativeInvoiceInfo;
+								layout.setOnClickListener(new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										interfaceInvoiceInfo.onBarcodeScan();
+									}
+								});
+
 	                  } else if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
-								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
-								textViewInvoiceAddress.setVisibility(View.GONE);
+//								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
+//								textViewInvoiceAddress.setVisibility(View.GONE);
 							}
 						}
                 } else if(holder instanceof ProgressBarViewHolder) {

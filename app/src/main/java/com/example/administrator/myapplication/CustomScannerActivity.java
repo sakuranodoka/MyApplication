@@ -78,39 +78,6 @@ public class CustomScannerActivity extends AppCompatActivity implements
 		capture = new CaptureManager(this, barcodeScannerView);
 		capture.initializeFromIntent(getIntent(), savedInstanceState);
 		capture.decode();
-
-	//			Button back = (Button) findViewById(R.id.backPressedState);
-	//			Button next = (Button) findViewById(R.id.nextPressedState);
-
-	//			if( b != null ) {
-	//				 	RelativeLayout ns = (RelativeLayout) findViewById(R.id.view_zxing_next_state);
-	//				 	if( ns != null && b.containsKey(InvoiceData.INVOICE_CASE) ) {
-	//						  switch( b.getInt(InvoiceData.INVOICE_CASE) ) {
-	//									case InvoiceData.INVOICE_CASE_INVOICE_USER_ID:
-	//										 back.setVisibility(View.GONE);
-	//										 break;
-	//									case InvoiceData.INVOICE_CASE_INVOICE_PREVIEW:
-	//									default:
-	//										 ns.setVisibility(View.GONE);
-	//										 break;
-	//							}
-	//				 	}
-	//
-	//				 	TextView textScannerPreview = (TextView) findViewById(R.id.textScannerPreview);
-	//				 	if( textScannerPreview != null && b.containsKey(InvoiceData.INVOICE_PREVIEW ) ) {
-	//						 	textScannerPreview.setText(b.getString(InvoiceData.INVOICE_PREVIEW));
-	//					}
-	//			}
-	//
-	//			View.OnClickListener onClick = new View.OnClickListener() {
-	//				 @Override
-	//				 public void onClick(View v) {
-	//						finish();
-	//				 }
-	//			};
-	//
-	//			back.setOnClickListener(onClick);
-	//			next.setOnClickListener(onClick);
 	}
 
 	 @Override

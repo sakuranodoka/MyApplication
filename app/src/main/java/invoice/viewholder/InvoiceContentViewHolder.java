@@ -8,6 +8,8 @@ import com.example.administrator.myapplication.R;
 
 public class InvoiceContentViewHolder extends RecyclerView.ViewHolder {
 
+    public Object relativeInvoiceInfo;
+
     public Object textViewInvoicePreview;
     public Object textViewInvoiceAddress;
     public Object textViewInvoiceDate;
@@ -16,6 +18,7 @@ public class InvoiceContentViewHolder extends RecyclerView.ViewHolder {
     public InvoiceContentViewHolder(View itemView) {
         super(itemView);
 
+        relativeInvoiceInfo = itemView.findViewById(R.id.relative_invoice_info);
         textViewInvoicePreview = itemView.findViewById(R.id.text_view_invoice_preview);
         textViewInvoiceAddress = itemView.findViewById(R.id.text_view_invoice_address);
         textViewInvoiceDate = itemView.findViewById(R.id.text_view_invoice_date);

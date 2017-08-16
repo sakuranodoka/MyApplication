@@ -5,6 +5,9 @@
     android:layout_height="wrap_content"
     android:background="@color/angel_white"
     android:padding="@dimen/round_padding"
+
+    android:id="@+id/relative_invoice_info"
+
     android:layout_marginTop="@dimen/round_padding"
     android:layout_marginStart="@dimen/slice_align"
     android:layout_marginEnd="@dimen/slice_align">

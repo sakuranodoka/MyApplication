@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+
 import org.parceler.Parcels;
 
 import java.io.Serializable;
@@ -51,6 +53,18 @@ import retrofit.ServiceRetrofit;
 import retrofit2.Retrofit;
 import sqlite.DbHelper;
 import toolbars.ToolbarOptions;
+
+//@org.parceler.Parcel
+//class incest implements Serializable {
+//	FragmentInvoiceDetail incestform;
+//	incest(){}
+//	public FragmentInvoiceDetail getIncestform() {
+//		return incestform;
+//	}
+//	public void setIncestform(FragmentInvoiceDetail incestform) {
+//		this.incestform = incestform;
+//	}
+//}
 
 public class InvoiceInfoActivity extends AppCompatActivity {
 
@@ -172,8 +186,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				pq.setDatetime("");
 				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 
-				Log.e("SYSTEM", "ROTATE");
-
 				async();
 			}
 		}
@@ -197,8 +209,13 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onRequestClearLance() {
-
+		public void onBarcodeScan() {
+			Intent t = new Intent(getApplication(), CustomScannerActivity.class);
+			Bundle zxingBn = new Bundle();
+			zxingBn.putInt(InvoiceData.INVOICE_CASE, InvoiceData.INVOICE_CASE_INVOICE_PREVIEW);
+			zxingBn.putString(InvoiceData.INVOICE_PREVIEW, "1234eeeee");
+			t.putExtras(zxingBn);
+			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
 		}
 	};
 
@@ -223,6 +240,9 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 				fm = getSupportFragmentManager().beginTransaction();
 
+				if(fragmentInvoiceDetail != null)
+					fragmentInvoiceDetail.clearance();
+
 				fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
 				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
 				fm.commit();
@@ -241,6 +261,17 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if(b != null) {
+			if(fragmentInvoiceDetail != null) {
+				Log.e("Fragment", "NOT NULL1");
+			} else {
+				Log.e("Fragment", "NULL1");
+			}
+//				fragmentInvoiceDetail.clearance();
+
+			//b.putString(InvoiceData.INVOICE_LIMIT, "0");
+
+
+
 			outState.putAll(b);
 		}
 		super.onSaveInstanceState(outState);
@@ -249,6 +280,13 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
+
+		if(fragmentInvoiceDetail != null) {
+			Log.e("Fragment", "NOT NULL2");
+		} else {
+			Log.e("Fragment", "NULL2");
+		}
+
 		if(savedInstanceState != null) {
 			b = savedInstanceState;
 
@@ -273,26 +311,54 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch(resultCode) {
-			case IntentKeycode.RESULT_INVOICE_CALLBACKS :
-				Bundle temp = data.getExtras();
-				ParcelQuery pq = null;
-				if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
-					b.putString(InvoiceData.INVOICE_LIMIT, "0");
 
-					Log.e("SUCCESSFULLY", "WRAP BILL OR DATE FRPM APPLIED SEARCH ACTIVITY");
+		Log.e("CODE", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
 
-					// กำหนด บิลล์ และ วันที่ เรียบร้อยแล้ว
-					pq = Parcels.unwrap(temp.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+		if(resultCode == RESULT_OK) {
+			switch(requestCode) {
+				case IntentKeycode.RESULT_INVOICE_SEARCH :
+					Bundle temp = data.getExtras();
+					if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
+						b.putString(InvoiceData.INVOICE_LIMIT, "0");
 
-					b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+						Log.e("SUCCESSFULLY", "WRAP BILL OR DATE FRPM APPLIED SEARCH ACTIVITY");
 
-					fragmentInvoiceDetail.clearance();
+						// กำหนด บิลล์ และ วันที่ เรียบร้อยแล้ว
+						ParcelQuery pq = Parcels.unwrap(temp.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
 
-					async();
-				}
-				break;
+						b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+
+						//if(fragmentInvoiceDetail != null)
+							//fragmentInvoiceDetail.clearance();
+
+						async();
+					}
+					break;
+			}
+		} else {
+			Log.e("STATE", "PRESSED BACK");
 		}
+//
+//		switch(resultCode) {
+//			case IntentKeycode.RESULT_INVOICE_CALLBACKS :
+//				Bundle temp = data.getExtras();
+//				ParcelQuery pq = null;
+//				if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
+//					b.putString(InvoiceData.INVOICE_LIMIT, "0");
+//
+//					Log.e("SUCCESSFULLY", "WRAP BILL OR DATE FRPM APPLIED SEARCH ACTIVITY");
+//
+//					// กำหนด บิลล์ และ วันที่ เรียบร้อยแล้ว
+//					pq = Parcels.unwrap(temp.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+//
+//					b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+//
+//					fragmentInvoiceDetail.clearance();
+//
+//					async();
+//				}
+//				break;
+//		}
 	}
 
 	@Override

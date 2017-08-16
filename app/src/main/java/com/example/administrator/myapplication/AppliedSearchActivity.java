@@ -78,10 +78,8 @@ public class AppliedSearchActivity extends AppCompatActivity {
 				pq.setBill(b);
 				pq.setDatetime(d);
 
-				//Log.e("COLLECTION", b+" "+d);
-
 				t.putExtra(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
-				setResult(IntentKeycode.RESULT_INVOICE_CALLBACKS, t);
+				setResult(RESULT_OK, t);
 
 				finish();
 			}
