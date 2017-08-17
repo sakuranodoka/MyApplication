@@ -36,6 +36,8 @@ public class CustomScannerActivity extends AppCompatActivity implements
 	 private DecoratedBarcodeView barcodeScannerView;
 	 private Button switchFlashlightButton;
 
+	 private int x = 0;
+
 	 private Bundle b = new Bundle();
 
 	@Override
