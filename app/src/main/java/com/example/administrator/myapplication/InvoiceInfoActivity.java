@@ -1,6 +1,8 @@
 package com.example.administrator.myapplication;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -309,6 +311,30 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 						async();
 					}
+					break;
+				case IntentIntegrator.REQUEST_CODE :
+
+					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							switch (which){
+								case DialogInterface.BUTTON_POSITIVE:
+									//Yes button clicked
+									interfaceInvoiceInfo.onBarcodeScan();
+									break;
+
+								case DialogInterface.BUTTON_NEGATIVE:
+									//No button clicked
+									break;
+							}
+						}
+					};
+
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+							  .setNegativeButton("No", dialogClickListener).show();
+
+
 					break;
 			}
 		} else {
