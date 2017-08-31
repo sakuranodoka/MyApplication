@@ -113,6 +113,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 					int limits = Integer.parseInt(b.getString(InvoiceData.INVOICE_LIMIT));
 					b.putString(InvoiceData.INVOICE_LIMIT, (limits-15)+"");
+					item.setType(INVOICE_CONTENT_LOADER);
 				} else {
 					item.setInvoicePreview(i.getInfoInvoice());
 					item.setInvoiceLocality(i.getInfoLocality());
@@ -421,7 +422,7 @@ public class FragmentInvoiceDetail extends Fragment {
 	                });
 
                 } else if(holder instanceof InvoiceContentViewHolder) {
-						ItemInvoice item = (ItemInvoice) listItem.get(position);
+						final ItemInvoice item = (ItemInvoice) listItem.get(position);
 
 						InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
 						TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
@@ -442,7 +443,11 @@ public class FragmentInvoiceDetail extends Fragment {
 								layout.setOnClickListener(new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
-										interfaceInvoiceInfo.onBarcodeScan();
+										Bundle b = new Bundle();
+										b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getInvoicePreview());
+										b.putInt(InvoiceData.INVOICE_SCANNER_CAPACITY, 0);
+										b.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, 0);
+										interfaceInvoiceInfo.onBarcodeScan(b);
 									}
 								});
 

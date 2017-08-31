@@ -215,12 +215,14 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onBarcodeScan() {
+		public void onBarcodeScan(Bundle b) {
 			Intent t = new Intent(getApplication(), CustomScannerActivity.class);
 			Bundle zxingBn = new Bundle();
-			zxingBn.putInt(InvoiceData.INVOICE_CASE, InvoiceData.INVOICE_CASE_INVOICE_PREVIEW);
-			zxingBn.putString(InvoiceData.INVOICE_PREVIEW, "1234eeeee");
-			t.putExtras(zxingBn);
+			//zxingBn.putInt(InvoiceData.INVOICE_CASE, InvoiceData.INVOICE_CASE_INVOICE_PREVIEW);
+			//zxingBn.putString(InvoiceData.INVOICE_SCANNER_STRING, "1234eeeee");
+			//t.putExtras(zxingBn);
+			t.putExtras(b);
+
 			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
 		}
 	};
@@ -291,7 +293,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		Log.e("CODE", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
@@ -320,10 +322,17 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 							switch (which){
 								case DialogInterface.BUTTON_POSITIVE:
 									//Yes button clicked
-									interfaceInvoiceInfo.onBarcodeScan();
+									Bundle tempdata = new Bundle();
+									//tempdata
+
+
+
+									//tempdata.putString(InvoiceData.INVOICE_SCANNER_STRING, );
+
+									//interfaceInvoiceInfo.onBarcodeScan();
 									break;
 
-								case DialogInterface.BUTTON_NEGATIVE:
+								case DialogInterface.BUTTON_NEGATIVE :
 									//No button clicked
 									break;
 							}
@@ -331,9 +340,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					};
 
 					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-							  .setNegativeButton("No", dialogClickListener).show();
-
+					builder.setMessage("สแกนบิลล์นี้ต่อไปใช่ไหม ?").setPositiveButton("ตกลง", dialogClickListener)
+							  .setNegativeButton("ยกเลิก", dialogClickListener).show();
 
 					break;
 			}

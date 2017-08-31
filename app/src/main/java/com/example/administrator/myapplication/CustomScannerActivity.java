@@ -66,8 +66,10 @@ public class CustomScannerActivity extends AppCompatActivity implements
 		ab.setDisplayShowTitleEnabled(false);
 
 		b = getIntent().getExtras();
-		if(b != null && b.containsKey(InvoiceData.INVOICE_CASE) ) {
-			FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner( b.getInt(InvoiceData.INVOICE_CASE));
+		if(b != null) {// && b.containsKey(InvoiceData.INVOICE_CASE) ) {
+			//FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner( b.getInt(InvoiceData.INVOICE_CASE));
+
+			FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner(b);
 			FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
 			fm.replace(R.id.layout_toolbar, fToolbarScanner);
 			fm.commit();
@@ -154,5 +156,6 @@ public class CustomScannerActivity extends AppCompatActivity implements
 	 public void onTorchOff() {
 			//switchFlashlightButton.setText(R.string.turn_on_flashlight);
 	 }
+
 
 }

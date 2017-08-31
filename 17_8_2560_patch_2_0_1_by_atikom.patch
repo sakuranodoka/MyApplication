@@ -1,0 +1,8 @@
+Index: app/src/main/res/_R0_environment/drawable/ic_arrow_forward_36_WHITE_FIXED.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/_R0_environment/drawable/ic_arrow_forward_36_WHITE_FIXED.xml	(date 1502877952000)
++++ app/src/main/res/_R0_environment/drawable/ic_arrow_forward_36_white_fixed.xml	(revision )
+@@ -1,0 +1,0 @@

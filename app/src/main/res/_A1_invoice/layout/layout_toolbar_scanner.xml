@@ -45,4 +45,57 @@
           android:background="@drawable/ic_arrow_forward_36_white_fixed"
           style="@style/Widget.AppCompat.Button.Borderless"/>
    </RelativeLayout>
+
+   <RelativeLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/layout_capacity"
+       android:visibility="invisible">
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_toStartOf="@+id/text_scanner_slice"
+          android:text="3"
+          android:textSize="@dimen/font_app_name"
+          android:textColor="@color/little_light_gray"
+
+          android:id="@+id/text_scanner_capacity"
+
+          android:gravity="end|center_vertical"
+          android:layout_marginTop="@dimen/round_padding"
+          android:layout_marginBottom="@dimen/round_padding"
+          android:layout_marginEnd="@dimen/double_round"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_toStartOf="@+id/text_scanner_maximize"
+          android:text="/"
+          android:textSize="@dimen/font_app_name"
+          android:textColor="@color/little_light_gray"
+
+          android:id="@+id/text_scanner_slice"
+
+          android:gravity="end|center_vertical"
+          android:layout_marginTop="@dimen/round_padding"
+          android:layout_marginBottom="@dimen/round_padding"
+          android:layout_marginEnd="@dimen/double_round"/>
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:text="4"
+          android:textSize="@dimen/font_app_name"
+          android:textColor="@color/little_light_gray"
+
+          android:id="@+id/text_scanner_maximize"
+
+          android:gravity="center_vertical"
+
+          android:layout_marginTop="@dimen/round_padding"
+          android:layout_marginBottom="@dimen/round_padding"
+          android:layout_marginEnd="@dimen/double_round"
+          android:layout_alignParentEnd="true"/>
+   </RelativeLayout>
 </RelativeLayout>

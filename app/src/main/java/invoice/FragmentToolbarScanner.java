@@ -25,6 +25,18 @@ public class FragmentToolbarScanner extends Fragment {
 		this.mode = mode;
 	}
 
+	private String bills = "";
+	private int capacitynumber = 0;
+	private int maximizenumber = 0;
+	private Bundle b = null;
+	//public FragmentToolbarScanner(String bills, int capacitynumber, int maximizenumber) {
+	public FragmentToolbarScanner(Bundle b) {
+		this.b = b;
+		this.bills = bills;
+		this.capacitynumber = capacitynumber;
+		this.maximizenumber = maximizenumber;
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,11 +64,23 @@ public class FragmentToolbarScanner extends Fragment {
 				headerMessage.append("สแกนบาร์โค้ดใบสั่งสินค้า");
 				break;
 			default:
-				headerMessage.append("กรุณากำหนดโหมด");
+				//headerMessage.append("กรุณากำหนดโหมด");
+				if(b.containsKey(InvoiceData.INVOICE_SCANNER_STRING)) {
+					headerMessage.append(b.getString(InvoiceData.INVOICE_SCANNER_STRING));
+				}
+				if(b.containsKey(InvoiceData.INVOICE_SCANNER_CAPACITY) && b.containsKey(InvoiceData.INVOICE_SCANNER_MAXIMIZE)) {
+					RelativeLayout layoutCapacity = (RelativeLayout) view.findViewById(R.id.layout_capacity);
+					layoutCapacity.setVisibility(View.VISIBLE);
+
+					TextView textScannerCapacity = (TextView) view.findViewById(R.id.text_scanner_capacity);
+					textScannerCapacity.setText(b.getInt(InvoiceData.INVOICE_SCANNER_CAPACITY)+"");
+
+					TextView textScannerMaximize = (TextView) view.findViewById(R.id.text_scanner_maximize);
+					textScannerMaximize.setText(b.getInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE)+"");
+				}
 				break;
 		}
 		textViewToolbarHeader.setText(headerMessage.toString());
-
 		return view;
 	}
 }
