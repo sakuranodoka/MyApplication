@@ -1,8 +1,15 @@
 package invoice.item;
 
+import com.google.gson.annotations.SerializedName;
+
+import invoice.BillPOJO;
+
+// ส่วนของอินเตอร์เฟส (ตัวแปร)
 public class ItemInvoice extends InvoiceBaseItem {
 
     public ItemInvoice(int type) { super(type); }
+
+	 public BillPOJO billPOJO;
 
     public String invoicePreview;
 
@@ -18,9 +25,17 @@ public class ItemInvoice extends InvoiceBaseItem {
 
 	 public String invoiceLocality;
 
-	public String BILL_NO;
+	 public String BILL_NO;
 
-    public String getInvoicePreview() {
+	public BillPOJO getBillPOJO() {
+		return billPOJO;
+	}
+
+	public void setBillPOJO(BillPOJO billPOJO) {
+		this.billPOJO = billPOJO;
+	}
+
+	public String getInvoicePreview() {
         return invoicePreview;
     }
 

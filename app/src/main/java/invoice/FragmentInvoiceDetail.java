@@ -44,6 +44,7 @@ import invoice.item.ItemInvoice;
 import invoice.item.ItemInvoiceDateDAO;
 import invoice.item.ItemInvoiceDateDropdown;
 import invoice.item.ItemInvoicePreview;
+import invoice.item.ParcelBill;
 import invoice.item.ParcelInvoice;
 import invoice.viewholder.InvoiceContentViewHolder;
 import invoice.viewholder.InvoiceHeaderViewHolder;
@@ -91,10 +92,11 @@ public class FragmentInvoiceDetail extends Fragment {
 
 			ParcelInvoice pi = new ParcelInvoice();
 
-			List<InvoicePOJO> pojoList = (List<InvoicePOJO>) data;
+			//List<InvoicePOJO> pojoList = (List<InvoicePOJO>) data;
+			List<BillPOJO> pojoList = (List<BillPOJO>) data;
 
-			ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
-			for (InvoicePOJO i : pojoList) {
+			//ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
+			for (BillPOJO o : pojoList) {
 
 				/*ItemInvoicePreview temp = new ItemInvoicePreview();
 				temp.setInvoicePreview(i.getInfoInvoice());
@@ -104,8 +106,9 @@ public class FragmentInvoiceDetail extends Fragment {
 				listInvoice.add(temp);*/
 
 				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+				item.setBillPOJO(o);
 
-				item.setBILL_NO(i.getBILL_NO());
+				//item.setBILL_NO(i.getBILL_NO());
 
 				/*if(i.getInfoInvoice().equals("0000")) {
 					canloadmore = false;
@@ -139,7 +142,7 @@ public class FragmentInvoiceDetail extends Fragment {
 		public void onFailure(Throwable t) {}
 	};
 
-   private final String DAY_NOW = "TODAY";
+   /*private final String DAY_NOW = "TODAY";
    private final String DAY_7 = "D7";
    private final String DAY_15 = "D15";
    private final String DAY_30 = "D30";
@@ -163,7 +166,7 @@ public class FragmentInvoiceDetail extends Fragment {
             "      \"title\" : \"แสดงทั้งหมด\"\n," +
             "\"id\" : \"" + DAY_ALL + "\"" +
             "    }\n" +
-            "]\n";
+            "]\n";*/
 
     public FragmentInvoiceDetail() {
         super();
@@ -189,7 +192,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
         listItem = new ArrayList<>();
         if(b != null) {
-	         if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
+	         /*if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
 		         Gson gson = new Gson();
 		         List<ItemInvoiceDateDAO> listDateDAO = new ArrayList<>();
 		         try {
@@ -204,10 +207,21 @@ public class FragmentInvoiceDetail extends Fragment {
 		         dropdown.setDateTag(listDateDAO);
 
 		         //listItem.add(dropdown);
-	         }
+	         }*/
 	         Boolean isDataNull = true;
 
-	         ParcelInvoice pi = null;
+	        ParcelBill pb = null;
+	        if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
+		        isDataNull = false;
+		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+	        }
+
+	        /*if(pb == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
+		        isDataNull = false;
+		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+	        }*/
+
+	         /*ParcelInvoice pi = null;
             if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
 	            // แยก Parcel เพราะว่ากลัวซ้ำกับ list ที่เลือก ใน dialog ดูมั่วๆๆๆๆ หะ 5555
 					isDataNull = false;
@@ -217,38 +231,42 @@ public class FragmentInvoiceDetail extends Fragment {
             if(pi == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
 					isDataNull = false;
 	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-            }
+            }*/
 
-            if(!isDataNull) {
-                for(ItemInvoicePreview i : pi.getListInvoice()) {
-	                 /*if(i.getInvoicePreview().equals("0000")) {
-		                 canloadmore = false;
-						  }*/
+            //if(!isDataNull) {
+                //for(ItemInvoicePreview i : pi.getListInvoice()) {
+            for(BillPOJO o : pb.getListBill()) {
+                 /*if(i.getInvoicePreview().equals("0000")) {
+	                 canloadmore = false;
+					  }*/
 
-	                ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-	                item.setBILL_NO(i.getBILL_NO());
-							/*if(i.getInvoicePreview().equals("0000")) {
-								 //canloadmore = false;
-								 item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...1");
-								 item.setInvoiceLocality("-");
-								 item.setInvoiceSubLocality("-");
-								 item.setInvoiceDate("ไม่บันทึกเวลา");
-							} else {
+                ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
 
-								 item.setInvoicePreview(i.getInvoicePreview());
-								 item.setInvoiceLocality(i.getInvoiceLocality());
-								 item.setInvoiceSubLocality(i.getInvoiceSublocality());
-								 item.setInvoiceDate(i.getInvoiceDate());
-							}*/
+	             item.setBillPOJO(o);
+                //item.setBILL_NO(o.getBILL_NO());
+
+						/*if(i.getInvoicePreview().equals("0000")) {
+							 //canloadmore = false;
+							 item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...1");
+							 item.setInvoiceLocality("-");
+							 item.setInvoiceSubLocality("-");
+							 item.setInvoiceDate("ไม่บันทึกเวลา");
+						} else {
+
+							 item.setInvoicePreview(i.getInvoicePreview());
+							 item.setInvoiceLocality(i.getInvoiceLocality());
+							 item.setInvoiceSubLocality(i.getInvoiceSublocality());
+							 item.setInvoiceDate(i.getInvoiceDate());
+						}*/
 
 
-                    /*item.setInvoicePreview(i.getInvoicePreview());
-	                 item.setInvoiceLocality(i.getInvoiceLocality());
-	                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
-                    item.setInvoiceDate(i.getInvoiceDate());*/
-                    listItem.add(item);
-                }
-            }
+                 /*item.setInvoicePreview(i.getInvoicePreview());
+                 item.setInvoiceLocality(i.getInvoiceLocality());
+                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
+                 item.setInvoiceDate(i.getInvoiceDate());*/
+                 listItem.add(item);
+             }
+            //}
         }
         adapter = new InvoiceDetailAdapter(listItem);
         recyclerView.setAdapter(adapter);
@@ -307,7 +325,7 @@ public class FragmentInvoiceDetail extends Fragment {
 											 public void run() {
 												 if(canloadmore) {
 													 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
-													 async();
+													 //async();
 												 }
 											 }
 									   },500);
@@ -392,7 +410,7 @@ public class FragmentInvoiceDetail extends Fragment {
        @Override
        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if(!listItem.isEmpty()) {
-                if(holder instanceof InvoiceHeaderViewHolder) {
+                /*if(holder instanceof InvoiceHeaderViewHolder) {
 
                     final ItemInvoiceDateDropdown item = (ItemInvoiceDateDropdown) listItem.get(position);
                     final InvoiceHeaderViewHolder vh = (InvoiceHeaderViewHolder) holder;
@@ -429,25 +447,38 @@ public class FragmentInvoiceDetail extends Fragment {
                          }
 	                });
 
-                } else if(holder instanceof InvoiceContentViewHolder) {
+                } else */
+                if(holder instanceof InvoiceContentViewHolder) {
 						final ItemInvoice item = (ItemInvoice) listItem.get(position);
+
+	               final BillPOJO temp = item.getBillPOJO();
 
 						InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
 						TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
 						//textViewInvoicePreview.setText(item.getInvoicePreview());
-	                textViewInvoicePreview.setText(item.getBILL_NO());
+	                //textViewInvoicePreview.setText(item.getBILL_NO());
+
+	                textViewInvoicePreview.setText(temp.getBILL_NO());
+
 	                //temp.setBILL_NO(i.getBILL_NO());
 
 						TextView textViewInvoiceDate = (TextView) vh.textViewInvoiceDate;
-						textViewInvoiceDate.setText(item.getInvoiceDate());
+						//textViewInvoiceDate.setText(item.getInvoiceDate());
+	                textViewInvoiceDate.setText(temp.getBILL_DATE());
+
+	               TextView textViewInvoiceBoxNumber = (TextView) vh.textViewInvoiceBoxNumber;
+	               if(textViewInvoiceBoxNumber != null && temp.getTOTAL_BOX() != null) {
+		               textViewInvoiceBoxNumber.setText("0 / "+Integer.parseInt(temp.getTOTAL_BOX()));
+	               }
 
 						if(b != null) {
-							if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
+							//if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
 		                  ImageButton btnRemove = (ImageButton) vh.btnRemove;
 		                  btnRemove.setVisibility(View.GONE);
 
 								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
-								textViewInvoiceAddress.setText(item.getInvoiceSubLocality()+" "+item.getInvoiceLocality());
+								textViewInvoiceAddress.setVisibility(View.GONE);
+								//textViewInvoiceAddress.setText(item.getInvoiceSubLocality()+" "+item.getInvoiceLocality());
 
 								RelativeLayout layout = (RelativeLayout) vh.relativeInvoiceInfo;
 								layout.setOnClickListener(new View.OnClickListener() {
@@ -455,17 +486,17 @@ public class FragmentInvoiceDetail extends Fragment {
 									public void onClick(View v) {
 										Bundle b = new Bundle();
 										//b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getInvoicePreview());
-										b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getBILL_NO());
+										b.putString(InvoiceData.INVOICE_SCANNER_STRING, temp.getBILL_NO());
 										b.putInt(InvoiceData.INVOICE_SCANNER_CAPACITY, 0);
-										b.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, 0);
+										b.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, Integer.parseInt(temp.getTOTAL_BOX()));
 										interfaceInvoiceInfo.onBarcodeScan(b);
 									}
 								});
 
-	                  } else if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
+	                  /*} else if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
 //								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
 //								textViewInvoiceAddress.setVisibility(View.GONE);
-							}
+							}*/
 						}
                 } else if(holder instanceof ProgressBarViewHolder) {
 

@@ -53,5 +53,5 @@ public interface InterfaceInvoice {
 	);
 
 	@GET("/Application/tracking/services/exports.php")
-	Observable<List<InvoicePOJO>> getInvoiceInfo ();
+	Observable<List<BillPOJO>> getInvoiceInfo ();
 }

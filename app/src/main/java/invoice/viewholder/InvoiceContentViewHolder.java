@@ -15,6 +15,8 @@ public class InvoiceContentViewHolder extends RecyclerView.ViewHolder {
     public Object textViewInvoiceDate;
     public Object btnRemove;
 
+    public Object textViewInvoiceBoxNumber;
+
     public InvoiceContentViewHolder(View itemView) {
         super(itemView);
 
@@ -23,5 +25,6 @@ public class InvoiceContentViewHolder extends RecyclerView.ViewHolder {
         textViewInvoiceAddress = itemView.findViewById(R.id.text_view_invoice_address);
         textViewInvoiceDate = itemView.findViewById(R.id.text_view_invoice_date);
         btnRemove = itemView.findViewById(R.id.btn_remove);
+        textViewInvoiceBoxNumber = itemView.findViewById(R.id.text_view_invoice_box_number);
     }
 }

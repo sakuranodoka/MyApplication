@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
@@ -70,6 +72,8 @@ public class CustomScannerActivity extends AppCompatActivity implements
 		if(b != null) {// && b.containsKey(InvoiceData.INVOICE_CASE) ) {
 			//FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner( b.getInt(InvoiceData.INVOICE_CASE));
 
+			b.putString("bbbb", "bbbb");
+
 			FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner(b);
 			FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
 			fm.replace(R.id.layout_toolbar, fToolbarScanner);
@@ -81,11 +85,21 @@ public class CustomScannerActivity extends AppCompatActivity implements
 		barcodeScannerView.setStatusText("หมายเหตุ : กรุณาทาบเส้นสีแดงให้คลอบคลุมรหัสบาร์โค้ด");
 
 		capture = new CaptureManager(this, barcodeScannerView);
-		Intent stable = getIntent();
-		stable.putExtra("TEST", "01");
-		//capture.initializeFromIntent(getIntent(), savedInstanceState);
-		capture.initializeFromIntent(stable, savedInstanceState);
+
+		Intent t = getIntent();
+		capture.initializeFromIntent(t, savedInstanceState);
+		//b.putString("bbbb", "bbbb");
+		//setResult(IntentIntegrator.REQUEST_CODE ,t);
+		//capture.initializeFromIntent(t, b);
 		capture.decode();
+
+		//Intent t = getIntent();
+		t.putExtras(b);
+		t.putExtra("SUPER_B", b);
+
+		//setResult(IntentIntegrator.REQUEST_CODE, t);
+
+		IntentIntegrator.parseActivityResult(IntentIntegrator.REQUEST_CODE, -1, t);
 	}
 
 	 @Override
@@ -103,6 +117,10 @@ public class CustomScannerActivity extends AppCompatActivity implements
 	 @Override
 	 protected void onDestroy() {
 			super.onDestroy();
+
+		   //IntentIntegrator t =
+
+
 			capture.onDestroy();
 	 }
 

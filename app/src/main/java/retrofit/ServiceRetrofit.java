@@ -12,6 +12,7 @@ import URL.ServiceURL;
 import authen.AuthenData;
 import authen.AuthenticatePOJO;
 import authen.InterfaceAuthen;
+import invoice.BillPOJO;
 import invoice.InterfaceInvoice;
 import invoice.InvoiceData;
 import invoice.InvoicePOJO;
@@ -144,7 +145,7 @@ public class ServiceRetrofit {
 					Log.e("LIMIT", limit.toString());
 
 					ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-					Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo();
+					Observable<List<BillPOJO>> ex = interfacePreInvoice.getInvoiceInfo();
 					/*Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(
 							  p.getUsername(),
 							  bill.toString(),

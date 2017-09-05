@@ -40,6 +40,7 @@ import datepicker.DatePickerFragment;
 import fragment.FragmentToolbar;
 import intent.IntentKeycode;
 import intent.IntentParcel;
+import invoice.BillPOJO;
 import invoice.FragmentInvoiceDetail;
 import invoice.InterfaceInvoiceInfo;
 import invoice.InvoiceData;
@@ -47,6 +48,7 @@ import invoice.InvoicePOJO;
 import invoice.ParcelQuery;
 import invoice.item.ItemInvoice;
 import invoice.item.ItemInvoicePreview;
+import invoice.item.ParcelBill;
 import invoice.item.ParcelInvoice;
 import okhttp3.ResponseBody;
 import retrofit.InterfaceListen;
@@ -55,18 +57,6 @@ import retrofit.ServiceRetrofit;
 import retrofit2.Retrofit;
 import sqlite.DbHelper;
 import toolbars.ToolbarOptions;
-
-//@org.parceler.Parcel
-//class incest implements Serializable {
-//	FragmentInvoiceDetail incestform;
-//	incest(){}
-//	public FragmentInvoiceDetail getIncestform() {
-//		return incestform;
-//	}
-//	public void setIncestform(FragmentInvoiceDetail incestform) {
-//		this.incestform = incestform;
-//	}
-//}
 
 public class InvoiceInfoActivity extends AppCompatActivity {
 
@@ -215,37 +205,43 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		}
 
 		@Override
-		public void onBarcodeScan(Bundle b) {
+		public void onBarcodeScan(Bundle clickeddata) {
 			Intent t = new Intent(getApplication(), CustomScannerActivity.class);
 			Bundle zxingBn = new Bundle();
 			//zxingBn.putInt(InvoiceData.INVOICE_CASE, InvoiceData.INVOICE_CASE_INVOICE_PREVIEW);
 			//zxingBn.putString(InvoiceData.INVOICE_SCANNER_STRING, "1234eeeee");
 			//t.putExtras(zxingBn);
-			t.putExtras(b);
+			t.putExtras(clickeddata);
 
 			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
 		}
 	};
 
-	private final InterfaceListen interfaceListen = new InterfaceListen() {
+  	private final InterfaceListen interfaceListen = new InterfaceListen() {
 		@Override
 		public void onResponse(Object data, Retrofit retrofit) {
-				ParcelInvoice pi = new ParcelInvoice();
+				//ParcelInvoice pi = new ParcelInvoice();
+				ParcelBill pb = new ParcelBill();
 
-				List<InvoicePOJO> pojoList = (List<InvoicePOJO>) data;
+				List<BillPOJO> pojoList = (List<BillPOJO>) data;
 
-				ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
-				for (InvoicePOJO i : pojoList) {
-					ItemInvoicePreview temp = new ItemInvoicePreview();
+				//ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
+				ArrayList<BillPOJO> list = new ArrayList<>();
+				for (BillPOJO i : pojoList) {
+					BillPOJO temp = new BillPOJO();
 					temp.setBILL_NO(i.getBILL_NO());
+					temp.setBILL_DATE(i.getBILL_DATE());
+					temp.setNET_AMOUNT(i.getNET_AMOUNT());
+					temp.setTOTAL_BOX(i.getTOTAL_BOX());
 					/*temp.setInvoicePreview(i.getInfoInvoice());
 					temp.setInvoiceSublocality(i.getInfoSubLocality());
 					temp.setInvoiceLocality(i.getInfoLocality());
 					temp.setInvoiceDate(i.getInfoTime());*/
-					listInvoice.add(temp);
+					list.add(temp);
 				}
-				pi.setListInvoice(listInvoice);
-				b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pi));
+				//pi.setListInvoice(listInvoice);
+				pb.setListBill(list);
+				b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
 
 				fm = getSupportFragmentManager().beginTransaction();
 
@@ -316,6 +312,12 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 						async();
 					}
 					break;
+				case 5566 :
+					for (String key: data.getExtras().keySet())
+					{
+						Log.e ("ELISTIER", key + " is a key in the bundle");
+					}
+					break;
 				case IntentIntegrator.REQUEST_CODE :
 					temp = data.getExtras();
 					final Bundle finalTemp = temp;
@@ -323,18 +325,21 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							switch (which){
-								case DialogInterface.BUTTON_POSITIVE:
+								case DialogInterface.BUTTON_POSITIVE :
 									//Yes button clicked
 									Bundle tempdata = new Bundle();
 									//tempdata
 
-
-
 									//tempdata.putString(InvoiceData.INVOICE_SCANNER_STRING, finalTemp.getString());
-
-									for (String key: data.getExtras().keySet())
+									//Log.e ("ALLKEYS", data.getExtras().getString("SCAN_RESULT_FORMAT"));
+									/*for (String key: data.getExtras().getBundle("SCAN_RESULT").keySet())
 									{
 										Log.e ("ALLKEYS", key + " is a key in the bundle");
+									}*/
+
+									for (String key: b.keySet())
+									{
+										Log.e ("STARSERIES", key + " is a key in the bundle");
 									}
 
 									//interfaceInvoiceInfo.onBarcodeScan(tempdata);
