@@ -51,4 +51,7 @@ public interface InterfaceInvoice {
 			  @Query("timestack") String timestack,
 			  @Query("limit") String limit
 	);
+
+	@GET("/Application/tracking/services/exports.php")
+	Observable<List<InvoicePOJO>> getInvoiceInfo ();
 }

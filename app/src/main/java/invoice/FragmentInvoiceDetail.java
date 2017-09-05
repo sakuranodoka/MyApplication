@@ -95,6 +95,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 			ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
 			for (InvoicePOJO i : pojoList) {
+
 				/*ItemInvoicePreview temp = new ItemInvoicePreview();
 				temp.setInvoicePreview(i.getInfoInvoice());
 				temp.setInvoiceSublocality(i.getInfoSubLocality());
@@ -104,7 +105,9 @@ public class FragmentInvoiceDetail extends Fragment {
 
 				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
 
-				if(i.getInfoInvoice().equals("0000")) {
+				item.setBILL_NO(i.getBILL_NO());
+
+				/*if(i.getInfoInvoice().equals("0000")) {
 					canloadmore = false;
 					item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...2");
 					item.setInvoiceLocality("-");
@@ -115,11 +118,12 @@ public class FragmentInvoiceDetail extends Fragment {
 					b.putString(InvoiceData.INVOICE_LIMIT, (limits-15)+"");
 					item.setType(INVOICE_CONTENT_LOADER);
 				} else {
+
 					item.setInvoicePreview(i.getInfoInvoice());
 					item.setInvoiceLocality(i.getInfoLocality());
 					item.setInvoiceSubLocality(i.getInfoSubLocality());
 					item.setInvoiceDate(i.getInfoTime());
-				}
+				}*/
 				listItem.add(item);
 			}
 			adapter.notifyDataSetChanged();
@@ -222,18 +226,22 @@ public class FragmentInvoiceDetail extends Fragment {
 						  }*/
 
 	                ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-							if(i.getInvoicePreview().equals("0000")) {
+	                item.setBILL_NO(i.getBILL_NO());
+							/*if(i.getInvoicePreview().equals("0000")) {
 								 //canloadmore = false;
 								 item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...1");
 								 item.setInvoiceLocality("-");
 								 item.setInvoiceSubLocality("-");
 								 item.setInvoiceDate("ไม่บันทึกเวลา");
 							} else {
+
 								 item.setInvoicePreview(i.getInvoicePreview());
 								 item.setInvoiceLocality(i.getInvoiceLocality());
 								 item.setInvoiceSubLocality(i.getInvoiceSublocality());
 								 item.setInvoiceDate(i.getInvoiceDate());
-							}
+							}*/
+
+
                     /*item.setInvoicePreview(i.getInvoicePreview());
 	                 item.setInvoiceLocality(i.getInvoiceLocality());
 	                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
@@ -426,7 +434,9 @@ public class FragmentInvoiceDetail extends Fragment {
 
 						InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
 						TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
-						textViewInvoicePreview.setText(item.getInvoicePreview());
+						//textViewInvoicePreview.setText(item.getInvoicePreview());
+	                textViewInvoicePreview.setText(item.getBILL_NO());
+	                //temp.setBILL_NO(i.getBILL_NO());
 
 						TextView textViewInvoiceDate = (TextView) vh.textViewInvoiceDate;
 						textViewInvoiceDate.setText(item.getInvoiceDate());
@@ -444,7 +454,8 @@ public class FragmentInvoiceDetail extends Fragment {
 									@Override
 									public void onClick(View v) {
 										Bundle b = new Bundle();
-										b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getInvoicePreview());
+										//b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getInvoicePreview());
+										b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getBILL_NO());
 										b.putInt(InvoiceData.INVOICE_SCANNER_CAPACITY, 0);
 										b.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, 0);
 										interfaceInvoiceInfo.onBarcodeScan(b);

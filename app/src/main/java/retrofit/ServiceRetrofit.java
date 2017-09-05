@@ -144,11 +144,12 @@ public class ServiceRetrofit {
 					Log.e("LIMIT", limit.toString());
 
 					ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-					Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(
+					Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo();
+					/*Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(
 							  p.getUsername(),
 							  bill.toString(),
 							  timestack.toString(),
-							  limit.toString());
+							  limit.toString());*/
 					observable = ex;
 				}
 			   break;

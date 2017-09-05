@@ -11,6 +11,8 @@ public class ItemInvoicePreview implements Serializable {
 	private String InvoiceSublocality;
 	private String InvoiceLocality;
 
+	private String BILL_NO;
+
 	public String getInvoicePreview() {
 		return InvoicePreview;
 	}
@@ -46,5 +48,13 @@ public class ItemInvoicePreview implements Serializable {
 	}
 	public void setInvoiceLocality(String invoiceLocality) {
 		InvoiceLocality = invoiceLocality;
+	}
+
+	public String getBILL_NO() {
+		return BILL_NO;
+	}
+
+	public void setBILL_NO(String BILL_NO) {
+		this.BILL_NO = BILL_NO;
 	}
 }

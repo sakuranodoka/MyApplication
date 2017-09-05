@@ -18,6 +18,8 @@ public class ItemInvoice extends InvoiceBaseItem {
 
 	 public String invoiceLocality;
 
+	public String BILL_NO;
+
     public String getInvoicePreview() {
         return invoicePreview;
     }
@@ -72,5 +74,13 @@ public class ItemInvoice extends InvoiceBaseItem {
 
 	public void setInvoiceLocality(String invoiceLocality) {
 		this.invoiceLocality = invoiceLocality;
+	}
+
+	public String getBILL_NO() {
+		return BILL_NO;
+	}
+
+	public void setBILL_NO(String BILL_NO) {
+		this.BILL_NO = BILL_NO;
 	}
 }

@@ -237,10 +237,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
 				for (InvoicePOJO i : pojoList) {
 					ItemInvoicePreview temp = new ItemInvoicePreview();
-					temp.setInvoicePreview(i.getInfoInvoice());
+					temp.setBILL_NO(i.getBILL_NO());
+					/*temp.setInvoicePreview(i.getInfoInvoice());
 					temp.setInvoiceSublocality(i.getInfoSubLocality());
 					temp.setInvoiceLocality(i.getInfoLocality());
-					temp.setInvoiceDate(i.getInfoTime());
+					temp.setInvoiceDate(i.getInfoTime());*/
 					listInvoice.add(temp);
 				}
 				pi.setListInvoice(listInvoice);
@@ -298,9 +299,10 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 		Log.e("CODE", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
 		if(resultCode == RESULT_OK) {
+			Bundle temp = null;
 			switch(requestCode) {
 				case IntentKeycode.RESULT_INVOICE_SEARCH :
-					Bundle temp = data.getExtras();
+					temp = data.getExtras();
 					if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
 						b.putString(InvoiceData.INVOICE_LIMIT, "0");
 
@@ -315,7 +317,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					}
 					break;
 				case IntentIntegrator.REQUEST_CODE :
-
+					temp = data.getExtras();
+					final Bundle finalTemp = temp;
 					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -327,9 +330,14 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 
 
-									//tempdata.putString(InvoiceData.INVOICE_SCANNER_STRING, );
+									//tempdata.putString(InvoiceData.INVOICE_SCANNER_STRING, finalTemp.getString());
 
-									//interfaceInvoiceInfo.onBarcodeScan();
+									for (String key: data.getExtras().keySet())
+									{
+										Log.e ("ALLKEYS", key + " is a key in the bundle");
+									}
+
+									//interfaceInvoiceInfo.onBarcodeScan(tempdata);
 									break;
 
 								case DialogInterface.BUTTON_NEGATIVE :

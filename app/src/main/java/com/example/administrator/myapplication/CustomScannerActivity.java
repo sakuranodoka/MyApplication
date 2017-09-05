@@ -1,5 +1,6 @@
 package com.example.administrator.myapplication;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -80,7 +81,10 @@ public class CustomScannerActivity extends AppCompatActivity implements
 		barcodeScannerView.setStatusText("หมายเหตุ : กรุณาทาบเส้นสีแดงให้คลอบคลุมรหัสบาร์โค้ด");
 
 		capture = new CaptureManager(this, barcodeScannerView);
-		capture.initializeFromIntent(getIntent(), savedInstanceState);
+		Intent stable = getIntent();
+		stable.putExtra("TEST", "01");
+		//capture.initializeFromIntent(getIntent(), savedInstanceState);
+		capture.initializeFromIntent(stable, savedInstanceState);
 		capture.decode();
 	}
 
