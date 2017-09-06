@@ -144,7 +144,7 @@ public class ServiceRetrofit {
 
 					Log.e("LIMIT", limit.toString());
 
-					ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+					//ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
 					Observable<List<BillPOJO>> ex = interfacePreInvoice.getInvoiceInfo();
 					/*Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(
 							  p.getUsername(),

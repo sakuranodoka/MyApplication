@@ -468,7 +468,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	               TextView textViewInvoiceBoxNumber = (TextView) vh.textViewInvoiceBoxNumber;
 	               if(textViewInvoiceBoxNumber != null && temp.getTOTAL_BOX() != null) {
-		               textViewInvoiceBoxNumber.setText("0 / "+Integer.parseInt(temp.getTOTAL_BOX()));
+		               textViewInvoiceBoxNumber.setText(temp.getBILL_COUNT()+" / "+Integer.parseInt(temp.getTOTAL_BOX()));
 	               }
 
 						if(b != null) {

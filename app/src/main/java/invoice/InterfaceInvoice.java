@@ -52,6 +52,6 @@ public interface InterfaceInvoice {
 			  @Query("limit") String limit
 	);
 
-	@GET("/Application/tracking/services/exports.php")
+	@GET("/Application/tracking/services/getInvoiceInfo.cache.php")
 	Observable<List<BillPOJO>> getInvoiceInfo ();
 }

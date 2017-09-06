@@ -193,9 +193,17 @@ public class UserActivity extends AppCompatActivity implements
 //		userBaseItems.add(itemMenu);
 
 		itemMenu = new ItemMenu();
+		//itemMenu.setMenuMethod(MenuMethod.T_BARCODE);
+		itemMenu.setImageSource(R.drawable.ic_view_array_black_24dp);
+		itemMenu.setMenuName("สแกนบิลล์สินค้า");
+		itemMenu.setImageResourceColor( ContextCompat.getColor(getApplicationContext(), R.color.lemon_light_fortune));
+		itemMenu.setDetailName("แสกนแถบบาร์โค้ด (ใบสั่งสินค้า) ของสินค้าเข้าระบบด้วยโทรศัพท์ของท่าน");
+		userBaseItems.add(itemMenu);
+
+		itemMenu = new ItemMenu();
 		itemMenu.setMenuMethod(MenuMethod.T_SHOW_INVOICE);
 		itemMenu.setImageSource(R.drawable.ic_list_24);
-		itemMenu.setMenuName("รายการบิลล์");
+		itemMenu.setMenuName("รายการบิลล์ที่ต้องสแกน");
 		itemMenu.setImageResourceColor( ContextCompat.getColor(getApplicationContext(), R.color.lemon_light_fortune));
 		//itemMenu.setDetailName("แสดงใบสั่งสินค้าทั้งหมดที่ท่านได้บันทึกไปแล้ว");
 		itemMenu.setDetailName("แสดงบิลล์ที่รอการสแกนทั้งหมด");

@@ -6,6 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class BillPOJO implements Serializable {
+
+	@SerializedName("BILL_COUNT")
+	@Expose
+	public String BILL_COUNT = "";
+
 	@SerializedName("BILL_NO")
 	@Expose
 	public String BILL_NO = "";
@@ -21,6 +26,14 @@ public class BillPOJO implements Serializable {
 	@SerializedName("NET_AMOUNT")
 	@Expose
 	public String NET_AMOUNT = "";
+
+	public String getBILL_COUNT() {
+		return BILL_COUNT;
+	}
+
+	public void setBILL_COUNT(String BILL_COUNT) {
+		this.BILL_COUNT = BILL_COUNT;
+	}
 
 	public String getBILL_NO() {
 		return BILL_NO;

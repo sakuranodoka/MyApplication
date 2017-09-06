@@ -233,6 +233,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					temp.setBILL_DATE(i.getBILL_DATE());
 					temp.setNET_AMOUNT(i.getNET_AMOUNT());
 					temp.setTOTAL_BOX(i.getTOTAL_BOX());
+					temp.setBILL_COUNT(i.getBILL_COUNT());
 					/*temp.setInvoicePreview(i.getInfoInvoice());
 					temp.setInvoiceSublocality(i.getInfoSubLocality());
 					temp.setInvoiceLocality(i.getInfoLocality());
@@ -312,12 +313,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 						async();
 					}
 					break;
-				case 5566 :
-					for (String key: data.getExtras().keySet())
-					{
-						Log.e ("ELISTIER", key + " is a key in the bundle");
-					}
-					break;
 				case IntentIntegrator.REQUEST_CODE :
 					temp = data.getExtras();
 					final Bundle finalTemp = temp;
@@ -337,9 +332,22 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 										Log.e ("ALLKEYS", key + " is a key in the bundle");
 									}*/
 
-									for (String key: b.keySet())
-									{
-										Log.e ("STARSERIES", key + " is a key in the bundle");
+//									for (String key: b.keySet())
+//									{
+//										Log.e ("STARSERIES", key + " is a key in the bundle");
+//									}
+
+									String result = data.getExtras().getString("SCAN_RESULT");
+
+									ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+									for(BillPOJO o : pb.getListBill()) {
+										if(o.getBILL_NO() == result) {
+											int counting = Integer.parseInt(o.getBILL_COUNT());
+											counting+= 1;
+											o.setBILL_COUNT(counting+"");
+											// set ++
+											break;
+										}
 									}
 
 									//interfaceInvoiceInfo.onBarcodeScan(tempdata);
