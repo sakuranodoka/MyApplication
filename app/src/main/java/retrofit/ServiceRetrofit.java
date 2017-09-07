@@ -17,6 +17,7 @@ import invoice.InterfaceInvoice;
 import invoice.InvoiceData;
 import invoice.InvoicePOJO;
 import invoice.ParcelQuery;
+import invoice.ServiceBill;
 import invoice.item.ParcelInvoice;
 import location.LocationData;
 import location.pojo.GeoCoderPOJO;
@@ -154,6 +155,9 @@ public class ServiceRetrofit {
 					observable = ex;
 				}
 			   break;
+			case RetrofitAbstract.RETROFIT_SET_BILL_COUNT:
+				observable = ServiceBill.setBillCount((Bundle) data, retrofit);
+				break;
 			case RetrofitAbstract.RETROFIT_GEOCODING:
 
 				retrofit = new Retrofit.Builder()

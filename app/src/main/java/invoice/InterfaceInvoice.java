@@ -52,6 +52,13 @@ public interface InterfaceInvoice {
 			  @Query("limit") String limit
 	);
 
-	@GET("/Application/tracking/services/getInvoiceInfo.cache.php")
+	@GET("/Application/tracking/services/getInvoiceInfo.home.php")
 	Observable<List<BillPOJO>> getInvoiceInfo ();
+
+	@Multipart
+	@POST("/Application/tracking/services/setInvoiceInfo.home.php")
+	Observable<DataWrapper> setBillCount (
+		  @Part("BILL_NO") RequestBody BILL_NO,
+		  @Part("BILL_COUNT") RequestBody BILL_COUNT
+	);
 }

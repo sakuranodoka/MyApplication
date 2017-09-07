@@ -26,4 +26,10 @@ public class ParcelBill implements Serializable {
 	public void setListBill(ArrayList<BillPOJO> listBill) {
 		this.listBill = listBill;
 	}
+
+	@SuppressWarnings("Made in this class")
+	public void setBillCountAt(int index, String BILL_COUNT) {
+		this.listBill.get(index).setBILL_COUNT(BILL_COUNT);
+	}
+
 }

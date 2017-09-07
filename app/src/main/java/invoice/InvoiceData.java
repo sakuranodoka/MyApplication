@@ -38,7 +38,14 @@ public class InvoiceData {
 		public static final String INVOICE_LIMIT = "INVOICE_LIMIT";
 		public static final String INVOICE_PARCEL_QUERY = "INVOICE_PARCEL_QUERY";
 
+		public static final String BILL_PARCEL = "BILL_PARCEL";
+		public static final String BILL_POJO = "BILL_POJO";
+
 		public static final String INVOICE_SCANNER_STRING = "INVOICE_SCANNER_STRING";
+		public static final String BILL_NO = "BILL_NO";
+
 		public static final String INVOICE_SCANNER_CAPACITY = "INVOICE_SCANNER_CAPACITY";
+		public static final String BILL_COUNT = "BILL_COUNT";
+
 		public static final String INVOICE_SCANNER_MAXIMIZE = "INVOICE_SCANNER_MAXIMIZE";
 }

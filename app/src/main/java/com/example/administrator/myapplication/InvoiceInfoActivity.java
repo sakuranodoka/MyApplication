@@ -51,6 +51,7 @@ import invoice.item.ItemInvoicePreview;
 import invoice.item.ParcelBill;
 import invoice.item.ParcelInvoice;
 import okhttp3.ResponseBody;
+import retrofit.DataWrapper;
 import retrofit.InterfaceListen;
 import retrofit.RetrofitAbstract;
 import retrofit.ServiceRetrofit;
@@ -316,6 +317,50 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				case IntentIntegrator.REQUEST_CODE :
 					temp = data.getExtras();
 					final Bundle finalTemp = temp;
+
+					// Below is set bill count ++ (in server and show message client)
+					String result = data.getExtras().getString("SCAN_RESULT");
+
+					ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+					int index = 0;
+					for(BillPOJO pojo : pb.getListBill()) {
+						Log.e("Interface", "|"+pojo.getBILL_NO()+"| && |"+result+"|");
+						if(pojo.getBILL_NO().trim().equals(result.trim())) {
+							int counting = Integer.parseInt(pojo.getBILL_COUNT());
+							counting+= 1;
+
+							// set ++
+							pojo.setBILL_COUNT(counting+"");
+							//pb.setBillCountAt(index, counting+"");
+
+							Bundle instanceBundle = new Bundle();
+							instanceBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
+
+							final InterfaceListen updateInterface = new InterfaceListen() {
+								@Override
+								public void onResponse(Object data, Retrofit retrofit) {
+									// Set List in fragment update data XD
+									DataWrapper message = (DataWrapper) data;
+									Log.e("MESSAGE", message.toString());
+								}
+
+								@Override
+								public void onBodyError(ResponseBody responseBodyError) {}
+
+								@Override
+								public void onBodyErrorIsNull() {}
+
+								@Override
+								public void onFailure(Throwable t) {}
+							};
+
+
+							new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
+							break;
+						}
+						index++;
+					}
+
 					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -337,20 +382,12 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 //										Log.e ("STARSERIES", key + " is a key in the bundle");
 //									}
 
-									String result = data.getExtras().getString("SCAN_RESULT");
 
-									ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-									for(BillPOJO o : pb.getListBill()) {
-										if(o.getBILL_NO() == result) {
-											int counting = Integer.parseInt(o.getBILL_COUNT());
-											counting+= 1;
-											o.setBILL_COUNT(counting+"");
-											// set ++
-											break;
-										}
-									}
+									// zzz
+									//pb.setListBill(list);
+									//b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
 
-									//interfaceInvoiceInfo.onBarcodeScan(tempdata);
+									interfaceInvoiceInfo.onBarcodeScan(b);
 									break;
 
 								case DialogInterface.BUTTON_NEGATIVE :
