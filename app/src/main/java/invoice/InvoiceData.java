@@ -38,6 +38,9 @@ public class InvoiceData {
 		public static final String INVOICE_LIMIT = "INVOICE_LIMIT";
 		public static final String INVOICE_PARCEL_QUERY = "INVOICE_PARCEL_QUERY";
 
+		public static final String SHARED_PREFERENCES_BILL_NO = "SHARED_PREFERENCES_BILL_NO";
+		public static final String SHARED_PREFERENCES_BILL_POSITION = "SHARED_PREFERENCES_BILL_POSITION";
+
 		public static final String BILL_PARCEL = "BILL_PARCEL";
 		public static final String BILL_POJO = "BILL_POJO";
 

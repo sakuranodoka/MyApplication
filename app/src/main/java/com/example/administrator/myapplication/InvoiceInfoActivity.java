@@ -67,6 +67,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	private Bundle b = new Bundle();
 
+	//private SharedPreferences PRIVATE_BILL_PREFERENCES = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
+
 	// Inner Sqlite
 	private DbHelper dbHelper;
 	private SQLiteDatabase sqlite;
@@ -124,8 +126,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		FragmentToolbar fToolbar = new FragmentToolbar("รายการใบสั่งสินค้า", callbacks, dataCallbacks);
 		fm.replace(R.id.layout_toolbar, fToolbar);
 		fm.commit();
-
-		sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
 
 		Intent t = getIntent();
 		if(t.getExtras() == null) b = new Bundle();
@@ -188,6 +188,13 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		//sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
+	}
+
 	protected void async() {
 		if(this.b != null) {
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
@@ -213,6 +220,13 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 			//zxingBn.putString(InvoiceData.INVOICE_SCANNER_STRING, "1234eeeee");
 			//t.putExtras(zxingBn);
 			t.putExtras(clickeddata);
+
+			b.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION,  clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION));
+
+			//SharedPreferences.Editor editor = sp.edit();
+			//editor.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)).apply();
+
+			Log.e("positionZZZZZZZZZZZ",  clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)+"");
 
 			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
 		}
@@ -248,7 +262,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				fm = getSupportFragmentManager().beginTransaction();
 
 				fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
-				fragmentInvoiceDetail.clearance();
+				//fragmentInvoiceDetail.clearance();
 				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
 				fm.commit();
 		}
@@ -279,15 +293,23 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		if(savedInstanceState != null) {
 			b = savedInstanceState;
 
-			async();
+			fm = getSupportFragmentManager().beginTransaction();
+			fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
+			//fragmentInvoiceDetail.clearance();
+			fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
+			fm.commit();
+
+			//async();
 
 			if(b != null) {
-//				for (String key: b.keySet())
-//				{
-//					Log.e ("myApplication", key + " is a key in the bundle");
-//				}
+				for (String key: b.keySet())
+				{
+					Log.e ("myApplication", key + " is a key in the bundle");
+				}
 				//async();
 			}
+		} else {
+			Log.e ("onRestoreInstanceState", "savedInstanceState is null");
 		}
 	}
 
@@ -322,43 +344,59 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					String result = data.getExtras().getString("SCAN_RESULT");
 
 					ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-					int index = 0;
-					for(BillPOJO pojo : pb.getListBill()) {
-						Log.e("Interface", "|"+pojo.getBILL_NO()+"| && |"+result+"|");
-						if(pojo.getBILL_NO().trim().equals(result.trim())) {
-							int counting = Integer.parseInt(pojo.getBILL_COUNT());
-							counting+= 1;
+					//final int position = sp.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, -1);
+					int position = -1;
+					if(b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
+						position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					} else {
+						break;
+					}
 
-							// set ++
-							pojo.setBILL_COUNT(counting+"");
-							//pb.setBillCountAt(index, counting+"");
+					Log.e("Interface", "|"+position+"| && |"+result+"|");
 
-							Bundle instanceBundle = new Bundle();
-							instanceBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
+					/*if(fragmentInvoiceDetail == null) {
+						Log.e("NULL", fragmentInvoiceDetail.getBILLPOJO(position));
+					} else Log.e("NotNull", "NotNull");*/
 
-							final InterfaceListen updateInterface = new InterfaceListen() {
-								@Override
-								public void onResponse(Object data, Retrofit retrofit) {
-									// Set List in fragment update data XD
-									DataWrapper message = (DataWrapper) data;
-									Log.e("MESSAGE", message.toString());
-								}
+					if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
 
-								@Override
-								public void onBodyError(ResponseBody responseBodyError) {}
+					final BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
+					final int finalposition = position;
 
-								@Override
-								public void onBodyErrorIsNull() {}
+					if(pojo.getBILL_NO().trim().equals(result.trim())) {
+						int counting = Integer.parseInt(pojo.getBILL_COUNT());
+						counting+= 1;
 
-								@Override
-								public void onFailure(Throwable t) {}
-							};
+						// set ++
+						pojo.setBILL_COUNT(counting+"");
+						//pb.setBillCountAt(index, counting+"");
 
+						Bundle instanceBundle = new Bundle();
+						instanceBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
 
-							new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
-							break;
-						}
-						index++;
+						final int finalCounting = counting;
+						final InterfaceListen updateInterface = new InterfaceListen() {
+							@Override
+							public void onResponse(Object data, Retrofit retrofit) {
+								// Set List in fragment update data XD
+								DataWrapper message = (DataWrapper) data;
+								Log.e("MESSAGE", message.toString());
+
+								fragmentInvoiceDetail.increaseCounting(finalposition, finalCounting);
+							}
+
+							@Override
+							public void onBodyError(ResponseBody responseBodyError) {}
+
+							@Override
+							public void onBodyErrorIsNull() {}
+
+							@Override
+							public void onFailure(Throwable t) {}
+						};
+
+						new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
+						break;
 					}
 
 					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -367,27 +405,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 							switch (which){
 								case DialogInterface.BUTTON_POSITIVE :
 									//Yes button clicked
-									Bundle tempdata = new Bundle();
-									//tempdata
-
-									//tempdata.putString(InvoiceData.INVOICE_SCANNER_STRING, finalTemp.getString());
-									//Log.e ("ALLKEYS", data.getExtras().getString("SCAN_RESULT_FORMAT"));
-									/*for (String key: data.getExtras().getBundle("SCAN_RESULT").keySet())
-									{
-										Log.e ("ALLKEYS", key + " is a key in the bundle");
-									}*/
-
-//									for (String key: b.keySet())
-//									{
-//										Log.e ("STARSERIES", key + " is a key in the bundle");
-//									}
-
-
-									// zzz
-									//pb.setListBill(list);
-									//b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
-
-									interfaceInvoiceInfo.onBarcodeScan(b);
+									Bundle bundle = new Bundle();
+									bundle.putString(InvoiceData.INVOICE_SCANNER_STRING, pojo.getBILL_NO());
+									bundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(pojo.getBILL_COUNT()));
+									bundle.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, Integer.parseInt(pojo.getTOTAL_BOX()));
+									interfaceInvoiceInfo.onBarcodeScan(bundle);
 									break;
 
 								case DialogInterface.BUTTON_NEGATIVE :

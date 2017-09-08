@@ -57,7 +57,7 @@
 
        android:id="@+id/text_view_invoice_box_number"
 
-       android:text="0/5"
+       android:text="0 / 5"
        android:textColor="@color/space_gray"
        android:textSize="@dimen/font_text_view"/>
 

@@ -208,11 +208,9 @@ public class FragmentInvoiceDetail extends Fragment {
 
 		         //listItem.add(dropdown);
 	         }*/
-	         Boolean isDataNull = true;
 
 	        ParcelBill pb = null;
 	        if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
-		        isDataNull = false;
 		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
 	        }
 
@@ -267,6 +265,8 @@ public class FragmentInvoiceDetail extends Fragment {
                  listItem.add(item);
              }
             //}
+        } else {
+	        Log.e("BundleInFragmentIsNull", "true");
         }
         adapter = new InvoiceDetailAdapter(listItem);
         recyclerView.setAdapter(adapter);
@@ -354,7 +354,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 												 if(canloadmore) {
 													 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
-													 async();
+													 //async();
 												 }
 											 }
 										 }
@@ -408,7 +408,7 @@ public class FragmentInvoiceDetail extends Fragment {
         }
 
        @Override
-       public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+       public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             if(!listItem.isEmpty()) {
                 /*if(holder instanceof InvoiceHeaderViewHolder) {
 
@@ -487,8 +487,11 @@ public class FragmentInvoiceDetail extends Fragment {
 										Bundle b = new Bundle();
 										//b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getInvoicePreview());
 										b.putString(InvoiceData.INVOICE_SCANNER_STRING, temp.getBILL_NO());
-										b.putInt(InvoiceData.INVOICE_SCANNER_CAPACITY, 0);
+										b.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(temp.getBILL_COUNT()));
 										b.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, Integer.parseInt(temp.getTOTAL_BOX()));
+
+										b.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
+
 										interfaceInvoiceInfo.onBarcodeScan(b);
 									}
 								});
@@ -521,6 +524,13 @@ public class FragmentInvoiceDetail extends Fragment {
                 return 0;
             }
         }
+
+        public BillPOJO getPOJO(int position) {
+	        if(this.listItem != null) {
+		        ItemInvoice item = (ItemInvoice) listItem.get(position);
+		        return item.getBillPOJO();
+	        } else return null;
+        }
     }
 
 	protected void async() {
@@ -528,6 +538,36 @@ public class FragmentInvoiceDetail extends Fragment {
 			//b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
 		}
+	}
+
+	public void increaseCounting(int position, int BILL_COUNT) {
+		try {
+			final ItemInvoice item = (ItemInvoice) this.listItem.get(position);
+			BillPOJO temp = item.getBillPOJO();
+			temp.setBILL_COUNT(BILL_COUNT+"");
+
+			item.setBillPOJO(temp);
+
+			adapter.notifyDataSetChanged();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	public BillPOJO getBILLPOJO(int position) {
+		if(this.adapter == null) { Log.e("TheyreAllOfDead", listItem.size()+""); }
+		return this.adapter.getPOJO(position);
+
+		//try {
+			/*Log.e("TheyreAllOfDead", listItem.size()+"");
+
+			if(listItem.get(position) == null) return null;
+			ItemInvoice item = (ItemInvoice) listItem.get(position);
+			return item.getBillPOJO();*/
+		/*} catch (Throwable e) {
+			e.printStackTrace();
+			return null;
+		}*/
 	}
 
 	public void clearance() {

@@ -44,6 +44,21 @@
         android:textColor="@color/space_gray"
         android:textSize="@dimen/font_text_view"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+
+        android:padding="@dimen/round_padding"
+
+        android:gravity="center"
+
+        android:id="@+id/text_view_invoice_box_number"
+
+        android:text="0 / 5"
+        android:textColor="@color/space_gray"
+        android:textSize="@dimen/font_text_view"/>
+
     <ImageButton
         android:layout_width="36dp"
         android:layout_height="wrap_content"
