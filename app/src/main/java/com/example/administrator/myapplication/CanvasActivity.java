@@ -79,12 +79,12 @@ public class CanvasActivity extends AppCompatActivity {
 	    // Remove title name
 	    ab.setDisplayShowTitleEnabled(false);
 
-	    FragmentToolbar fToolbarScanner = new FragmentToolbar("กรุณาเซ็นต์ชื่อผู้รับ ในพื้นว่างด้านล่าง");
+	    FragmentToolbar fToolbarScanner = new FragmentToolbar("กรุณาเซ็นต์ชื่อผู้รับ");
 	    FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
 	    fm.replace(R.id.layout_toolbar, fToolbarScanner);
 	    fm.commit();
 
-	    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+	    //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 		 LinearLayout layoutCanvasReset = (LinearLayout) findViewById(R.id.layout_canvas_reset);
 		 layoutCanvasReset.bringToFront();
@@ -124,7 +124,7 @@ public class CanvasActivity extends AppCompatActivity {
 
             b.putString("status", "done");
             b.putString(InvoiceData.ENCODED_IMAGE_PATH, encodeResult);
-						b.putString(InvoiceData.USER_FULLNAME, inputUserFullname.getText().toString());
+				b.putString(InvoiceData.USER_FULLNAME, inputUserFullname.getText().toString());
 
             Intent intent = new Intent();
             intent.putExtras(b);
@@ -138,8 +138,6 @@ public class CanvasActivity extends AppCompatActivity {
         btnSignatureClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //signature.clear();
-
                 mSignature.clear();
                 btnSignatureSubmit.setEnabled(false);
             }

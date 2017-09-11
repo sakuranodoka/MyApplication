@@ -173,12 +173,26 @@ public class FragmentInvoiceDetail extends Fragment {
     }
 
     public FragmentInvoiceDetail(Bundle b, InterfaceInvoiceInfo interfaceInvoiceInfo) {
-        super();
+		 super();
 
-        this.b = b;
-	     //if(this.b != null && !this.b.containsKey(InvoiceData.INVOICE_DAY_TAG))
-		     //this.b.putString(InvoiceData.INVOICE_DAY_TAG, DAY_NOW);
-	     this.interfaceInvoiceInfo = interfaceInvoiceInfo;
+		 this.b = b;
+		 //if(this.b != null && !this.b.containsKey(InvoiceData.INVOICE_DAY_TAG))
+	    //this.b.putString(InvoiceData.INVOICE_DAY_TAG, DAY_NOW);
+		 this.interfaceInvoiceInfo = interfaceInvoiceInfo;
+
+	    listItem = new ArrayList<>();
+
+	    ParcelBill pb = null;
+	    if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
+		    pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+	    }
+
+	    for(BillPOJO o : pb.getListBill()) {
+		     ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+		     item.setBillPOJO(o);
+
+		     listItem.add(item);
+	    }
     }
 
     @Nullable
@@ -190,84 +204,85 @@ public class FragmentInvoiceDetail extends Fragment {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViews);
 
-        listItem = new ArrayList<>();
-        if(b != null) {
-	         /*if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
-		         Gson gson = new Gson();
-		         List<ItemInvoiceDateDAO> listDateDAO = new ArrayList<>();
-		         try {
-			         Type listType = new TypeToken<ArrayList<ItemInvoiceDateDAO>>() {
-			         }.getType();
-			         listDateDAO = gson.fromJson(INVOICE_DATE_OPTIONAL, listType);
-		         } catch (Exception e) {
-			         e.printStackTrace();
-			         Log.e("error", "Parse Failed GSON" + e.getMessage());
-		         }
-		         ItemInvoiceDateDropdown dropdown = new ItemInvoiceDateDropdown(INVOICE_CONTENT_HEADER);
-		         dropdown.setDateTag(listDateDAO);
+//        listItem = new ArrayList<>();
+//        if(b != null) {
+//	         /*if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
+//		         Gson gson = new Gson();
+//		         List<ItemInvoiceDateDAO> listDateDAO = new ArrayList<>();
+//		         try {
+//			         Type listType = new TypeToken<ArrayList<ItemInvoiceDateDAO>>() {
+//			         }.getType();
+//			         listDateDAO = gson.fromJson(INVOICE_DATE_OPTIONAL, listType);
+//		         } catch (Exception e) {
+//			         e.printStackTrace();
+//			         Log.e("error", "Parse Failed GSON" + e.getMessage());
+//		         }
+//		         ItemInvoiceDateDropdown dropdown = new ItemInvoiceDateDropdown(INVOICE_CONTENT_HEADER);
+//		         dropdown.setDateTag(listDateDAO);
+//
+//		         //listItem.add(dropdown);
+//	         }*/
+//
+//	        ParcelBill pb = null;
+//	        if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
+//		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+//	        }
+//
+//	        /*if(pb == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
+//		        isDataNull = false;
+//		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+//	        }*/
+//
+//	         /*ParcelInvoice pi = null;
+//            if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
+//	            // แยก Parcel เพราะว่ากลัวซ้ำกับ list ที่เลือก ใน dialog ดูมั่วๆๆๆๆ หะ 5555
+//					isDataNull = false;
+//	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+//            }
+//
+//            if(pi == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
+//					isDataNull = false;
+//	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+//            }*/
+//
+//            //if(!isDataNull) {
+//                //for(ItemInvoicePreview i : pi.getListInvoice()) {
+//            for(BillPOJO o : pb.getListBill()) {
+//                 /*if(i.getInvoicePreview().equals("0000")) {
+//	                 canloadmore = false;
+//					  }*/
+//
+//                ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+//
+//	             item.setBillPOJO(o);
+//                //item.setBILL_NO(o.getBILL_NO());
+//
+//						/*if(i.getInvoicePreview().equals("0000")) {
+//							 //canloadmore = false;
+//							 item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...1");
+//							 item.setInvoiceLocality("-");
+//							 item.setInvoiceSubLocality("-");
+//							 item.setInvoiceDate("ไม่บันทึกเวลา");
+//						} else {
+//
+//							 item.setInvoicePreview(i.getInvoicePreview());
+//							 item.setInvoiceLocality(i.getInvoiceLocality());
+//							 item.setInvoiceSubLocality(i.getInvoiceSublocality());
+//							 item.setInvoiceDate(i.getInvoiceDate());
+//						}*/
+//
+//
+//                 /*item.setInvoicePreview(i.getInvoicePreview());
+//                 item.setInvoiceLocality(i.getInvoiceLocality());
+//                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
+//                 item.setInvoiceDate(i.getInvoiceDate());*/
+//                 listItem.add(item);
+//             }
+//            //}
+//        } else {
+//	        Log.e("BundleInFragmentIsNull", "true");
+//        }
 
-		         //listItem.add(dropdown);
-	         }*/
-
-	        ParcelBill pb = null;
-	        if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
-		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-	        }
-
-	        /*if(pb == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
-		        isDataNull = false;
-		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-	        }*/
-
-	         /*ParcelInvoice pi = null;
-            if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
-	            // แยก Parcel เพราะว่ากลัวซ้ำกับ list ที่เลือก ใน dialog ดูมั่วๆๆๆๆ หะ 5555
-					isDataNull = false;
-	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-            }
-
-            if(pi == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
-					isDataNull = false;
-	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-            }*/
-
-            //if(!isDataNull) {
-                //for(ItemInvoicePreview i : pi.getListInvoice()) {
-            for(BillPOJO o : pb.getListBill()) {
-                 /*if(i.getInvoicePreview().equals("0000")) {
-	                 canloadmore = false;
-					  }*/
-
-                ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-
-	             item.setBillPOJO(o);
-                //item.setBILL_NO(o.getBILL_NO());
-
-						/*if(i.getInvoicePreview().equals("0000")) {
-							 //canloadmore = false;
-							 item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...1");
-							 item.setInvoiceLocality("-");
-							 item.setInvoiceSubLocality("-");
-							 item.setInvoiceDate("ไม่บันทึกเวลา");
-						} else {
-
-							 item.setInvoicePreview(i.getInvoicePreview());
-							 item.setInvoiceLocality(i.getInvoiceLocality());
-							 item.setInvoiceSubLocality(i.getInvoiceSublocality());
-							 item.setInvoiceDate(i.getInvoiceDate());
-						}*/
-
-
-                 /*item.setInvoicePreview(i.getInvoicePreview());
-                 item.setInvoiceLocality(i.getInvoiceLocality());
-                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
-                 item.setInvoiceDate(i.getInvoiceDate());*/
-                 listItem.add(item);
-             }
-            //}
-        } else {
-	        Log.e("BundleInFragmentIsNull", "true");
-        }
         adapter = new InvoiceDetailAdapter(listItem);
         recyclerView.setAdapter(adapter);
 
@@ -488,7 +503,7 @@ public class FragmentInvoiceDetail extends Fragment {
 										//b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getInvoicePreview());
 										b.putString(InvoiceData.INVOICE_SCANNER_STRING, temp.getBILL_NO());
 										b.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(temp.getBILL_COUNT()));
-										b.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, Integer.parseInt(temp.getTOTAL_BOX()));
+										b.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(temp.getTOTAL_BOX()));
 
 										b.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
 
@@ -555,19 +570,15 @@ public class FragmentInvoiceDetail extends Fragment {
 	}
 
 	public BillPOJO getBILLPOJO(int position) {
-		if(this.adapter == null) { Log.e("TheyreAllOfDead", listItem.size()+""); }
-		return this.adapter.getPOJO(position);
-
-		//try {
-			/*Log.e("TheyreAllOfDead", listItem.size()+"");
-
-			if(listItem.get(position) == null) return null;
-			ItemInvoice item = (ItemInvoice) listItem.get(position);
-			return item.getBillPOJO();*/
-		/*} catch (Throwable e) {
-			e.printStackTrace();
-			return null;
-		}*/
+		if(this.adapter == null) {
+			// please set new adapter, the old adapter was เดี้ยงไปแล้ว
+			Log.e("TheyreAllOfDead", listItem.size()+"");
+			if(this.listItem != null) {
+				ItemInvoice item = (ItemInvoice) listItem.get(position);
+				return item.getBillPOJO();
+			} else return null;
+		}
+		else return this.adapter.getPOJO(position);
 	}
 
 	public void clearance() {

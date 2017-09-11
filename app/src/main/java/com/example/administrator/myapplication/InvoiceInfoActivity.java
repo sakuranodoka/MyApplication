@@ -215,10 +215,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		@Override
 		public void onBarcodeScan(Bundle clickeddata) {
 			Intent t = new Intent(getApplication(), CustomScannerActivity.class);
-			Bundle zxingBn = new Bundle();
-			//zxingBn.putInt(InvoiceData.INVOICE_CASE, InvoiceData.INVOICE_CASE_INVOICE_PREVIEW);
-			//zxingBn.putString(InvoiceData.INVOICE_SCANNER_STRING, "1234eeeee");
-			//t.putExtras(zxingBn);
+
 			t.putExtras(clickeddata);
 
 			b.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION,  clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION));
@@ -226,9 +223,17 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 			//SharedPreferences.Editor editor = sp.edit();
 			//editor.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)).apply();
 
-			Log.e("positionZZZZZZZZZZZ",  clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)+"");
+			//Log.e("positionZZZZZZZZZZZ",  clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)+"");
+			int BILL_COUNT = clickeddata.getInt(InvoiceData.BILL_COUNT);
+			int TOTAL_BOX = clickeddata.getInt(InvoiceData.TOTAL_BOX);
 
-			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
+			if(BILL_COUNT >= TOTAL_BOX) {
+				// ...
+				t = new Intent(InvoiceInfoActivity.this, CanvasActivity.class);
+				startActivityForResult(t, IntentKeycode.RESULT_CANVAS);
+			} else {
+				startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
+			}
 		}
 	};
 
@@ -283,31 +288,43 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 			b.putString(InvoiceData.INVOICE_LIMIT, "0");
 			outState.putAll(b);
 		}
+		Log.e("onSaveInstanceState", "true");
 		super.onSaveInstanceState(outState);
+	}
+
+	private void checkTotal(int BILL_COUNT, int TOTAL_BOX) {
+		if(BILL_COUNT >= TOTAL_BOX) {
+
+		} else {
+
+		}
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 
+		Log.e("onRestoreInstanceState", "true");
+
 		if(savedInstanceState != null) {
 			b = savedInstanceState;
 
 			fm = getSupportFragmentManager().beginTransaction();
 			fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
-			//fragmentInvoiceDetail.clearance();
 			fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
 			fm.commit();
 
+			//Log.e("stateSize", fragmentInvoiceDetail.getItemCounts()+"");
+
 			//async();
 
-			if(b != null) {
+			/*if(b != null) {
 				for (String key: b.keySet())
 				{
 					Log.e ("myApplication", key + " is a key in the bundle");
 				}
 				//async();
-			}
+			}*/
 		} else {
 			Log.e ("onRestoreInstanceState", "savedInstanceState is null");
 		}
@@ -317,7 +334,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.e("CODE", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
+		Log.e("onActivityResult", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
 		if(resultCode == RESULT_OK) {
 			Bundle temp = null;
 			switch(requestCode) {
@@ -344,7 +361,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					String result = data.getExtras().getString("SCAN_RESULT");
 
 					ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-					//final int position = sp.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, -1);
+
 					int position = -1;
 					if(b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
 						position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
@@ -353,10 +370,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					}
 
 					Log.e("Interface", "|"+position+"| && |"+result+"|");
-
-					/*if(fragmentInvoiceDetail == null) {
-						Log.e("NULL", fragmentInvoiceDetail.getBILLPOJO(position));
-					} else Log.e("NotNull", "NotNull");*/
 
 					if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
 
@@ -369,10 +382,12 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 						// set ++
 						pojo.setBILL_COUNT(counting+"");
-						//pb.setBillCountAt(index, counting+"");
 
 						Bundle instanceBundle = new Bundle();
 						instanceBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
+
+						final int BILL_COUNT = Integer.parseInt(pojo.getBILL_COUNT());
+						final int TOTAL_BOX = Integer.parseInt(pojo.getTOTAL_BOX());
 
 						final int finalCounting = counting;
 						final InterfaceListen updateInterface = new InterfaceListen() {
@@ -383,6 +398,30 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 								Log.e("MESSAGE", message.toString());
 
 								fragmentInvoiceDetail.increaseCounting(finalposition, finalCounting);
+
+								DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										switch (which) {
+											case DialogInterface.BUTTON_POSITIVE:
+												//Yes button clicked
+												Bundle bundle = new Bundle();
+												bundle.putString(InvoiceData.INVOICE_SCANNER_STRING, pojo.getBILL_NO());
+												bundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(pojo.getBILL_COUNT()));
+												bundle.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(pojo.getTOTAL_BOX()));
+												interfaceInvoiceInfo.onBarcodeScan(bundle);
+												break;
+
+											case DialogInterface.BUTTON_NEGATIVE:
+												//No button clicked
+												break;
+										}
+									}
+								};
+
+								AlertDialog.Builder builder = new AlertDialog.Builder(InvoiceInfoActivity.this);
+								builder.setMessage("สแกนบิลล์นี้ต่อไปใช่ไหม ?").setPositiveButton("ตกลง", dialogClickListener)
+										  .setNegativeButton("ยกเลิก", dialogClickListener).show();
 							}
 
 							@Override
@@ -395,33 +434,33 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 							public void onFailure(Throwable t) {}
 						};
 
-						new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
+						/*if(BILL_COUNT >= TOTAL_BOX) {
+							// เซ็นชื่อ ผู้รับ
+
+							Intent t = new Intent(InvoiceInfoActivity.this, CanvasActivity.class);
+							startActivityForResult(t, IntentKeycode.RESULT_CANVAS);
+
+						} else {*/
+							new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
+						//}
 						break;
+					} else {
+
+						AlertDialog.Builder builder1 = new AlertDialog.Builder(InvoiceInfoActivity.this);
+						builder1.setMessage("หมายเลขบิลล์ข้างกล่อง ไม่ตรงกับหมายเลขบิลล์ในระบบ");
+						builder1.setCancelable(true);
+
+						builder1.setNegativeButton(
+								  "ปิด",
+								  new DialogInterface.OnClickListener() {
+									  public void onClick(DialogInterface dialog, int id) {
+										  dialog.cancel();
+									  }
+								  });
+
+						AlertDialog alert11 = builder1.create();
+						alert11.show();
 					}
-
-					DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							switch (which){
-								case DialogInterface.BUTTON_POSITIVE :
-									//Yes button clicked
-									Bundle bundle = new Bundle();
-									bundle.putString(InvoiceData.INVOICE_SCANNER_STRING, pojo.getBILL_NO());
-									bundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(pojo.getBILL_COUNT()));
-									bundle.putInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE, Integer.parseInt(pojo.getTOTAL_BOX()));
-									interfaceInvoiceInfo.onBarcodeScan(bundle);
-									break;
-
-								case DialogInterface.BUTTON_NEGATIVE :
-									//No button clicked
-									break;
-							}
-						}
-					};
-
-					AlertDialog.Builder builder = new AlertDialog.Builder(this);
-					builder.setMessage("สแกนบิลล์นี้ต่อไปใช่ไหม ?").setPositiveButton("ตกลง", dialogClickListener)
-							  .setNegativeButton("ยกเลิก", dialogClickListener).show();
 
 					break;
 			}

@@ -64,19 +64,19 @@ public class FragmentToolbarScanner extends Fragment {
 				headerMessage.append("สแกนบาร์โค้ดใบสั่งสินค้า");
 				break;
 			default:
-				//headerMessage.append("กรุณากำหนดโหมด");
 				if(b.containsKey(InvoiceData.INVOICE_SCANNER_STRING)) {
 					headerMessage.append(b.getString(InvoiceData.INVOICE_SCANNER_STRING));
 				}
-				if(b.containsKey(InvoiceData.INVOICE_SCANNER_CAPACITY) && b.containsKey(InvoiceData.INVOICE_SCANNER_MAXIMIZE)) {
+
+				if(b.containsKey(InvoiceData.BILL_COUNT) && b.containsKey(InvoiceData.TOTAL_BOX)) {
 					RelativeLayout layoutCapacity = (RelativeLayout) view.findViewById(R.id.layout_capacity);
 					layoutCapacity.setVisibility(View.VISIBLE);
 
 					TextView textScannerCapacity = (TextView) view.findViewById(R.id.text_scanner_capacity);
-					textScannerCapacity.setText(b.getInt(InvoiceData.INVOICE_SCANNER_CAPACITY)+"");
+					textScannerCapacity.setText(b.getInt(InvoiceData.BILL_COUNT)+"");
 
 					TextView textScannerMaximize = (TextView) view.findViewById(R.id.text_scanner_maximize);
-					textScannerMaximize.setText(b.getInt(InvoiceData.INVOICE_SCANNER_MAXIMIZE)+"");
+					textScannerMaximize.setText(b.getInt(InvoiceData.TOTAL_BOX)+"");
 				}
 				break;
 		}

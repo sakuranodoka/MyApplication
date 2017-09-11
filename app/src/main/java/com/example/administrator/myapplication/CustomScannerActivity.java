@@ -69,11 +69,7 @@ public class CustomScannerActivity extends AppCompatActivity implements
 		ab.setDisplayShowTitleEnabled(false);
 
 		b = getIntent().getExtras();
-		if(b != null) {// && b.containsKey(InvoiceData.INVOICE_CASE) ) {
-			//FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner( b.getInt(InvoiceData.INVOICE_CASE));
-
-			b.putString("bbbb", "bbbb");
-
+		if(b != null) {
 			FragmentToolbarScanner fToolbarScanner = new FragmentToolbarScanner(b);
 			FragmentTransaction fm = getSupportFragmentManager().beginTransaction();
 			fm.replace(R.id.layout_toolbar, fToolbarScanner);
@@ -88,18 +84,15 @@ public class CustomScannerActivity extends AppCompatActivity implements
 
 		Intent t = getIntent();
 		capture.initializeFromIntent(t, savedInstanceState);
-		//b.putString("bbbb", "bbbb");
-		//setResult(IntentIntegrator.REQUEST_CODE ,t);
-		//capture.initializeFromIntent(t, b);
 		capture.decode();
 
 		//Intent t = getIntent();
-		t.putExtras(b);
-		t.putExtra("SUPER_B", b);
+		//t.putExtras(b);
+		//t.putExtra("SUPER_B", b);
 
 		//setResult(IntentIntegrator.REQUEST_CODE, t);
 
-		IntentIntegrator.parseActivityResult(IntentIntegrator.REQUEST_CODE, -1, t);
+		//IntentIntegrator.parseActivityResult(IntentIntegrator.REQUEST_CODE, -1, t);
 	}
 
 	 @Override

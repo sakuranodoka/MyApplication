@@ -13,6 +13,7 @@
    <dimen name="dialog_button_fixed_height">52dp</dimen>
 
    <dimen name="font_text_view">17sp</dimen>
+   <dimen name="font_button_default">19sp</dimen>
    <dimen name="font_app_name">22sp</dimen>
 
 
