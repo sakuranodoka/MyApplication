@@ -52,4 +52,8 @@ public class InvoiceData {
 
 		public static final String INVOICE_SCANNER_MAXIMIZE = "INVOICE_SCANNER_MAXIMIZE";
 		public static final String TOTAL_BOX = "TOTAL_BOX";
+
+		public static final String BILL_BITMAP = "BILL_BITMAP";
+		public static final String BILL_SIGN = "BILL_SIGN";
+
 }

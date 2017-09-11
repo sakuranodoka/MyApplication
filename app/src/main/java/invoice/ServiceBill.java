@@ -22,4 +22,21 @@ public class ServiceBill {
 
 		return i.setBillCount(BILL_NO, BILL_COUNT);
 	}
+
+	public static Observable<DataWrapper> setCompleteBill(Bundle bundle, Retrofit retrofit) {
+		if(bundle == null) try {
+			throw new Exception();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		InterfaceInvoice i = retrofit.create(InterfaceInvoice.class);
+
+		RequestBody BILL_NO = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.BILL_NO));
+		RequestBody BILL_COUNT = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.BILL_COUNT));
+
+		RequestBody BILL_BITMAP = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.ENCODED_IMAGE_PATH));
+		RequestBody BILL_USERNAME = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.USER_FULLNAME));
+
+		return i.setCompleteBill(BILL_NO, BILL_COUNT, BILL_BITMAP, BILL_USERNAME);
+	}
 }

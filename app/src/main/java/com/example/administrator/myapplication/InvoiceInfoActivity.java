@@ -337,6 +337,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		Log.e("onActivityResult", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
 		if(resultCode == RESULT_OK) {
 			Bundle temp = null;
+			int position = -1;
 			switch(requestCode) {
 				case IntentKeycode.RESULT_INVOICE_SEARCH :
 					temp = data.getExtras();
@@ -362,7 +363,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 					ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
 
-					int position = -1;
+					position = -1;
 					if(b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
 						position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
 					} else {
@@ -462,6 +463,69 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 						alert11.show();
 					}
 
+					break;
+				case IntentKeycode.RESULT_CANVAS:
+
+					position = -1;
+
+					if(b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
+						position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					} else {
+						break;
+					}
+
+					final int removeposition = position;
+
+
+					if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
+
+					final BillPOJO pojotemp = fragmentInvoiceDetail.getBILLPOJO(position);
+
+					Bundle instanceBundle = data.getExtras();
+
+					final int BILL_COUNT = Integer.parseInt(pojotemp.getBILL_COUNT());
+					final String BILL_NO = pojotemp.getBILL_NO();
+
+					final InterfaceListen setCompleteBillInterface = new InterfaceListen() {
+						@Override
+						public void onResponse(Object data, Retrofit retrofit) {
+							// ... complete 1 bill -.-
+							DataWrapper message = (DataWrapper) data;
+							Log.e("MESSAGE", message.toString());
+
+							// remove in position
+							fragmentInvoiceDetail.removeByPosition(removeposition);
+
+							AlertDialog.Builder builder1 = new AlertDialog.Builder(InvoiceInfoActivity.this);
+							builder1.setMessage("สแกนบิลล์ "+ BILL_NO);
+							builder1.setCancelable(true);
+
+							builder1.setNegativeButton(
+									  "ปิด",
+									  new DialogInterface.OnClickListener() {
+										  public void onClick(DialogInterface dialog, int id) {
+											  dialog.cancel();
+										  }
+									  });
+
+							AlertDialog alert11 = builder1.create();
+							alert11.show();
+						}
+
+						@Override
+						public void onBodyError(ResponseBody responseBodyError) {}
+
+						@Override
+						public void onBodyErrorIsNull() {}
+
+						@Override
+						public void onFailure(Throwable t) {}
+					};
+
+					instanceBundle.putString(InvoiceData.BILL_NO, BILL_NO);
+					instanceBundle.putString(InvoiceData.BILL_COUNT, BILL_COUNT+"");
+
+					new ServiceRetrofit().callServer(setCompleteBillInterface, RetrofitAbstract.RETROFIT_SET_COMPLETE_BILL, instanceBundle);
 					break;
 			}
 		} else {

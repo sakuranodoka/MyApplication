@@ -158,6 +158,9 @@ public class ServiceRetrofit {
 			case RetrofitAbstract.RETROFIT_SET_BILL_COUNT:
 				observable = ServiceBill.setBillCount((Bundle) data, retrofit);
 				break;
+			case RetrofitAbstract.RETROFIT_SET_COMPLETE_BILL:
+				observable = ServiceBill.setCompleteBill((Bundle) data, retrofit);
+				break;
 			case RetrofitAbstract.RETROFIT_GEOCODING:
 
 				retrofit = new Retrofit.Builder()

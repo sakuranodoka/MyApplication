@@ -569,6 +569,25 @@ public class FragmentInvoiceDetail extends Fragment {
 		}
 	}
 
+	public void removeByPosition(int position) {
+		try {
+			/*if(this.adapter == null) {
+				Log.e("TheyreAllOfDead", "Adapter dead");
+				adapter = new InvoiceDetailAdapter(listItem);
+				//recyclerView.setAdapter(adapter);
+			}*/
+			//List<InvoiceBaseItem> temp = this.listItem.
+			this.listItem.remove(position);
+
+			//this.listItem.clear();
+			//this.listItem.addAll(temp);
+
+			adapter.notifyDataSetChanged();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
 	public BillPOJO getBILLPOJO(int position) {
 		if(this.adapter == null) {
 			// please set new adapter, the old adapter was เดี้ยงไปแล้ว
