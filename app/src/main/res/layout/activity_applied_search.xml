@@ -83,7 +83,7 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/half_little"
+
           android:orientation="vertical"
           android:padding="@dimen/round_padding"
           android:background="@color/angel_white">
@@ -158,5 +158,6 @@
 
        android:background="@android:color/transparent"
        style="@style/Base.Widget.AppCompat.Button.Borderless"/>
+
 
 </RelativeLayout>

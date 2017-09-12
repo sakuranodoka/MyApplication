@@ -84,52 +84,82 @@ public class FragmentInvoiceDetail extends Fragment {
 		@Override
 		public void onResponse(Object data, Retrofit retrofit) {
 
-			isloading = false;
-
 			if(listItem.size() != 0) {
 				listItem.remove(listItem.size() - 1);
 				adapter.notifyDataSetChanged();
 			}
+			canloadmore = true;
 
-			ParcelInvoice pi = new ParcelInvoice();
+			// set new data PLEASE
 
-			//List<InvoicePOJO> pojoList = (List<InvoicePOJO>) data;
+			ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+
+			ArrayList<BillPOJO> listbill = pb.getListBill();
+
 			List<BillPOJO> pojoList = (List<BillPOJO>) data;
 
-			//ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
-			for (BillPOJO o : pojoList) {
-
-				/*ItemInvoicePreview temp = new ItemInvoicePreview();
-				temp.setInvoicePreview(i.getInfoInvoice());
-				temp.setInvoiceSublocality(i.getInfoSubLocality());
-				temp.setInvoiceLocality(i.getInfoLocality());
-				temp.setInvoiceDate(i.getInfoTime());
-				listInvoice.add(temp);*/
+			for (BillPOJO i : pojoList) {
+				BillPOJO temp = new BillPOJO();
+				temp.setBILL_NO(i.getBILL_NO());
+				temp.setBILL_DATE(i.getBILL_DATE());
+				temp.setNET_AMOUNT(i.getNET_AMOUNT());
+				temp.setTOTAL_BOX(i.getTOTAL_BOX());
+				temp.setBILL_COUNT(i.getBILL_COUNT());
 
 				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-				item.setBillPOJO(o);
+				item.setBillPOJO(temp);
 
-				//item.setBILL_NO(i.getBILL_NO());
-
-				/*if(i.getInfoInvoice().equals("0000")) {
-					canloadmore = false;
-					item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...2");
-					item.setInvoiceLocality("-");
-					item.setInvoiceSubLocality("-");
-					item.setInvoiceDate("ไม่บันทึกเวลา");
-
-					int limits = Integer.parseInt(b.getString(InvoiceData.INVOICE_LIMIT));
-					b.putString(InvoiceData.INVOICE_LIMIT, (limits-15)+"");
-					item.setType(INVOICE_CONTENT_LOADER);
-				} else {
-
-					item.setInvoicePreview(i.getInfoInvoice());
-					item.setInvoiceLocality(i.getInfoLocality());
-					item.setInvoiceSubLocality(i.getInfoSubLocality());
-					item.setInvoiceDate(i.getInfoTime());
-				}*/
+					/*temp.setInvoicePreview(i.getInfoInvoice());
+					temp.setInvoiceSublocality(i.getInfoSubLocality());
+					temp.setInvoiceLocality(i.getInfoLocality());
+					temp.setInvoiceDate(i.getInfoTime());*/
 				listItem.add(item);
 			}
+
+			listbill.addAll((pojoList));
+			pb.setListBill(listbill);
+
+			b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
+
+//			ParcelInvoice pi = new ParcelInvoice();
+//
+//			//List<InvoicePOJO> pojoList = (List<InvoicePOJO>) data;
+//			List<BillPOJO> pojoList = (List<BillPOJO>) data;
+//
+//			//ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
+//			for (BillPOJO o : pojoList) {
+//
+//				/*ItemInvoicePreview temp = new ItemInvoicePreview();
+//				temp.setInvoicePreview(i.getInfoInvoice());
+//				temp.setInvoiceSublocality(i.getInfoSubLocality());
+//				temp.setInvoiceLocality(i.getInfoLocality());
+//				temp.setInvoiceDate(i.getInfoTime());
+//				listInvoice.add(temp);*/
+//
+//				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+//				item.setBillPOJO(o);
+//
+//				//item.setBILL_NO(i.getBILL_NO());
+//
+//				/*if(i.getInfoInvoice().equals("0000")) {
+//					canloadmore = false;
+//					item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...2");
+//					item.setInvoiceLocality("-");
+//					item.setInvoiceSubLocality("-");
+//					item.setInvoiceDate("ไม่บันทึกเวลา");
+//
+//					int limits = Integer.parseInt(b.getString(InvoiceData.INVOICE_LIMIT));
+//					b.putString(InvoiceData.INVOICE_LIMIT, (limits-15)+"");
+//					item.setType(INVOICE_CONTENT_LOADER);
+//				} else {
+//
+//					item.setInvoicePreview(i.getInfoInvoice());
+//					item.setInvoiceLocality(i.getInfoLocality());
+//					item.setInvoiceSubLocality(i.getInfoSubLocality());
+//					item.setInvoiceDate(i.getInfoTime());
+//				}*/
+//				listItem.add(item);
+//			}
 			adapter.notifyDataSetChanged();
 		}
 
@@ -337,14 +367,12 @@ public class FragmentInvoiceDetail extends Fragment {
 
 						 recyclerView.scrollToPosition(listItem.size() - 1);
 
-						 limited = limited + 15;
-
-						 //isloading = true;
-
 						 handler.postDelayed(new Runnable() {
 							 @Override
 							 public void run() {
 								 limited = limited + 15;
+								 async();
+
 //								 if(canloadmore) {
 //									 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 //									 //async();
@@ -368,6 +396,7 @@ public class FragmentInvoiceDetail extends Fragment {
 							 @Override
 							 public void run() {
 								 limited = limited + 15;
+								 async();
 							 }
 						 },500);
 					 }
@@ -611,7 +640,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	protected void async() {
 		if(this.b != null) {
-			//b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
+			b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
 		}
 	}
@@ -655,6 +684,10 @@ public class FragmentInvoiceDetail extends Fragment {
 			} else return null;
 		}
 		else return this.adapter.getPOJO(position);
+	}
+
+	public void setNewLimited() {
+		limited = 0;
 	}
 
 	public void clearance() {

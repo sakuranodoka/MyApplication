@@ -180,6 +180,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 //				async();
 			}
 
+			b.putString(InvoiceData.INVOICE_LIMIT, "0");
+
 			if(savedInstanceState == null) {
 				async();
 			}
@@ -331,6 +333,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					temp = data.getExtras();
 					if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
 						b.putString(InvoiceData.INVOICE_LIMIT, "0");
+
+						fragmentInvoiceDetail.setNewLimited();
 
 						Log.e("SUCCESSFULLY", "WRAP BILL OR DATE FRPM APPLIED SEARCH ACTIVITY");
 

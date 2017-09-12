@@ -47,6 +47,8 @@ public class InvoiceData {
 		public static final String INVOICE_SCANNER_STRING = "INVOICE_SCANNER_STRING";
 		public static final String BILL_NO = "BILL_NO";
 
+		public static final String BILL_DATE = "BILL_DATE";
+
 		public static final String INVOICE_SCANNER_CAPACITY = "INVOICE_SCANNER_CAPACITY";
 		public static final String BILL_COUNT = "BILL_COUNT";
 
