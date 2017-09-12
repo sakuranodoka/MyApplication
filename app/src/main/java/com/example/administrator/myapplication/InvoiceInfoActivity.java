@@ -496,8 +496,23 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 							// remove in position
 							fragmentInvoiceDetail.removeByPosition(removeposition);
 
+							//b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
+							ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
+
+							//BillPOJO instancetemppojo = new BillPOJO();
+
+
+							ArrayList<BillPOJO> instancelistpojo = pb.getListBill();
+							int bundleindex = instancelistpojo.indexOf(pojotemp);
+
+							if( bundleindex != -1 ) {
+								 instancelistpojo.remove(bundleindex);
+								 pb.setListBill(instancelistpojo);
+								 b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
+							}
+
 							AlertDialog.Builder builder1 = new AlertDialog.Builder(InvoiceInfoActivity.this);
-							builder1.setMessage("สแกนบิลล์ "+ BILL_NO);
+							builder1.setMessage("สแกนบิลล์ "+ BILL_NO + " เสร็จสิ้น");
 							builder1.setCancelable(true);
 
 							builder1.setNegativeButton(

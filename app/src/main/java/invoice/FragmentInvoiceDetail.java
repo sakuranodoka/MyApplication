@@ -33,6 +33,7 @@ import org.parceler.Parcels;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -175,6 +176,10 @@ public class FragmentInvoiceDetail extends Fragment {
     public FragmentInvoiceDetail(Bundle b, InterfaceInvoiceInfo interfaceInvoiceInfo) {
 		 super();
 
+	    // Set Load more
+	    this.canloadmore = true;
+	    this.isloading = false;
+
 		 this.b = b;
 		 //if(this.b != null && !this.b.containsKey(InvoiceData.INVOICE_DAY_TAG))
 	    //this.b.putString(InvoiceData.INVOICE_DAY_TAG, DAY_NOW);
@@ -314,6 +319,7 @@ public class FragmentInvoiceDetail extends Fragment {
 			 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				 super.onScrollStateChanged(recyclerView, newState);
 				 //detect is the topmost item visible and is user scrolling? if true then only execute
+				 //Log.e("SCROLL", "TRUE");
 				 if (newState == RecyclerView.SCROLL_STATE_DRAGGING && !isloading) {
 					 isUserScrolling = true;
 					 if(isListGoingUp) {
@@ -517,7 +523,8 @@ public class FragmentInvoiceDetail extends Fragment {
 							}*/
 						}
                 } else if(holder instanceof ProgressBarViewHolder) {
-
+	                ProgressBarViewHolder vh = (ProgressBarViewHolder) holder;
+	                vh.avi.smoothToShow();
                 }
             }
         }
@@ -571,16 +578,12 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	public void removeByPosition(int position) {
 		try {
-			/*if(this.adapter == null) {
-				Log.e("TheyreAllOfDead", "Adapter dead");
-				adapter = new InvoiceDetailAdapter(listItem);
-				//recyclerView.setAdapter(adapter);
-			}*/
-			//List<InvoiceBaseItem> temp = this.listItem.
-			this.listItem.remove(position);
 
-			//this.listItem.clear();
-			//this.listItem.addAll(temp);
+			ArrayList<InvoiceBaseItem> copy = new ArrayList<InvoiceBaseItem>(listItem);
+			copy.remove(position);
+
+			listItem.clear();
+			listItem.addAll(copy);
 
 			adapter.notifyDataSetChanged();
 		} catch (Throwable e) {

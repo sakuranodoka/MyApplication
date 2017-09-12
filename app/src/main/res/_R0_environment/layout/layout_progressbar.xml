@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@android:color/transparent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
 
-              android:layout_margin="@dimen/slice_align">
+                android:layout_margin="@dimen/slice_align">
 
-   <ProgressBar
+   <!--<ProgressBar-->
+       <!--android:layout_width="wrap_content"-->
+       <!--android:layout_height="wrap_content"-->
+
+       <!--android:layout_centerInParent="true"-->
+
+       <!--android:padding="@dimen/round_padding"-->
+       <!--android:id="@+id/progressBar"-->
+       <!--android:indeterminate="true"-->
+       <!--style="@android:style/Widget.Holo.ProgressBar"-->
+       <!--android:layout_gravity="center_horizontal"/>-->
+
+   <com.wang.avi.AVLoadingIndicatorView
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-
+       android:id="@+id/aviProgressBar"
        android:layout_centerInParent="true"
-
-       android:padding="@dimen/round_padding"
-       android:id="@+id/progressBar"
-       android:indeterminate="true"
-       style="@android:style/Widget.Holo.ProgressBar"
-       android:layout_gravity="center_horizontal"/>
+       app:indicatorColor="@color/rising_green"
+       app:indicatorName="BallScaleIndicator"/>
 
 </RelativeLayout>
