@@ -67,8 +67,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	private Bundle b = new Bundle();
 
-	//private SharedPreferences PRIVATE_BILL_PREFERENCES = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
-
 	// Inner Sqlite
 	private DbHelper dbHelper;
 	private SQLiteDatabase sqlite;
@@ -134,52 +132,52 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG)) {
 			if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
 				// Last version
-				/*
-				// ลบเพื่อจะได้ไม่ซ้ำซ้อนใน Fragment
-				b.remove(InvoiceData.INVOICE_PARCEL_CONTENT);
-
-				Bundle temp = (Bundle) b.clone();
-
-				String username = "";
-				if(sp != null && !sp.getString(AuthenData.USERNAME, "").equals(""))
-					username = sp.getString(AuthenData.USERNAME, "");
-
-				dbHelper = new DbHelper(this);
-				sqlite = dbHelper.getWritableDatabase();
-				//cursor = sqlite.rawQuery("SELECT " + dbHelper.COL_INVOICE + "," + dbHelper.COL_TIME +" FROM " + dbHelper.TABLE_NAME, null);
-				cursor = sqlite.query(dbHelper.TABLE_NAME,  new String[] { dbHelper.COL_INVOICE,dbHelper.COL_TIME,dbHelper.COL_LATITUDE,dbHelper.COL_LONGITUDE }, dbHelper.COL_EMPLOYEE + "=?", new String[] { username }, null, null, null);
-
-				cursor.moveToFirst();
-
-				ParcelInvoice pPpi = new ParcelInvoice();
-				ArrayList<ItemInvoicePreview> list = new ArrayList<>();
-				while(!cursor.isAfterLast()) {
-					ItemInvoicePreview item = new ItemInvoicePreview();
-					item.setInvoicePreview(cursor.getString(cursor.getColumnIndex(dbHelper.COL_INVOICE)));
-					item.setInvoiceDate(cursor.getString(cursor.getColumnIndex(dbHelper.COL_TIME)));
-					list.add(item);
-					cursor.moveToNext();
-				}
-				pPpi.setListInvoice(list);
-				Parcelable wrapped = Parcels.wrap(pPpi);
-
-				temp.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
-
-				FragmentInvoiceDetail fragmentInvoiceDetail = new FragmentInvoiceDetail(temp, interfaceInvoiceInfo);
-				fm = getSupportFragmentManager().beginTransaction();
-				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
-				fm.commit();*/
+//
+//				// ลบเพื่อจะได้ไม่ซ้ำซ้อนใน Fragment
+//				b.remove(InvoiceData.INVOICE_PARCEL_CONTENT);
+//
+//				Bundle temp = (Bundle) b.clone();
+//
+//				String username = "";
+//				if(sp != null && !sp.getString(AuthenData.USERNAME, "").equals(""))
+//					username = sp.getString(AuthenData.USERNAME, "");
+//
+//				dbHelper = new DbHelper(this);
+//				sqlite = dbHelper.getWritableDatabase();
+//				//cursor = sqlite.rawQuery("SELECT " + dbHelper.COL_INVOICE + "," + dbHelper.COL_TIME +" FROM " + dbHelper.TABLE_NAME, null);
+//				cursor = sqlite.query(dbHelper.TABLE_NAME,  new String[] { dbHelper.COL_INVOICE,dbHelper.COL_TIME,dbHelper.COL_LATITUDE,dbHelper.COL_LONGITUDE }, dbHelper.COL_EMPLOYEE + "=?", new String[] { username }, null, null, null);
+//
+//				cursor.moveToFirst();
+//
+//				ParcelInvoice pPpi = new ParcelInvoice();
+//				ArrayList<ItemInvoicePreview> list = new ArrayList<>();
+//				while(!cursor.isAfterLast()) {
+//					ItemInvoicePreview item = new ItemInvoicePreview();
+//					item.setInvoicePreview(cursor.getString(cursor.getColumnIndex(dbHelper.COL_INVOICE)));
+//					item.setInvoiceDate(cursor.getString(cursor.getColumnIndex(dbHelper.COL_TIME)));
+//					list.add(item);
+//					cursor.moveToNext();
+//				}
+//				pPpi.setListInvoice(list);
+//				Parcelable wrapped = Parcels.wrap(pPpi);
+//
+//				temp.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
+//
+//				FragmentInvoiceDetail fragmentInvoiceDetail = new FragmentInvoiceDetail(temp, interfaceInvoiceInfo);
+//				fm = getSupportFragmentManager().beginTransaction();
+//				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
+//				fm.commit();
 			} else if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
 
 				// Set limited
-				/*b.putString(InvoiceData.INVOICE_LIMIT, "0");
-
-				ParcelQuery pq = new ParcelQuery();
-				pq.setBill("");
-				pq.setDatetime("");
-				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
-
-				async();*/
+//				b.putString(InvoiceData.INVOICE_LIMIT, "0");
+//
+//				ParcelQuery pq = new ParcelQuery();
+//				pq.setBill("");
+//				pq.setDatetime("");
+//				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+//
+//				async();
 			}
 
 			if(savedInstanceState == null) {
@@ -191,8 +189,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
-		//sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
 	}
 
 	protected void async() {
@@ -292,14 +288,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		super.onSaveInstanceState(outState);
 	}
 
-	private void checkTotal(int BILL_COUNT, int TOTAL_BOX) {
-		if(BILL_COUNT >= TOTAL_BOX) {
-
-		} else {
-
-		}
-	}
-
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -361,16 +349,12 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					// Below is set bill count ++ (in server and show message client)
 					String result = data.getExtras().getString("SCAN_RESULT");
 
-					ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-
 					position = -1;
 					if(b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
 						position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
 					} else {
 						break;
 					}
-
-					Log.e("Interface", "|"+position+"| && |"+result+"|");
 
 					if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
 
@@ -386,9 +370,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 						Bundle instanceBundle = new Bundle();
 						instanceBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
-
-						final int BILL_COUNT = Integer.parseInt(pojo.getBILL_COUNT());
-						final int TOTAL_BOX = Integer.parseInt(pojo.getTOTAL_BOX());
 
 						final int finalCounting = counting;
 						final InterfaceListen updateInterface = new InterfaceListen() {
@@ -435,15 +416,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 							public void onFailure(Throwable t) {}
 						};
 
-						/*if(BILL_COUNT >= TOTAL_BOX) {
-							// เซ็นชื่อ ผู้รับ
+						new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
 
-							Intent t = new Intent(InvoiceInfoActivity.this, CanvasActivity.class);
-							startActivityForResult(t, IntentKeycode.RESULT_CANVAS);
-
-						} else {*/
-							new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
-						//}
 						break;
 					} else {
 
@@ -462,12 +436,10 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 						AlertDialog alert11 = builder1.create();
 						alert11.show();
 					}
-
 					break;
 				case IntentKeycode.RESULT_CANVAS:
 
 					position = -1;
-
 					if(b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
 						position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
 					} else {
@@ -493,14 +465,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 							DataWrapper message = (DataWrapper) data;
 							Log.e("MESSAGE", message.toString());
 
-							// remove in position
+							// remove in position (fragment adapter's list)
 							fragmentInvoiceDetail.removeByPosition(removeposition);
 
-							//b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
+							// remove in bundle
 							ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-
-							//BillPOJO instancetemppojo = new BillPOJO();
-
 
 							ArrayList<BillPOJO> instancelistpojo = pb.getListBill();
 							int bundleindex = instancelistpojo.indexOf(pojotemp);
@@ -511,11 +480,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 								 b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
 							}
 
-							AlertDialog.Builder builder1 = new AlertDialog.Builder(InvoiceInfoActivity.this);
-							builder1.setMessage("สแกนบิลล์ "+ BILL_NO + " เสร็จสิ้น");
-							builder1.setCancelable(true);
+							AlertDialog.Builder builder = new AlertDialog.Builder(InvoiceInfoActivity.this);
+							builder.setMessage("สแกนบิลล์ "+ BILL_NO + " เสร็จสิ้น");
+							builder.setCancelable(true);
 
-							builder1.setNegativeButton(
+							builder.setNegativeButton(
 									  "ปิด",
 									  new DialogInterface.OnClickListener() {
 										  public void onClick(DialogInterface dialog, int id) {
@@ -523,8 +492,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 										  }
 									  });
 
-							AlertDialog alert11 = builder1.create();
-							alert11.show();
+							AlertDialog dialog = builder.create();
+							dialog.show();
 						}
 
 						@Override
@@ -540,6 +509,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					instanceBundle.putString(InvoiceData.BILL_NO, BILL_NO);
 					instanceBundle.putString(InvoiceData.BILL_COUNT, BILL_COUNT+"");
 
+					// required update that's complete bill
 					new ServiceRetrofit().callServer(setCompleteBillInterface, RetrofitAbstract.RETROFIT_SET_COMPLETE_BILL, instanceBundle);
 					break;
 			}

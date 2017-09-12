@@ -10,7 +10,8 @@
       android:layout_height="wrap_content"
       android:orientation="horizontal"
       android:gravity="center"
-      android:layout_margin="@dimen/double_round"
+      android:layout_marginEnd="@dimen/double_round"
+      android:layout_marginTop="@dimen/primary_bound"
       android:id="@+id/layout_canvas_reset"
       android:layout_alignParentRight="true">
       <TextView
@@ -78,12 +79,12 @@
          android:layout_height="wrap_content"
          android:layout_width="wrap_content"
          android:text="บันทึก"
-         android:textSize="@dimen/font_text_view"
+         android:textSize="15sp"
          android:textColor="@color/rising_green"
 
-         android:gravity="center"
+         android:gravity="bottom|end"
 
-         android:paddingStart="@dimen/round_padding"
+         android:padding="@dimen/round_padding"
 
          android:layout_alignParentEnd="true"
          android:layout_centerInParent="true"
