@@ -1,14 +1,9 @@
 package invoice;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,50 +11,33 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.myapplication.R;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.parceler.Parcels;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
-import autocomplete.InstantAutocomplete;
-import intent.IntentKeycode;
 import invoice.item.InvoiceBaseItem;
 import invoice.item.ItemInvoice;
-import invoice.item.ItemInvoiceDateDAO;
-import invoice.item.ItemInvoiceDateDropdown;
-import invoice.item.ItemInvoicePreview;
 import invoice.item.ParcelBill;
-import invoice.item.ParcelInvoice;
 import invoice.viewholder.InvoiceContentViewHolder;
 import invoice.viewholder.InvoiceHeaderViewHolder;
 import invoice.viewholder.ProgressBarViewHolder;
-import location.LocationData;
-import location.pojo.GeoCoderPOJO;
 import okhttp3.ResponseBody;
 import retrofit.InterfaceListen;
 import retrofit.RetrofitAbstract;
 import retrofit.ServiceRetrofit;
 import retrofit2.Retrofit;
-import seller.titlebar.SellerTitleDAO;
 
 public class FragmentInvoiceDetail extends Fragment {
+
+	// oh hello
 
    private RecyclerView recyclerView;
    private InvoiceDetailAdapter adapter;
