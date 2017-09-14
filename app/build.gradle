@@ -22,7 +22,10 @@ android {
                             '/src/main/res/_A0_shop_info',
                             '/src/main/res/_A1_invoice',
                             '/src/main/res/_A1_bill_list',
-                            '/src/main/res/_A0_authen'
+                            '/src/main/res/_A0_authen',
+
+
+                            '/src/main/assets/fonts'
                     ]
         }
     }
