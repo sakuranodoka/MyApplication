@@ -5,13 +5,7 @@
       <item name="colorPrimaryDark">@color/supreme_blue</item>
       <item name="colorAccent">@color/stone_gray</item>
 
-       <!--<item name="android:textViewStyle">@style/RobotoTextViewStyle</item>-->
-       <!--<item name="android:buttonStyle">@style/RobotoTextViewStyle</item>-->
     </style>
-
-   <!--<style name="RobotoTextViewStyle" parent="android:Widget.TextView">-->
-      <!--<item name="android:fontFamily">@fonts</item>-->
-   <!--</style>-->
 
    <!-- สีไอคอนโฮมสีขาว-->
    <style name="CustomToolBarTheme" parent="ApplicationTheme">

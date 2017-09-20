@@ -193,11 +193,11 @@ public class UserActivity extends AppCompatActivity implements
 //		userBaseItems.add(itemMenu);
 
 		itemMenu = new ItemMenu();
-		//itemMenu.setMenuMethod(MenuMethod.T_BARCODE);
+		itemMenu.setMenuMethod(MenuMethod.T_BARCODE);
 		itemMenu.setImageSource(R.drawable.ic_view_array_black_24dp);
-		itemMenu.setMenuName("สแกนบิลล์สินค้า");
+		itemMenu.setMenuName("สแกนเพื่อค้นหาบิลล์");
 		itemMenu.setImageResourceColor( ContextCompat.getColor(getApplicationContext(), R.color.lemon_light_fortune));
-		itemMenu.setDetailName("แสกนแถบบาร์โค้ด (ใบสั่งสินค้า) ของสินค้าเข้าระบบด้วยโทรศัพท์ของท่าน");
+		itemMenu.setDetailName("แสกนแถบบาร์โค้ด (ใบสั่งสินค้า) ของสินค้าเเพื่อค้นหาหมายเลขบิลล์ในระบบ และจำนวนที่ต้องนำเข้าระบบ");
 		userBaseItems.add(itemMenu);
 
 		itemMenu = new ItemMenu();
@@ -558,13 +558,13 @@ public class UserActivity extends AppCompatActivity implements
 
 		@Override
 		public void onBarcodeScan(int mode, String preview) {
-			if(b != null)
-				b.putInt(InvoiceData.INVOICE_CASE, mode);
+			//if(b != null)
+			//	b.putInt(InvoiceData.INVOICE_CASE, mode);
 			Intent t = new Intent(UserActivity.this, CustomScannerActivity.class);
-			Bundle zxingBn = new Bundle();
-			zxingBn.putInt(InvoiceData.INVOICE_CASE, mode);
-			zxingBn.putString(InvoiceData.INVOICE_PREVIEW, preview);
-			t.putExtras(zxingBn);
+//			Bundle zxingBn = new Bundle();
+//			zxingBn.putInt(InvoiceData.INVOICE_CASE, mode);
+//			zxingBn.putString(InvoiceData.INVOICE_PREVIEW, preview);
+//			t.putExtras(zxingBn);
 			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
 		}
 

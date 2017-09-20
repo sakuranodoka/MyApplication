@@ -113,8 +113,8 @@ public class UserAdapter extends RecyclerView.Adapter {
                                 interfaceUser.onCapture();
                                 break;
                             case MenuMethod.T_BARCODE:
-                                //interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
-                                interfaceUser.setShowDialog();
+                                interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
+                                //interfaceUser.setShowDialog();
                                 break;
                             case MenuMethod.T_SHOW_INVOICE:
                     //                                 Bundle _b_ = new Bundle();
