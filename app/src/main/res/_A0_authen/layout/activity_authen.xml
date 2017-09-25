@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="match_parent"
    android:layout_height="match_parent"
-   android:fitsSystemWindows="true">
+   android:fitsSystemWindows="true"
+   android:background="@color/little_light_gray">
 
    <LinearLayout
        android:orientation="vertical"
@@ -11,6 +12,12 @@
        android:paddingTop="56dp"
        android:paddingLeft="24dp"
        android:paddingRight="24dp">
+
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/authen"
+          android:layout_gravity="center"/>
 
       <!--<ImageView android:src=""-->
                  <!--android:layout_width="wrap_content"-->
@@ -22,14 +29,13 @@
       <android.support.design.widget.TextInputLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:layout_marginBottom="8dp"
-          android:background="@color/little_light_gray">
+          android:layout_marginTop="@dimen/double_round"
+          android:layout_marginBottom="8dp">
          <EditText android:id="@+id/input_email"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
                    android:inputType="text"
-                   android:hint="ชื่อผู้ใช้งาน (Username)"/>
+                   android:hint="รหัสร้านค้า (Ship Number)"/>
       </android.support.design.widget.TextInputLayout>
 
       <!-- Password Label -->
@@ -37,8 +43,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="8dp"
-          android:layout_marginBottom="8dp"
-          android:background="@color/little_light_gray">
+          android:layout_marginBottom="8dp">
          <EditText android:id="@+id/input_password"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
@@ -52,16 +57,20 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="24dp"
           android:layout_marginBottom="24dp"
+          android:background="@android:color/transparent"
           android:padding="12dp"
-          android:text="เข้าสู่ระบบ"/>
+          android:text="เข้าสู่ระบบ"
+          android:textSize="@dimen/font_text_view"
+          android:textColor="@color/dark_blue"
+          />
 
-      <TextView android:id="@+id/link_signup"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:text="สร้างบัญชี่ผู้ใช้ (Create Acccount)"
-                android:gravity="center"
-                android:textSize="16dip"/>
+      <!--<TextView android:id="@+id/link_signup"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginBottom="24dp"-->
+                <!--android:text="สร้างบัญชี่ผู้ใช้ (Create Acccount)"-->
+                <!--android:gravity="center"-->
+                <!--android:textSize="16dip"/>-->
 
    </LinearLayout>
 </ScrollView>

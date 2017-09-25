@@ -165,8 +165,8 @@ public class MainActivity extends AppCompatActivity
 	    } else {
 		    switch(sp.getInt(AuthenData.USER_ROLE, 0)) {
 			    case 1:
-				    startActivity(new Intent(MainActivity.this, EBusinessActivity.class));
-				    break;
+				    //startActivity(new Intent(MainActivity.this, EBusinessActivity.class));
+				    //break;
 			    case 2:
 			    	//UserActivity.class
 				    //startActivity(new Intent(MainActivity.this, GuideActivity.class));

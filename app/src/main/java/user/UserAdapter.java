@@ -20,6 +20,7 @@ import java.util.List;
 
 import authen.AuthenData;
 import invoice.InvoiceData;
+import invoice.ParcelQuery;
 import invoice.item.ParcelInvoice;
 import user.user.item.ItemMenu;
 import user.user.item.ItemSection;
@@ -113,7 +114,7 @@ public class UserAdapter extends RecyclerView.Adapter {
                                 interfaceUser.onCapture();
                                 break;
                             case MenuMethod.T_BARCODE:
-                                interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, InvoiceData.INVOICE_PREVIEW_PRODUCT);
+                                interfaceUser.onBarcodeScan(InvoiceData.INVOICE_CASE_INVOICE_PREVIEW, "สแกนเพื่อค้นหาบิลล์");
                                 //interfaceUser.setShowDialog();
                                 break;
                             case MenuMethod.T_SHOW_INVOICE:
@@ -130,9 +131,15 @@ public class UserAdapter extends RecyclerView.Adapter {
                     //
                     //	                              viewHolderMenu.itemView.getContext().startActivity(t);
                             Bundle callbackState = new Bundle();
-                            callbackState.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
+                            //callbackState.putInt(InvoiceData.INVOICE_INFO_TAG, InvoiceData.INVOICE_INFO_WITH_USER_ID);
 
-                            interfaceUser.onIntentCallback(InvoiceInfoActivity.class, callbackState);
+                            ParcelQuery pq = new ParcelQuery();
+                            pq.setBill("");
+                            pq.setDatetime("");
+
+                            b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+
+                            interfaceUser.onIntentCallback(InvoiceInfoActivity.class, b);
                             break;
                         }
                     }

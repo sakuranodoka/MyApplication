@@ -98,13 +98,13 @@ public class FragmentAuthen extends Fragment {
 		}
 
 		_loginButton = (Button) rootView.findViewById(R.id.btn_login);
-		_signupLink = (TextView) rootView.findViewById(R.id.link_signup);
-		_signupLink.setOnClickListener(new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-		interfaceReplace.replacing(FragmentScope.SIGN_UP);
-		}
-		});
+		//_signupLink = (TextView) rootView.findViewById(R.id.link_signup);
+//		_signupLink.setOnClickListener(new View.OnClickListener() {
+//		@Override
+//		public void onClick(View v) {
+//		interfaceReplace.replacing(FragmentScope.SIGN_UP);
+//		}
+//		});
 
 		return rootView;
 	}

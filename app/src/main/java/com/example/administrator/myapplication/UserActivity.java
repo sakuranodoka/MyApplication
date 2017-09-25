@@ -59,6 +59,7 @@ import dialog.DialogFragmentData;
 import fragment.FragmentToolbar;
 import intent.IntentKeycode;
 import invoice.InvoiceData;
+import invoice.ParcelQuery;
 import invoice.ServiceInvoice;
 import invoice.ViewInvoiceSwitchDialogFragment;
 import invoice.item.ItemInvoicePreview;
@@ -217,15 +218,6 @@ public class UserActivity extends AppCompatActivity implements
 		itemMenu.setDetailName("ลงชื่อออกจากระบบงาน");
 		userBaseItems.add(itemMenu);
 
-		//			itemMenu = new ItemMenu();
-		//			itemMenu.setMenuMethod(MenuMethod.T_PHOTO);
-		//			itemMenu.setImageSource(R.drawable.ic_camera_black_24dp);
-		//			itemMenu.setMenuName("ถ่ายภาพสินค้า");
-		//			itemMenu.setImageResourceColor( ContextCompat.getColor(getApplicationContext(), R.color.lemon_wingless));
-		//			itemMenu.setDetailName("ถ่ายภาพประกอบรายละเอียดของสินค้า");
-		//			itemMenu.setIntent(new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
-		//			userBaseItems.add(itemMenu
-
 		userAdapter.setRecyclerAdapter(userBaseItems);
 		userAdapter.notifyDataSetChanged();
 
@@ -247,7 +239,7 @@ public class UserActivity extends AppCompatActivity implements
 		System.gc();
 		Log.e("Intent ended", "true | " + requestCode);
 		if(resultCode == RESULT_OK) {
-			if(requestCode == IntentIntegrator.REQUEST_CODE) {
+			/*if(requestCode == IntentIntegrator.REQUEST_CODE) {
 				// ยิงบาร์โค้ด หรือ QR Code
 				IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
@@ -361,6 +353,25 @@ public class UserActivity extends AppCompatActivity implements
 						}
 					}
 				}
+			} else */
+			if(requestCode == IntentIntegrator.REQUEST_CODE) {
+				if(b != null) {
+					Bundle temp = new Bundle();
+
+					Intent t = new Intent();
+					String d = "";
+					String sc = data.getExtras().getString("SCAN_RESULT");
+
+					ParcelQuery pq = new ParcelQuery();
+					pq.setBill(sc);
+					pq.setDatetime(d);
+
+					temp.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+
+					interfaceUser.onIntentCallback(InvoiceInfoActivity.class, temp);
+				}
+
+
 			} else if(requestCode == 9999) {
 				Toast.makeText(this, "Saved.", Toast.LENGTH_SHORT).show();
 				getContentResolver().notifyChange(uri, null);
@@ -561,10 +572,10 @@ public class UserActivity extends AppCompatActivity implements
 			//if(b != null)
 			//	b.putInt(InvoiceData.INVOICE_CASE, mode);
 			Intent t = new Intent(UserActivity.this, CustomScannerActivity.class);
-//			Bundle zxingBn = new Bundle();
+			Bundle zxingBn = new Bundle();
 //			zxingBn.putInt(InvoiceData.INVOICE_CASE, mode);
-//			zxingBn.putString(InvoiceData.INVOICE_PREVIEW, preview);
-//			t.putExtras(zxingBn);
+			zxingBn.putString(InvoiceData.INVOICE_SCANNER_STRING, preview);
+			t.putExtras(zxingBn);
 			startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
 		}
 
@@ -583,8 +594,12 @@ public class UserActivity extends AppCompatActivity implements
 		@Override
 		public void onIntentCallback(Class<?> target, Bundle callbackState) {
 			Intent t = new Intent(UserActivity.this, target);
-			if(target.equals(InvoiceInfoActivity.class))
-				b.putInt(InvoiceData.INVOICE_INFO_TAG, callbackState.getInt(InvoiceData.INVOICE_INFO_TAG));
+			//if(target.equals(InvoiceInfoActivity.class))
+				//b.putInt(InvoiceData.INVOICE_INFO_TAG, callbackState.getInt(InvoiceData.INVOICE_INFO_TAG));
+
+			if(callbackState.containsKey(InvoiceData.INVOICE_PARCEL_QUERY))
+				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, callbackState.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+
 			t.putExtras(b);
 			startActivity(t);
 		}

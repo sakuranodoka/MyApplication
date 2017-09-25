@@ -67,14 +67,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	private Bundle b = new Bundle();
 
-	// Inner Sqlite
-	private DbHelper dbHelper;
-	private SQLiteDatabase sqlite;
-	private Cursor cursor;
-
-	// Shared Preferences
-	private SharedPreferences sp;
-
 	@Override
 	public void setContentView(@LayoutRes int layoutResID) {
 		DrawerLayout fullLayout = (DrawerLayout) getLayoutInflater().inflate(R.layout.layout_main, null);
@@ -129,8 +121,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		if(t.getExtras() == null) b = new Bundle();
 		else b = t.getExtras();
 
-		if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG)) {
-			if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
+		//if(b != null && b.containsKey(InvoiceData.INVOICE_INFO_TAG)) {
+			//if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
 				// Last version
 //
 //				// ลบเพื่อจะได้ไม่ซ้ำซ้อนใน Fragment
@@ -167,7 +159,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 //				fm = getSupportFragmentManager().beginTransaction();
 //				fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
 //				fm.commit();
-			} else if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
+			//} else if(b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
 
 				// Set limited
 //				b.putString(InvoiceData.INVOICE_LIMIT, "0");
@@ -178,14 +170,14 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 //				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 //
 //				async();
-			}
+			//}
 
-			b.putString(InvoiceData.INVOICE_LIMIT, "0");
+		b.putString(InvoiceData.INVOICE_LIMIT, "0");
 
-			if(savedInstanceState == null) {
-				async();
-			}
+		if(savedInstanceState == null) {
+			async();
 		}
+		//}
 	}
 
 	@Override
