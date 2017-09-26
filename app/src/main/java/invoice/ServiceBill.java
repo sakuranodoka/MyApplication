@@ -1,12 +1,19 @@
 package invoice;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.example.administrator.myapplication.MainActivity;
 
 import org.parceler.Parcels;
 
 import java.util.List;
 
+import authen.AuthenData;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit.DataWrapper;
@@ -30,13 +37,16 @@ public class ServiceBill {
 			BILL_DATE_temp = pq.getDatetime();
 		}
 
+//		SharedPreferences sp = AppCompatActivity.getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
+
 		RequestBody BILL_NO = RequestBody.create(MediaType.parse("text/plain"), BILL_NO_temp);
 		RequestBody BILL_DATE = RequestBody.create(MediaType.parse("text/plain"), BILL_DATE_temp);
+		RequestBody SHIP_NO = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(AuthenData.USERNAME));
 		RequestBody LIMIT = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.INVOICE_LIMIT));
 
-		Log.e("LIMITEd",  bundle.getString(InvoiceData.INVOICE_LIMIT));
+		Log.e("Username",  bundle.getString(AuthenData.USERNAME));
 
-		return i.getBillList(BILL_NO, BILL_DATE, LIMIT);
+		return i.getBillList(BILL_NO, BILL_DATE, SHIP_NO ,LIMIT);
 	}
 
 	public static Observable<DataWrapper> setBillCount(Bundle bundle, Retrofit retrofit) {

@@ -187,6 +187,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	protected void async() {
 		if(this.b != null) {
+			SharedPreferences sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
+			String SHIP_NO = sp.getString(AuthenData.USERNAME, "");
+
+			b.putString(AuthenData.USERNAME, SHIP_NO);
+
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
 		}
 	}

@@ -57,6 +57,7 @@ public interface InterfaceInvoice {
 	Observable<List<BillPOJO>> getBillList (
 			  @Part("BILL_NO") RequestBody BILL_NO,
 			  @Part("BILL_DATE") RequestBody BILL_DATE,
+			  @Part("SHIP_NO") RequestBody SHIP_NO,
 			  @Part("LIMIT") RequestBody LIMIT
 	);
 

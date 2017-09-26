@@ -223,7 +223,7 @@ public class UserActivity extends AppCompatActivity implements
 
 		sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
 		Log.e("APP VERSION", sp.getString(SystemData.SHARED_App_Version_KEY, "Empty"));
-		Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show();
 	}
 
 	protected synchronized void buildGoogleAPI() {
