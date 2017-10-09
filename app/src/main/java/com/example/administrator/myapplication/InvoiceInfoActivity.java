@@ -269,7 +269,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 									switch (which) {
 										case DialogInterface.BUTTON_POSITIVE:
 											//Yes button clicked
-											Bundle bundle = new Bundle();
+											Bundle bundle = new Bundl e();
 											bundle.putString(InvoiceData.INVOICE_SCANNER_STRING, finalOnceBill.getBILL_NO());
 											bundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(finalOnceBill.getBILL_COUNT()));
 											bundle.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(finalOnceBill.getTOTAL_BOX()));
