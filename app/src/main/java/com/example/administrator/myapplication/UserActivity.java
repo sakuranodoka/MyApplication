@@ -356,6 +356,8 @@ public class UserActivity extends AppCompatActivity implements
 			} else */
 			if(requestCode == IntentIntegrator.REQUEST_CODE) {
 				if(b != null) {
+					// Scan 1 Bill (Fixed)
+
 					Bundle temp = new Bundle();
 
 					Intent t = new Intent();
@@ -365,6 +367,7 @@ public class UserActivity extends AppCompatActivity implements
 					ParcelQuery pq = new ParcelQuery();
 					pq.setBill(sc);
 					pq.setDatetime(d);
+					pq.setIncreaseOne(true);
 
 					temp.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 

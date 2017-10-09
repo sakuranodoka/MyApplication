@@ -11,6 +11,8 @@ public class ParcelQuery implements Serializable {
 	public String bill;
 	public String datetime;
 
+	public boolean increaseOne = false;
+
 	public ParcelQuery() {
 	}
 
@@ -28,5 +30,13 @@ public class ParcelQuery implements Serializable {
 
 	public void setDatetime(String datetime) {
 		this.datetime = datetime;
+	}
+
+	public boolean isIncreaseOne() {
+		return increaseOne;
+	}
+
+	public void setIncreaseOne(boolean increaseOne) {
+		this.increaseOne = increaseOne;
 	}
 }

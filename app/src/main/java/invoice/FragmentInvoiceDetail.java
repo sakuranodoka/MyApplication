@@ -47,8 +47,6 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	private static int limited = 0;
 
-	private static boolean isloading = false;
-
 	private static boolean canloadmore = true;
 
 	// let inside data
@@ -68,8 +66,6 @@ public class FragmentInvoiceDetail extends Fragment {
 			}
 			canloadmore = true;
 
-			// set new data PLEASE
-
 			ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
 
 			ArrayList<BillPOJO> listbill = pb.getListBill();
@@ -78,6 +74,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 			for (BillPOJO i : pojoList) {
 				BillPOJO temp = new BillPOJO();
+
 				temp.setBILL_NO(i.getBILL_NO());
 				temp.setBILL_DATE(i.getBILL_DATE());
 				temp.setNET_AMOUNT(i.getNET_AMOUNT());
@@ -87,10 +84,6 @@ public class FragmentInvoiceDetail extends Fragment {
 				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
 				item.setBillPOJO(temp);
 
-					/*temp.setInvoicePreview(i.getInfoInvoice());
-					temp.setInvoiceSublocality(i.getInfoSubLocality());
-					temp.setInvoiceLocality(i.getInfoLocality());
-					temp.setInvoiceDate(i.getInfoTime());*/
 				listItem.add(item);
 			}
 
@@ -99,45 +92,6 @@ public class FragmentInvoiceDetail extends Fragment {
 
 			b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
 
-//			ParcelInvoice pi = new ParcelInvoice();
-//
-//			//List<InvoicePOJO> pojoList = (List<InvoicePOJO>) data;
-//			List<BillPOJO> pojoList = (List<BillPOJO>) data;
-//
-//			//ArrayList<ItemInvoicePreview> listInvoice = new ArrayList<>();
-//			for (BillPOJO o : pojoList) {
-//
-//				/*ItemInvoicePreview temp = new ItemInvoicePreview();
-//				temp.setInvoicePreview(i.getInfoInvoice());
-//				temp.setInvoiceSublocality(i.getInfoSubLocality());
-//				temp.setInvoiceLocality(i.getInfoLocality());
-//				temp.setInvoiceDate(i.getInfoTime());
-//				listInvoice.add(temp);*/
-//
-//				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-//				item.setBillPOJO(o);
-//
-//				//item.setBILL_NO(i.getBILL_NO());
-//
-//				/*if(i.getInfoInvoice().equals("0000")) {
-//					canloadmore = false;
-//					item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...2");
-//					item.setInvoiceLocality("-");
-//					item.setInvoiceSubLocality("-");
-//					item.setInvoiceDate("ไม่บันทึกเวลา");
-//
-//					int limits = Integer.parseInt(b.getString(InvoiceData.INVOICE_LIMIT));
-//					b.putString(InvoiceData.INVOICE_LIMIT, (limits-15)+"");
-//					item.setType(INVOICE_CONTENT_LOADER);
-//				} else {
-//
-//					item.setInvoicePreview(i.getInfoInvoice());
-//					item.setInvoiceLocality(i.getInfoLocality());
-//					item.setInvoiceSubLocality(i.getInfoSubLocality());
-//					item.setInvoiceDate(i.getInfoTime());
-//				}*/
-//				listItem.add(item);
-//			}
 			adapter.notifyDataSetChanged();
 		}
 
@@ -150,32 +104,6 @@ public class FragmentInvoiceDetail extends Fragment {
 		@Override
 		public void onFailure(Throwable t) {}
 	};
-
-   /*private final String DAY_NOW = "TODAY";
-   private final String DAY_7 = "D7";
-   private final String DAY_15 = "D15";
-   private final String DAY_30 = "D30";
-   private final String DAY_ALL = "ALL";
-	private final String DAY_TAG = "DAY_TAG";
-   private final String INVOICE_DATE_OPTIONAL = "\n" +
-            "[\n" +
-            "    {\n" +
-            "      \"title\" : \"เฉพาะวันนี้\"\n," +
-            "\"id\" : \"" + DAY_NOW + "\"" +
-            "    },{\n" +
-            "      \"title\" : \"7 วันย้อนหลัง\"\n," +
-            "\"id\" : \"" + DAY_7 + "\"" +
-            "    },{\n" +
-            "      \"title\" : \"15 วันย้อนหลัง\"\n," +
-            "\"id\" : \"" + DAY_15 + "\"" +
-            "    },{\n" +
-            "      \"title\" : \"30 วันย้อนหลัง\"\n," +
-            "\"id\" : \"" + DAY_30 + "\"" +
-            "    },{\n" +
-            "      \"title\" : \"แสดงทั้งหมด\"\n," +
-            "\"id\" : \"" + DAY_ALL + "\"" +
-            "    }\n" +
-            "]\n";*/
 
     public FragmentInvoiceDetail() {
         super();
@@ -199,11 +127,13 @@ public class FragmentInvoiceDetail extends Fragment {
 		    pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
 	    }
 
-	    for(BillPOJO o : pb.getListBill()) {
-		     ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-		     item.setBillPOJO(o);
+	    if(pb != null) {
+		    for (BillPOJO o : pb.getListBill()) {
+			    ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+			    item.setBillPOJO(o);
 
-		     listItem.add(item);
+			    listItem.add(item);
+		    }
 	    }
     }
 
@@ -326,13 +256,11 @@ public class FragmentInvoiceDetail extends Fragment {
 			 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				 super.onScrollStateChanged(recyclerView, newState);
 				 LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-				 //Log.e("SCROLL_STATE", newState+"/"+lm.findLastCompletelyVisibleItemPosition()+"|"+ listItem.size());
 
 				 if(lm.findLastCompletelyVisibleItemPosition() == listItem.size()-1 && newState == 0 && canloadmore == true) {
 					 // Bottom Detected
 
 					 canloadmore = false;
-					 // canloadmore equals true again when async will be done
 
 					 if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
 						 android.os.Handler handler = new android.os.Handler();
@@ -348,13 +276,10 @@ public class FragmentInvoiceDetail extends Fragment {
 						 handler.postDelayed(new Runnable() {
 							 @Override
 							 public void run() {
+
 								 limited = limited + 15;
 								 async();
 
-//								 if(canloadmore) {
-//									 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
-//									 //async();
-//								 }
 							 }
 						 },500);
 					 } else if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
@@ -537,16 +462,12 @@ public class FragmentInvoiceDetail extends Fragment {
 
 						InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
 						TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
-						//textViewInvoicePreview.setText(item.getInvoicePreview());
-	                //textViewInvoicePreview.setText(item.getBILL_NO());
 
-	                textViewInvoicePreview.setText(temp.getBILL_NO());
+	               textViewInvoicePreview.setText(temp.getBILL_NO());
 
-	                //temp.setBILL_NO(i.getBILL_NO());
 
 						TextView textViewInvoiceDate = (TextView) vh.textViewInvoiceDate;
-						//textViewInvoiceDate.setText(item.getInvoiceDate());
-	                textViewInvoiceDate.setText(temp.getBILL_DATE());
+	               textViewInvoiceDate.setText(temp.getBILL_DATE());
 
 	               TextView textViewInvoiceBoxNumber = (TextView) vh.textViewInvoiceBoxNumber;
 	               if(textViewInvoiceBoxNumber != null && temp.getTOTAL_BOX() != null) {
@@ -554,20 +475,18 @@ public class FragmentInvoiceDetail extends Fragment {
 	               }
 
 						if(b != null) {
-							//if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
 		                  ImageButton btnRemove = (ImageButton) vh.btnRemove;
 		                  btnRemove.setVisibility(View.GONE);
 
 								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
 								textViewInvoiceAddress.setVisibility(View.GONE);
-								//textViewInvoiceAddress.setText(item.getInvoiceSubLocality()+" "+item.getInvoiceLocality());
 
 								RelativeLayout layout = (RelativeLayout) vh.relativeInvoiceInfo;
 								layout.setOnClickListener(new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
 										Bundle b = new Bundle();
-										//b.putString(InvoiceData.INVOICE_SCANNER_STRING, item.getInvoicePreview());
+
 										b.putString(InvoiceData.INVOICE_SCANNER_STRING, temp.getBILL_NO());
 										b.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(temp.getBILL_COUNT()));
 										b.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(temp.getTOTAL_BOX()));
@@ -577,11 +496,6 @@ public class FragmentInvoiceDetail extends Fragment {
 										interfaceInvoiceInfo.onBarcodeScan(b);
 									}
 								});
-
-	                  /*} else if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_INNER_APP) {
-//								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
-//								textViewInvoiceAddress.setVisibility(View.GONE);
-							}*/
 						}
                 } else if(holder instanceof ProgressBarViewHolder) {
 	                ProgressBarViewHolder vh = (ProgressBarViewHolder) holder;
@@ -655,7 +569,6 @@ public class FragmentInvoiceDetail extends Fragment {
 	public BillPOJO getBILLPOJO(int position) {
 		if(this.adapter == null) {
 			// please set new adapter, the old adapter was เดี้ยงไปแล้ว
-			Log.e("TheyreAllOfDead", listItem.size()+"");
 			if(this.listItem != null) {
 				ItemInvoice item = (ItemInvoice) listItem.get(position);
 				return item.getBillPOJO();
@@ -666,14 +579,5 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	public void setNewLimited() {
 		limited = 0;
-	}
-
-	public void clearance() {
-		limited = 0;
-		canloadmore = true;
-		isloading = false;
-		listItem.clear();
-		if(adapter != null)
-			adapter.notifyDataSetChanged();
 	}
 }

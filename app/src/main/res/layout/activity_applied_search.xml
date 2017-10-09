@@ -52,7 +52,6 @@
              android:layout_height="wrap_content"
              android:layout_centerInParent="true"
 
-             card_view:cardCornerRadius="@dimen/round_padding"
              card_view:cardElevation="0dp"
              card_view:cardPreventCornerOverlap="false"
              card_view:cardBackgroundColor="@android:color/transparent">
@@ -111,7 +110,6 @@
              android:layout_height="wrap_content"
              android:layout_centerInParent="true"
 
-             card_view:cardCornerRadius="@dimen/round_padding"
              card_view:cardElevation="0dp"
              card_view:cardPreventCornerOverlap="false"
              card_view:cardBackgroundColor="@android:color/transparent">
