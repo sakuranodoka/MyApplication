@@ -121,12 +121,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		if(t.getExtras() == null) b = new Bundle();
 		else b = t.getExtras();
 
-		b.putString(InvoiceData.INVOICE_LIMIT, "0");
-
-		if(savedInstanceState == null) {
-			async();
-		}
-		//}
+		if(savedInstanceState == null) { async(); }
 	}
 
 	@Override
@@ -135,13 +130,16 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	}
 
 	protected void async() {
-		if(this.b != null) {
-			SharedPreferences sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
+		SharedPreferences sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
+		if(this.b != null && sp != null) {
 			String SHIP_NO = sp.getString(AuthenData.USERNAME, "");
 
+			b.putString(InvoiceData.INVOICE_LIMIT, "0");
 			b.putString(AuthenData.USERNAME, SHIP_NO);
 
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
+		} else {
+			Log.e("Error", "Bundle is null or Unauthorized.");
 		}
 	}
 
@@ -152,7 +150,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				b.putString(InvoiceData.INVOICE_DAY_TAG, optionIDs);
 				async();
 			} else {
-				Log.e("error", "bundle is null.");
+				Log.e("Error", "Bundle is null.");
 			}
 		}
 

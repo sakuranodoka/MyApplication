@@ -116,8 +116,7 @@ public class FragmentInvoiceDetail extends Fragment {
 	    this.canloadmore = true;
 
 		 this.b = b;
-		 //if(this.b != null && !this.b.containsKey(InvoiceData.INVOICE_DAY_TAG))
-	    //this.b.putString(InvoiceData.INVOICE_DAY_TAG, DAY_NOW);
+
 		 this.interfaceInvoiceInfo = interfaceInvoiceInfo;
 
 	    listItem = new ArrayList<>();
@@ -146,85 +145,6 @@ public class FragmentInvoiceDetail extends Fragment {
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViews);
 
-//        listItem = new ArrayList<>();
-//        if(b != null) {
-//	         /*if(b.containsKey(InvoiceData.INVOICE_INFO_TAG) && b.getInt(InvoiceData.INVOICE_INFO_TAG) == InvoiceData.INVOICE_INFO_WITH_USER_ID) {
-//		         Gson gson = new Gson();
-//		         List<ItemInvoiceDateDAO> listDateDAO = new ArrayList<>();
-//		         try {
-//			         Type listType = new TypeToken<ArrayList<ItemInvoiceDateDAO>>() {
-//			         }.getType();
-//			         listDateDAO = gson.fromJson(INVOICE_DATE_OPTIONAL, listType);
-//		         } catch (Exception e) {
-//			         e.printStackTrace();
-//			         Log.e("error", "Parse Failed GSON" + e.getMessage());
-//		         }
-//		         ItemInvoiceDateDropdown dropdown = new ItemInvoiceDateDropdown(INVOICE_CONTENT_HEADER);
-//		         dropdown.setDateTag(listDateDAO);
-//
-//		         //listItem.add(dropdown);
-//	         }*/
-//
-//	        ParcelBill pb = null;
-//	        if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
-//		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-//	        }
-//
-//	        /*if(pb == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
-//		        isDataNull = false;
-//		        pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-//	        }*/
-//
-//	         /*ParcelInvoice pi = null;
-//            if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
-//	            // แยก Parcel เพราะว่ากลัวซ้ำกับ list ที่เลือก ใน dialog ดูมั่วๆๆๆๆ หะ 5555
-//					isDataNull = false;
-//	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-//            }
-//
-//            if(pi == null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
-//					isDataNull = false;
-//	            pi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-//            }*/
-//
-//            //if(!isDataNull) {
-//                //for(ItemInvoicePreview i : pi.getListInvoice()) {
-//            for(BillPOJO o : pb.getListBill()) {
-//                 /*if(i.getInvoicePreview().equals("0000")) {
-//	                 canloadmore = false;
-//					  }*/
-//
-//                ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-//
-//	             item.setBillPOJO(o);
-//                //item.setBILL_NO(o.getBILL_NO());
-//
-//						/*if(i.getInvoicePreview().equals("0000")) {
-//							 //canloadmore = false;
-//							 item.setInvoicePreview("ไม่พบข้อมูลเพิ่มเติม ...1");
-//							 item.setInvoiceLocality("-");
-//							 item.setInvoiceSubLocality("-");
-//							 item.setInvoiceDate("ไม่บันทึกเวลา");
-//						} else {
-//
-//							 item.setInvoicePreview(i.getInvoicePreview());
-//							 item.setInvoiceLocality(i.getInvoiceLocality());
-//							 item.setInvoiceSubLocality(i.getInvoiceSublocality());
-//							 item.setInvoiceDate(i.getInvoiceDate());
-//						}*/
-//
-//
-//                 /*item.setInvoicePreview(i.getInvoicePreview());
-//                 item.setInvoiceLocality(i.getInvoiceLocality());
-//                 item.setInvoiceSubLocality(i.getInvoiceSublocality());
-//                 item.setInvoiceDate(i.getInvoiceDate());*/
-//                 listItem.add(item);
-//             }
-//            //}
-//        } else {
-//	        Log.e("BundleInFragmentIsNull", "true");
-//        }
-
         adapter = new InvoiceDetailAdapter(listItem);
         recyclerView.setAdapter(adapter);
 
@@ -249,17 +169,13 @@ public class FragmentInvoiceDetail extends Fragment {
         }
 
 	    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-			 private boolean isUserScrolling = false;
-			 private boolean isListGoingUp = true;
-
 			 @Override
 			 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				 super.onScrollStateChanged(recyclerView, newState);
 				 LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-				 if(lm.findLastCompletelyVisibleItemPosition() == listItem.size()-1 && newState == 0 && canloadmore == true) {
+				 if (lm.findLastCompletelyVisibleItemPosition() == listItem.size()-1 && newState == 0 && canloadmore == true) {
 					 // Bottom Detected
-
 					 canloadmore = false;
 
 					 if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
@@ -304,87 +220,11 @@ public class FragmentInvoiceDetail extends Fragment {
 						 },500);
 					 }
 				 }
-				 //detect is the topmost item visible and is user scrolling? if true then only execute
-				 //Log.e("SCROLL", "TRUE");
-//				 if (newState == RecyclerView.SCROLL_STATE_DRAGGING && !isloading) {
-//					 isUserScrolling = true;
-//					 if(isListGoingUp) {
-//						 if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-//							 final LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-//							 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
-//								 android.os.Handler handler = new android.os.Handler();
-//
-//								 if (isListGoingUp) {
-//									 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
-//										 Toast.makeText(getContext(),"กำลังประมวลผล ... ", Toast.LENGTH_SHORT).show();
-//										 InvoiceBaseItem temp = new InvoiceBaseItem(INVOICE_CONTENT_LOADER);
-//
-//										 listItem.add(temp);
-//
-//										 adapter.notifyDataSetChanged();
-//
-//										 limited = limited + 15;
-//
-//										 isloading = true;
-//
-//										 handler.postDelayed(new Runnable() {
-//											 @Override
-//											 public void run() {
-//												 if(canloadmore) {
-//													 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
-//													 //async();
-//												 }
-//											 }
-//									   },500);
-//								   }
-//								 }
-//							 }
-//						 } else if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
-//							 final GridLayoutManager lm = (GridLayoutManager) recyclerView.getLayoutManager();
-//							 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
-//								 android.os.Handler handler = new android.os.Handler();
-//								 handler.postDelayed(new Runnable() {
-//									 @Override
-//									 public void run() {
-//										 if (isListGoingUp) {
-//											 if (lm.findLastCompletelyVisibleItemPosition()  == listItem.size()-1) {
-//												 Toast.makeText(getContext(),"ำลังประมวลผล ... ", Toast.LENGTH_SHORT).show();
-//												 InvoiceBaseItem temp = new InvoiceBaseItem(INVOICE_CONTENT_LOADER);
-//
-//												 listItem.add(temp);
-//
-//												 adapter.notifyDataSetChanged();
-//
-//												 limited = limited + 15;
-//
-//												 isloading = true;
-//
-//												 if(canloadmore) {
-//													 b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
-//													 //async();
-//												 }
-//											 }
-//										 }
-//									 }
-//								 },50);
-//							 }
-//						 }
-//					 }
-//				 }
 			 }
 
 		    @Override
 		    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 			    super.onScrolled(recyclerView, dx, dy);
-//			    if(isUserScrolling) {
-//				    if(dy > 0) {
-//					    //means user finger is moving up but the list is going down
-//					    isListGoingUp = true;
-//				    } else {
-//					    //means user finger is moving down but the list is going up
-//					    isListGoingUp = false;
-//				    }
-//			    }
 		    }
 	    });
 	    adapter.notifyDataSetChanged();

@@ -39,12 +39,14 @@ public class ServiceBill {
 
 //		SharedPreferences sp = AppCompatActivity.getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
 
+
+
 		RequestBody BILL_NO = RequestBody.create(MediaType.parse("text/plain"), BILL_NO_temp);
 		RequestBody BILL_DATE = RequestBody.create(MediaType.parse("text/plain"), BILL_DATE_temp);
 		RequestBody SHIP_NO = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(AuthenData.USERNAME));
 		RequestBody LIMIT = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.INVOICE_LIMIT));
 
-		Log.e("Username",  bundle.getString(AuthenData.USERNAME));
+		Log.e("Username+Limit",  bundle.getString(AuthenData.USERNAME)+" | "+LIMIT);
 
 		return i.getBillList(BILL_NO, BILL_DATE, SHIP_NO ,LIMIT);
 	}

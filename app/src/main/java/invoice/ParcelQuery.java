@@ -13,8 +13,7 @@ public class ParcelQuery implements Serializable {
 
 	public boolean increaseOne = false;
 
-	public ParcelQuery() {
-	}
+	public ParcelQuery() {}
 
 	public String getBill() {
 		return bill;
