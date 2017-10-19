@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.myapplication.BusProvider;
 import com.example.administrator.myapplication.R;
 
 import org.parceler.Parcels;
@@ -32,15 +33,13 @@ import invoice.viewholder.ProgressBarViewHolder;
 import okhttp3.ResponseBody;
 import retrofit.InterfaceListen;
 import retrofit.RetrofitAbstract;
-import retrofit.ServiceRetrofit;
 import retrofit2.Retrofit;
 
 public class FragmentInvoiceDetail extends Fragment {
 
-	// oh hello
-
    private RecyclerView recyclerView;
    private InvoiceDetailAdapter adapter;
+
    public static final int INVOICE_CONTENT_HEADER = 0;
    public static final int INVOICE_CONTENT_VIEW = 1;
 	public static final int INVOICE_CONTENT_LOADER = 2;
@@ -54,15 +53,17 @@ public class FragmentInvoiceDetail extends Fragment {
 
    private Bundle b = null;
 
+	private ParcelBill pb = null;
+
 	private InterfaceInvoiceInfo interfaceInvoiceInfo = null;
 
 	private final InterfaceListen interfaceListen = new InterfaceListen() {
 		@Override
 		public void onResponse(Object data, Retrofit retrofit) {
 
-			if(listItem.size() != 0) {
-				listItem.remove(listItem.size() - 1);
-				adapter.notifyDataSetChanged();
+			if (listItem.size() != 0) {
+				 listItem.remove(listItem.size() - 1);
+				 adapter.notifyDataSetChanged();
 			}
 			canloadmore = true;
 
@@ -136,6 +137,46 @@ public class FragmentInvoiceDetail extends Fragment {
 	    }
     }
 
+	public FragmentInvoiceDetail(ParcelBill pb) {
+		super();
+		this.pb = pb;
+
+		listItem = new ArrayList<>();
+
+		if (pb != null) {
+			 for (BillPOJO o : pb.getListBill()) {
+				 ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+				 item.setBillPOJO(o);
+
+				 listItem.add(item);
+			}
+		}
+
+		this.limited = 0;
+		this.canloadmore = true;
+	}
+
+   public void setData(ParcelBill pb) {
+
+		 if (pb != null) {
+
+			  // Remove preloader
+			  if (listItem.size() != 0) {
+				   listItem.remove(listItem.size() - 1);
+				   //adapter.notifyDataSetChanged();
+			  }
+
+			  this.canloadmore = true;
+
+			  for (BillPOJO o : pb.getListBill()) {
+				  ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
+				  item.setBillPOJO(o);
+				  listItem.add(item);
+			  }
+			  adapter.notifyDataSetChanged();
+		  }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -159,9 +200,9 @@ public class FragmentInvoiceDetail extends Fragment {
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    switch(adapter.getItemViewType(position)) {
-                        case 0:return 2;
-                        default:return 1;
+                    switch (adapter.getItemViewType(position)) {
+                         case 0 : return 2;
+                         default : return 1;
                     }
                 }
             });
@@ -175,29 +216,29 @@ public class FragmentInvoiceDetail extends Fragment {
 				 LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
 
 				 if (lm.findLastCompletelyVisibleItemPosition() == listItem.size()-1 && newState == 0 && canloadmore == true) {
-					 // Bottom Detected
-					 canloadmore = false;
+					  // Bottom Detected
+					  canloadmore = false;
 
 					 if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-						 android.os.Handler handler = new android.os.Handler();
-						 Toast.makeText(getContext(),"โหลดข้อมูลบิลล์ ... ", Toast.LENGTH_SHORT).show();
-						 InvoiceBaseItem temp = new InvoiceBaseItem(INVOICE_CONTENT_LOADER);
+						  android.os.Handler handler = new android.os.Handler();
+						  Toast.makeText(getContext(),"โหลดข้อมูลบิลล์ ... ", Toast.LENGTH_SHORT).show();
+						  InvoiceBaseItem temp = new InvoiceBaseItem(INVOICE_CONTENT_LOADER);
 
-						 listItem.add(temp);
+						  listItem.add(temp);
 
-						 adapter.notifyDataSetChanged();
+						  adapter.notifyDataSetChanged();
 
-						 recyclerView.scrollToPosition(listItem.size() - 1);
+						  recyclerView.scrollToPosition(listItem.size() - 1);
 
-						 handler.postDelayed(new Runnable() {
-							 @Override
-							 public void run() {
+						  handler.postDelayed(new Runnable() {
+							  @Override
+							  public void run() {
 
-								 limited = limited + 15;
+							 	 limited = limited + 15;
 								 async();
 
-							 }
-						 },500);
+							  }
+						  },500);
 					 } else if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
 						 android.os.Handler handler = new android.os.Handler();
 
@@ -217,7 +258,7 @@ public class FragmentInvoiceDetail extends Fragment {
 								 limited = limited + 15;
 								 async();
 							 }
-						 },500);
+						 }, 500);
 					 }
 				 }
 			 }
@@ -295,48 +336,53 @@ public class FragmentInvoiceDetail extends Fragment {
 	                });
 
                 } else */
-                if(holder instanceof InvoiceContentViewHolder) {
-						final ItemInvoice item = (ItemInvoice) listItem.get(position);
+                if (holder instanceof InvoiceContentViewHolder) {
+	                 final ItemInvoice item = (ItemInvoice) listItem.get(position);
 
-	               final BillPOJO temp = item.getBillPOJO();
+		              final BillPOJO temp = item.getBillPOJO();
 
-						InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
-						TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
+						  InvoiceContentViewHolder vh = (InvoiceContentViewHolder) holder;
+	                 TextView textViewInvoicePreview = (TextView) vh.textViewInvoicePreview;
 
-	               textViewInvoicePreview.setText(temp.getBILL_NO());
+		              textViewInvoicePreview.setText(temp.getBILL_NO());
 
+	                 TextView textViewInvoiceDate = (TextView) vh.textViewInvoiceDate;
+		              textViewInvoiceDate.setText(temp.getBILL_DATE());
 
-						TextView textViewInvoiceDate = (TextView) vh.textViewInvoiceDate;
-	               textViewInvoiceDate.setText(temp.getBILL_DATE());
+		              TextView textViewInvoiceBoxNumber = (TextView) vh.textViewInvoiceBoxNumber;
+		              if (textViewInvoiceBoxNumber != null && temp.getTOTAL_BOX() != null) {
+			               textViewInvoiceBoxNumber.setText(temp.getBILL_COUNT()+" / "+Integer.parseInt(temp.getTOTAL_BOX()));
+		              }
 
-	               TextView textViewInvoiceBoxNumber = (TextView) vh.textViewInvoiceBoxNumber;
-	               if(textViewInvoiceBoxNumber != null && temp.getTOTAL_BOX() != null) {
-		               textViewInvoiceBoxNumber.setText(temp.getBILL_COUNT()+" / "+Integer.parseInt(temp.getTOTAL_BOX()));
-	               }
+	                 ImageButton btnRemove = (ImageButton) vh.btnRemove;
+	                 btnRemove.setVisibility(View.GONE);
 
-						if(b != null) {
-		                  ImageButton btnRemove = (ImageButton) vh.btnRemove;
-		                  btnRemove.setVisibility(View.GONE);
+	                 TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
+	                 textViewInvoiceAddress.setVisibility(View.GONE);
 
-								TextView textViewInvoiceAddress = (TextView) vh.textViewInvoiceAddress;
-								textViewInvoiceAddress.setVisibility(View.GONE);
+	                 RelativeLayout layout = (RelativeLayout) vh.relativeInvoiceInfo;
+	                 layout.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+								Bundle instanceBundle = new Bundle();
 
-								RelativeLayout layout = (RelativeLayout) vh.relativeInvoiceInfo;
-								layout.setOnClickListener(new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										Bundle b = new Bundle();
+//								instanceBundle.putString(InvoiceData.INVOICE_SCANNER_STRING, temp.getBILL_NO());
+//								instanceBundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(temp.getBILL_COUNT()));
+//								instanceBundle.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(temp.getTOTAL_BOX()));
+//								instanceBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
 
-										b.putString(InvoiceData.INVOICE_SCANNER_STRING, temp.getBILL_NO());
-										b.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(temp.getBILL_COUNT()));
-										b.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(temp.getTOTAL_BOX()));
+								BarcodeWrapper wrapper = new BarcodeWrapper();
+								wrapper.setBillPOJO(temp);
+								wrapper.setPosition(position);
 
-										b.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
+								if (!BusProvider.isBusNull()) {
+									 BusProvider.getInstance().post(wrapper);
+								}
 
-										interfaceInvoiceInfo.onBarcodeScan(b);
-									}
-								});
-						}
+								//interfaceInvoiceInfo.onBarcodeScan(b);
+								}
+							});
+						//}
                 } else if(holder instanceof ProgressBarViewHolder) {
 	                ProgressBarViewHolder vh = (ProgressBarViewHolder) holder;
 	                vh.avi.smoothToShow();
@@ -363,17 +409,30 @@ public class FragmentInvoiceDetail extends Fragment {
         }
 
         public BillPOJO getPOJO(int position) {
-	        if(this.listItem != null) {
-		        ItemInvoice item = (ItemInvoice) listItem.get(position);
-		        return item.getBillPOJO();
+	        if (this.listItem != null) {
+		         ItemInvoice item = (ItemInvoice) listItem.get(position);
+		         return item.getBillPOJO();
 	        } else return null;
         }
     }
 
-	protected void async() {
-		if(this.b != null) {
+	 protected void async() {
+		/*if(this.b != null) {
 			b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
+		}*/
+		Bundle instanceBundle = new Bundle();
+
+		instanceBundle.putString(InvoiceData.INVOICE_LIMIT, limited+"");
+		Log.e("LIMIt963F", limited+"");
+
+		AsynchronousWrapper wrapper = new AsynchronousWrapper();
+		wrapper.setRequired(true);
+		wrapper.setRetrofitAbstractLayer(RetrofitAbstract.RETROFIT_PRE_INVOICE);
+		wrapper.setInstanceBundle(instanceBundle);
+
+		if (!BusProvider.isBusNull()) {
+			 BusProvider.getInstance().post(wrapper);
 		}
 	}
 

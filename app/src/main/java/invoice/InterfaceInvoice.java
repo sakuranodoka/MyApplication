@@ -71,9 +71,11 @@ public interface InterfaceInvoice {
 	@Multipart
 	@POST("/Application/tracking/services/setCompleteBill.home.php")
 	Observable<DataWrapper> setCompleteBill (
-			  @Part("BILL_NO") RequestBody BILL_NO,
-			  @Part("BILL_COUNT") RequestBody BILL_COUNT,
-			  @Part("BILL_BITMAP") RequestBody bitmap,
-	        @Part("BILL_USERNAME") RequestBody sign
+			  @Part("FK_BILL_NO") RequestBody FK_BILL_NO,
+			  @Part("LATITUTE") RequestBody LATITUTE,
+			  @Part("LONGITUTE") RequestBody LONGITUTE,
+			  @Part("COUNTING") RequestBody COUNTING,
+			  @Part("SIGN_NAME") RequestBody SIGN_NAME,
+	        @Part("BITMAP_PATH") RequestBody BITMAP_PATH
 	);
 }

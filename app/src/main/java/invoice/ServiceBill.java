@@ -31,22 +31,18 @@ public class ServiceBill {
 
 		String BILL_NO_temp = "";
 		String BILL_DATE_temp = "";
-		if(bundle.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
-			ParcelQuery pq = Parcels.unwrap(bundle.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
-			BILL_NO_temp = pq.getBill();
-			BILL_DATE_temp = pq.getDatetime();
+		if (bundle.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
+			 ParcelQuery pq = Parcels.unwrap(bundle.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+			 BILL_NO_temp = pq.getBill();
+			 BILL_DATE_temp = pq.getDatetime();
 		}
 
 //		SharedPreferences sp = AppCompatActivity.getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
-
-
 
 		RequestBody BILL_NO = RequestBody.create(MediaType.parse("text/plain"), BILL_NO_temp);
 		RequestBody BILL_DATE = RequestBody.create(MediaType.parse("text/plain"), BILL_DATE_temp);
 		RequestBody SHIP_NO = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(AuthenData.USERNAME));
 		RequestBody LIMIT = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.INVOICE_LIMIT));
-
-		Log.e("Username+Limit",  bundle.getString(AuthenData.USERNAME)+" | "+LIMIT);
 
 		return i.getBillList(BILL_NO, BILL_DATE, SHIP_NO ,LIMIT);
 	}
@@ -70,12 +66,21 @@ public class ServiceBill {
 		}
 		InterfaceInvoice i = retrofit.create(InterfaceInvoice.class);
 
-		RequestBody BILL_NO = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.BILL_NO));
-		RequestBody BILL_COUNT = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.BILL_COUNT));
+		RequestBody FK_BILL_NO = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.BILL_NO));
 
-		RequestBody BILL_BITMAP = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.ENCODED_IMAGE_PATH));
-		RequestBody BILL_USERNAME = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.USER_FULLNAME));
+		RequestBody LATITUTE = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.LATITUDE));
+		RequestBody LONGITUTE = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.LONGITUDE));
 
-		return i.setCompleteBill(BILL_NO, BILL_COUNT, BILL_BITMAP, BILL_USERNAME);
+		RequestBody COUNTING = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.BILL_COUNT));
+
+		RequestBody SIGN_NAME = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.USER_FULLNAME));
+		RequestBody BITMAP_PATH = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.ENCODED_IMAGE_PATH));
+
+		return i.setCompleteBill(FK_BILL_NO,
+					  LATITUTE,
+					  LONGITUTE,
+					  COUNTING,
+					  SIGN_NAME,
+					  BITMAP_PATH);
 	}
 }

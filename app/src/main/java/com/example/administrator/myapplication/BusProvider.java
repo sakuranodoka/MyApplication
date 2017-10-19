@@ -9,11 +9,14 @@ import com.squareup.otto.ThreadEnforcer;
 public final class BusProvider {
     private static Bus bus;
 
+    public static boolean isBusNull() {
+        return bus == null;
+    }
+
     public static Bus getInstance() {
         if (bus == null) {
             bus = new Bus();
         }
-
         return bus;
     }
 

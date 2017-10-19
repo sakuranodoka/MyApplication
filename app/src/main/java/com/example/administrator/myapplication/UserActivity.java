@@ -71,6 +71,7 @@ import sqlite.DbHelper;
 import system.SystemData;
 import system.UpdateApplication;
 import user.InterfaceUser;
+import user.LocationAppData;
 import user.UserAdapter;
 import user.UserBaseItem;
 import user.user.item.ItemMenu;
@@ -800,22 +801,33 @@ public class UserActivity extends AppCompatActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		if(b != null) {
-			b.putString(InvoiceData.LATITUDE, location.getLatitude()+"");
-			b.putString(InvoiceData.LONGITUDE, location.getLongitude()+"");
-			//Log.e("lat", location.getLatitude()+"");
-			//Log.e("lng",location.getLongitude()+"");
+		if (b != null) {
+			 //b.putString(InvoiceData.LATITUDE, location.getLatitude()+"");
+			 //b.putString(InvoiceData.LONGITUDE, location.getLongitude()+"");
+
+			 if (BusProvider.isBusNull()) {
+				  Log.e("Fatal Error", "Bus is null");
+			 } else {
+
+				  LocationAppData lad = new LocationAppData();
+				  lad.setLatitute(location.getLatitude()+"");
+				  lad.setLongitute(location.getLongitude()+"");
+
+				  BusProvider.getInstance().post(lad);
+			 }
+			 //Log.e("lat", location.getLatitude()+"");
+			 //Log.e("lng",location.getLongitude()+"");
 		}
 	}
 
 	// ล้อกเอ้าท์
 	@Override
 	public void onLogout() {
-		if(sp != null) {
-			if(AuthenMethod.setLogout(sp)) {
-				Toast.makeText(this, "ขอบคุณที่ใช้บริการ", Toast.LENGTH_LONG).show();
-				onResume();
-			}
+		if (sp != null) {
+			 if (AuthenMethod.setLogout(sp)) {
+				  Toast.makeText(this, "ขอบคุณที่ใช้บริการ", Toast.LENGTH_LONG).show();
+				  onResume();
+			 }
 		}
 	}
 }
