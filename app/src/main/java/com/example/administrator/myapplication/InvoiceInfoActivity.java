@@ -33,6 +33,7 @@ import invoice.BillPOJO;
 import invoice.FragmentInvoiceDetail;
 import invoice.InterfaceInvoiceInfo;
 import invoice.InvoiceData;
+import invoice.LimitWrapper;
 import invoice.ParcelQuery;
 import invoice.item.ParcelBill;
 import invoice.AsynchronousWrapper;
@@ -137,10 +138,12 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	}
 
 	@Subscribe
-	public void limitedOverwrite(int limited) {
+	public void limitedOverwrite(LimitWrapper wrapper) {
+		Log.e("PUT_LIMIT", wrapper.getLimit()+"");
+
 		if( this.originalBundle == null) this.originalBundle = new Bundle();
 
-		this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, limited+"");
+		this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, wrapper.getLimit()+"");
 	}
 
 	@Subscribe
@@ -164,7 +167,10 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 			instanceBundle.putString(AuthenData.USERNAME, SHIP_NO);
 
-			//this.b.putString(AuthenData.USERNAME, SHIP_NO);
+			if (!instanceBundle.containsKey(InvoiceData.INVOICE_LIMIT))
+				 instanceBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
+
+			Log.e("LIMIT", instanceBundle.getString(InvoiceData.INVOICE_LIMIT));
 
 			new ServiceRetrofit().callServer(this.callback, RetrofitAbstractLayer, instanceBundle);
 
@@ -493,12 +499,16 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 					position = instanceBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
 
+					// Set to main original bundle
+					// Important
+					this.originalBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
+
 					if (fragmentInvoiceDetail == null) {
 						 Log.e("Fatal Error", "III Fragment is null");
 						 break;
 					}
 
-					if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
+					//if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
 
 					final BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
 					final int finalposition = position;
@@ -506,6 +516,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					if (pojo.getBILL_NO().trim().equals(result.trim())) {
 						 int counting = Integer.parseInt(pojo.getBILL_COUNT());
 						 counting+= 1;
+
 						 // counting please
 						 // coun
 						 // c /c

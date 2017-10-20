@@ -157,13 +157,24 @@ public class FragmentInvoiceDetail extends Fragment {
 		this.canloadmore = true;
 
 		if (!BusProvider.isBusNull()) {
-			 BusProvider.getInstance().post(0);
+			 Log.e("IS_LIMIT_POST", "true");
+
+			 LimitWrapper wrapper = new LimitWrapper();
+			 wrapper.setLimit(0);
+
+			 BusProvider.getInstance().post(wrapper);
+		} else {
+			Log.e("IS_LIMIT_POST", "false");
 		}
 	}
 
 	public void fixedLimited(int limited) {
 		this.limited = limited;
-		if(!BusProvider.isBusNull()) BusProvider.getInstance().post(this.limited);
+
+		LimitWrapper wrapper = new LimitWrapper();
+		wrapper.setLimit(limited);
+
+		if(!BusProvider.isBusNull()) BusProvider.getInstance().post(wrapper);
 	}
 
    public void setData(ParcelBill pb) {
@@ -439,7 +450,9 @@ public class FragmentInvoiceDetail extends Fragment {
 		instanceBundle.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 
 	   if (!BusProvider.isBusNull()) {
-		    BusProvider.getInstance().post(limited);
+		    LimitWrapper limitWrapper = new LimitWrapper();
+		    limitWrapper.setLimit(limited);
+		    BusProvider.getInstance().post(limitWrapper);
 		}
 
 		AsynchronousWrapper wrapper = new AsynchronousWrapper();
@@ -456,7 +469,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 		try {
 
-			final ItemInvoice item = (ItemInvoice) this.listItem.get(position);
+			/*final ItemInvoice item = (ItemInvoice) this.listItem.get(position);
 
 			BillPOJO pojo = item.getBillPOJO();
 
@@ -466,7 +479,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 			pojo.setBILL_COUNT(BILL_COUNT+"");
 
-			item.setBillPOJO(pojo);
+			item.setBillPOJO(pojo);*/
 
 			adapter.notifyDataSetChanged();
 		} catch (Throwable e) {
@@ -490,12 +503,14 @@ public class FragmentInvoiceDetail extends Fragment {
 	}
 
 	public BillPOJO getBILLPOJO(int position) {
+
 		//if (this.adapter == null) {
 			// please set new adapter, the old adapter was เดี้ยงไปแล้ว
-			 if (this.listItem != null) {
-				  ItemInvoice item = (ItemInvoice) listItem.get(position);
-				  return item.getBillPOJO();
-			 } else return null;
+		 if (this.listItem != null) {
+			 Log.e("AfterScanPositionBBB", position+"");
+			  ItemInvoice item = (ItemInvoice) listItem.get(position);
+			  return item.getBillPOJO();
+		 } else return null;
 		/*} else {
 			if (this.listItem != null) {
 				ItemInvoice item = (ItemInvoice) listItem.get(position);
