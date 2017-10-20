@@ -106,11 +106,11 @@ public class FragmentInvoiceDetail extends Fragment {
 		public void onFailure(Throwable t) {}
 	};
 
-    public FragmentInvoiceDetail() {
-        super();
-    }
+   public FragmentInvoiceDetail() {
+       super();
+   }
 
-    public FragmentInvoiceDetail(Bundle b, InterfaceInvoiceInfo interfaceInvoiceInfo) {
+   public FragmentInvoiceDetail(Bundle b, InterfaceInvoiceInfo interfaceInvoiceInfo) {
 		 super();
 
 	    // Set Load more
@@ -144,6 +144,7 @@ public class FragmentInvoiceDetail extends Fragment {
 		listItem = new ArrayList<>();
 
 		if (pb != null) {
+
 			 for (BillPOJO o : pb.getListBill()) {
 				 ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
 				 item.setBillPOJO(o);
@@ -154,6 +155,15 @@ public class FragmentInvoiceDetail extends Fragment {
 
 		this.limited = 0;
 		this.canloadmore = true;
+
+		if (!BusProvider.isBusNull()) {
+			 BusProvider.getInstance().post(0);
+		}
+	}
+
+	public void fixedLimited(int limited) {
+		this.limited = limited;
+		if(!BusProvider.isBusNull()) BusProvider.getInstance().post(this.limited);
 	}
 
    public void setData(ParcelBill pb) {
@@ -421,10 +431,16 @@ public class FragmentInvoiceDetail extends Fragment {
 			b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
 		}*/
+
+		Log.e("(Async)LIMIT ", limited+" (When pan down)");
+
 		Bundle instanceBundle = new Bundle();
 
 		instanceBundle.putString(InvoiceData.INVOICE_LIMIT, limited+"");
-		Log.e("LIMIt963F", limited+"");
+
+	   if (!BusProvider.isBusNull()) {
+		    BusProvider.getInstance().post(limited);
+		}
 
 		AsynchronousWrapper wrapper = new AsynchronousWrapper();
 		wrapper.setRequired(true);
@@ -436,13 +452,21 @@ public class FragmentInvoiceDetail extends Fragment {
 		}
 	}
 
-	public void increaseCounting(int position, int BILL_COUNT) {
-		try {
-			final ItemInvoice item = (ItemInvoice) this.listItem.get(position);
-			BillPOJO temp = item.getBillPOJO();
-			temp.setBILL_COUNT(BILL_COUNT+"");
+	public void increaseCounting(int position) {
 
-			item.setBillPOJO(temp);
+		try {
+
+			final ItemInvoice item = (ItemInvoice) this.listItem.get(position);
+
+			BillPOJO pojo = item.getBillPOJO();
+
+			int BILL_COUNT = Integer.parseInt(pojo.getBILL_COUNT());
+
+			BILL_COUNT= BILL_COUNT+1;
+
+			pojo.setBILL_COUNT(BILL_COUNT+"");
+
+			item.setBillPOJO(pojo);
 
 			adapter.notifyDataSetChanged();
 		} catch (Throwable e) {
@@ -466,14 +490,35 @@ public class FragmentInvoiceDetail extends Fragment {
 	}
 
 	public BillPOJO getBILLPOJO(int position) {
-		if(this.adapter == null) {
+		//if (this.adapter == null) {
 			// please set new adapter, the old adapter was เดี้ยงไปแล้ว
-			if(this.listItem != null) {
+			 if (this.listItem != null) {
+				  ItemInvoice item = (ItemInvoice) listItem.get(position);
+				  return item.getBillPOJO();
+			 } else return null;
+		/*} else {
+			if (this.listItem != null) {
 				ItemInvoice item = (ItemInvoice) listItem.get(position);
 				return item.getBillPOJO();
 			} else return null;
+		}*/
+		//else return this.adapter.getPOJO(position);
+	}
+
+	public ParcelBill getParcelBill() {
+		ParcelBill genereatedP = new ParcelBill();
+
+		ArrayList<BillPOJO> listBill = new ArrayList<>();
+		for (int i = 0 ; i < this.listItem.size() ; i++) {
+			if (this.listItem.get(i) instanceof  ItemInvoice) {
+				 ItemInvoice item = (ItemInvoice) this.listItem.get(i);
+				 if (item.getType() == INVOICE_CONTENT_VIEW) {
+				     listBill.add(item.getBillPOJO());
+				 }
+			}
 		}
-		else return this.adapter.getPOJO(position);
+		genereatedP.setListBill(listBill);
+		return genereatedP;
 	}
 
 	public void setNewLimited() {

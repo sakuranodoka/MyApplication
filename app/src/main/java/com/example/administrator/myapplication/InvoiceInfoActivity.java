@@ -112,7 +112,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 		if (savedInstanceState == null) {
 			 //async();
-			 this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
 			 asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, null);
 		}
 	}
@@ -137,6 +136,12 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		}
 	}
 
+	@Subscribe
+	public void limitedOverwrite(int limited) {
+		if( this.originalBundle == null) this.originalBundle = new Bundle();
+
+		this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, limited+"");
+	}
 
 	@Subscribe
 	public void requestAsynchronous(AsynchronousWrapper wrapper) {
@@ -184,8 +189,17 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				 } else {
 					   fragmentInvoiceDetail.setData(pb);
 				 }
-			 } else {
+			 } else if (data instanceof DataWrapper && ((DataWrapper) data).getStatus().equals("update")) {
+				 if (fragmentInvoiceDetail != null) {
+					  int position = originalBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					  fragmentInvoiceDetail.increaseCounting(position);
+				 } else {
+					  Log.e("Fatal Error", "Fragment invoice detail is null.");
+				 }
+			 } else if (data instanceof DataWrapper && ((DataWrapper) data).getStatus().equals("complete")) {
 
+			 } else {
+				 Log.e("Fatal Error", "No remaining services.");
 			 }
 		}
 
@@ -385,6 +399,10 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		if (this.originalBundle != null) {
 			 //this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
+
+			 ParcelBill pb = fragmentInvoiceDetail.getParcelBill();
+			 this.originalBundle.putParcelable(InvoiceData.BILL_PARCEL, Parcels.wrap(pb));
+
 			 outState.putAll(this.originalBundle);
 		}
 		Log.e("onSaveInstanceState", "true");
@@ -398,11 +416,27 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		Log.e("onRestoreInstanceState", "true");
 
 		if (savedInstanceState != null) {
+
 			 this.originalBundle = savedInstanceState;
 
-			 this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
+			 //this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
 
-			 asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, this.originalBundle);
+			 ParcelBill pb = Parcels.unwrap(this.originalBundle.getParcelable(InvoiceData.BILL_PARCEL));
+
+			 int PRE_RESTORE_LIMIT = Integer.parseInt(this.originalBundle.getString(InvoiceData.INVOICE_LIMIT));
+
+			 fm = getSupportFragmentManager().beginTransaction();
+
+			 // Now fragmentInvoiceDetail == null
+			 fragmentInvoiceDetail = new FragmentInvoiceDetail(pb);
+			 fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
+			 fm.commit();
+
+			 fragmentInvoiceDetail.fixedLimited(PRE_RESTORE_LIMIT);
+
+			 // fragmentInvoiceDetail.fixedLimited(Integer.parseInt(this.originalBundle.getString(InvoiceData.INVOICE_LIMIT)));
+
+			 //asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, this.originalBundle);
 
 			 /*fm = getSupportFragmentManager().beginTransaction();
 			 fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
@@ -459,6 +493,11 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 					position = instanceBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
 
+					if (fragmentInvoiceDetail == null) {
+						 Log.e("Fatal Error", "III Fragment is null");
+						 break;
+					}
+
 					if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
 
 					final BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
@@ -469,9 +508,14 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 						 counting+= 1;
 						 // counting please
 						 // coun
-						// c /c
+						 // c /c
+						 pojo.setBILL_COUNT(counting + "");
 
-						 //asynchronous(RetrofitAbstract.RETROFIT_SET_BILL_COUNT, );
+						 Bundle tempBundle = new Bundle();
+						 tempBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
+						 //tempBundle.putString();
+
+						 asynchronous(RetrofitAbstract.RETROFIT_SET_BILL_COUNT, tempBundle);
 
 						 // set ++
 						 /*pojo.setBILL_COUNT(counting+"");
