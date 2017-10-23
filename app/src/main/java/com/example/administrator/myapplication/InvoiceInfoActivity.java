@@ -831,8 +831,14 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onStop() {
+		super.onStop();
+		if (!BusProvider.isBusNull())
+			 BusProvider.getInstance().unregister(this);
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		BusProvider.getInstance().unregister(this);
 	}
 }

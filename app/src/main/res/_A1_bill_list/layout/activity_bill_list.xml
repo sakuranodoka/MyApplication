@@ -10,7 +10,6 @@
    <TextView
        android:layout_width="344dp"
        android:layout_height="551dp"
-       android:textAlignment="center"
-       android:text="@string/accept"/>
+       android:textAlignment="center"/>
 
 </android.support.constraint.ConstraintLayout>

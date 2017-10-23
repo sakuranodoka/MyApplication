@@ -1,23 +1,25 @@
 package com.example.administrator.myapplication;
 
+import android.util.Log;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-/**
- * Created by Administrator on 24/10/2559.
- */
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
-    @Override
-    public void onTokenRefresh() {
+   private static final String TAG = "MyFirebaseIIDService";
 
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        sendRegistrationToServer(refreshedToken);
+   @Override
+   public void onTokenRefresh() {
+	   super.onTokenRefresh();
+	   String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 
-    }
+	   Log.e(TAG, "Refreshed token: " + refreshedToken);
 
-    private void sendRegistrationToServer(String token) {
+	   sendRegistrationToServer(refreshedToken);
+   }
 
-    }
+   private void sendRegistrationToServer(String token) {
 
+   }
 }

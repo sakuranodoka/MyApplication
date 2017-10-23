@@ -787,26 +787,17 @@ public class UserActivity extends AppCompatActivity implements
 				 IntentKeycode.RESULT_REQUEST_PERMISSION);
 			return;
 		}
-		//Toast.makeText(this, "เชื่อมต่อกับระบบ GPS แล้ว", Toast.LENGTH_SHORT).show();
 		LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
 	}
 
 	@Override
-	public void onConnectionSuspended(int i) {
-
-	}
+	public void onConnectionSuspended(int i) {}
 
 	@Override
-	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-	}
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {}
 
 	@Override
 	public void onLocationChanged(Location location) {
-		// if (b != null) {
-			 //b.putString(InvoiceData.LATITUDE, location.getLatitude()+"");
-			 //b.putString(InvoiceData.LONGITUDE, location.getLongitude()+"");
-
 		 if (BusProvider.isBusNull()) {
 			  Log.e("Fatal Error", "Bus is null");
 		 } else {
@@ -821,11 +812,8 @@ public class UserActivity extends AppCompatActivity implements
 			  instanceBundle.putString(InvoiceData.LATITUDE, location.getLatitude()+"");
 			  instanceBundle.putString(InvoiceData.LONGITUDE, location.getLongitude()+"");
 
-			  // new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_STATIC_GPS, instanceBundle);
+			  //new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_STATIC_GPS, instanceBundle);
 		 }
-			 //Log.e("lat", location.getLatitude()+"");
-			 //Log.e("lng",location.getLongitude()+"");
-//		}
 	}
 
 	// ล้อกเอ้าท์
