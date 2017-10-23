@@ -465,21 +465,30 @@ public class FragmentInvoiceDetail extends Fragment {
 		}
 	}
 
+	public void goToPosition(final int position) {
+		if (adapter != null && this.listItem.size() >= position) {
+			 recyclerView.getLayoutManager().scrollToPosition(position);
+			 adapter.notifyDataSetChanged();
+		}
+	}
+
 	public void increaseCounting(int position) {
 
 		try {
 
-			/*final ItemInvoice item = (ItemInvoice) this.listItem.get(position);
+			final ItemInvoice item = (ItemInvoice) this.listItem.get(position);
 
 			BillPOJO pojo = item.getBillPOJO();
 
 			int BILL_COUNT = Integer.parseInt(pojo.getBILL_COUNT());
 
-			BILL_COUNT= BILL_COUNT+1;
+			BILL_COUNT = BILL_COUNT+1;
 
 			pojo.setBILL_COUNT(BILL_COUNT+"");
 
-			item.setBillPOJO(pojo);*/
+			item.setBillPOJO(pojo);
+
+			recyclerView.getLayoutManager().scrollToPosition(position);
 
 			adapter.notifyDataSetChanged();
 		} catch (Throwable e) {

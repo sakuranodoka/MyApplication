@@ -53,6 +53,13 @@ public interface InterfaceInvoice {
 	);
 
 	@Multipart
+	@POST("/Application/tracking/services/setGPS.php")
+	Observable<DataWrapper> setGPS (
+			  @Part("LATITUTE") RequestBody LATITUTE,
+			  @Part("LONGITUTE") RequestBody LONGITUTE
+	);
+
+	@Multipart
 	@POST("/Application/tracking/services/getInvoiceInfo.home.php")
 	Observable<List<BillPOJO>> getBillList (
 			  @Part("BILL_NO") RequestBody BILL_NO,

@@ -83,4 +83,18 @@ public class ServiceBill {
 					  SIGN_NAME,
 					  BITMAP_PATH);
 	}
+
+	public static Observable<DataWrapper> setGPS(Bundle bundle, Retrofit retrofit) {
+		if(bundle == null) try {
+			throw new Exception();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		InterfaceInvoice i = retrofit.create(InterfaceInvoice.class);
+
+		RequestBody LATITUTE = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.LATITUDE));
+		RequestBody LONGITUTE = RequestBody.create(MediaType.parse("text/plain"), bundle.getString(InvoiceData.LONGITUDE));
+
+		return i.setGPS(LATITUTE, LONGITUTE);
+	}
 }

@@ -181,6 +181,9 @@ public class ServiceRetrofit {
 					observable = ex;
 				}
 			   break;
+			case RetrofitAbstract.RETROFIT_STATIC_GPS:
+				observable = ServiceBill.setGPS((Bundle) data, retrofit);
+				break;
 		}
 		this.styzf(observable, listener, retrofit);
 	 }

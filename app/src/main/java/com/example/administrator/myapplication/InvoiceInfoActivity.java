@@ -37,6 +37,7 @@ import invoice.LimitWrapper;
 import invoice.ParcelQuery;
 import invoice.item.ParcelBill;
 import invoice.AsynchronousWrapper;
+import object.Clone;
 import okhttp3.ResponseBody;
 import retrofit.DataWrapper;
 import retrofit.InterfaceListen;
@@ -139,7 +140,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	@Subscribe
 	public void limitedOverwrite(LimitWrapper wrapper) {
-		Log.e("PUT_LIMIT", wrapper.getLimit()+"");
 
 		if( this.originalBundle == null) this.originalBundle = new Bundle();
 
@@ -197,13 +197,60 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 				 }
 			 } else if (data instanceof DataWrapper && ((DataWrapper) data).getStatus().equals("update")) {
 				 if (fragmentInvoiceDetail != null) {
-					  int position = originalBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					  final int position = originalBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
 					  fragmentInvoiceDetail.increaseCounting(position);
+
+					  String dialogHeader = "";
+					  int dialogCase = 1;
+
+					  final BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
+					  if (pojo.getBILL_COUNT().equals(pojo.getTOTAL_BOX())) {
+						   // สแกนครบแล้ว เซ็นชื่อได้เลย
+						   dialogHeader = "สแกนบิลล์นี้ครบทุกกล่องแล้ว ต้องการจะเซ็นต์ชื่อรับสินค้าหรือไม่";
+						   dialogCase = 1;
+					  } else {
+						   // ถามว่าจะสแกนต่อใช่ไหม ? (สแกนยังไม่ครบ)
+						   dialogHeader = "สแกนบิลล์ "+pojo.getBILL_NO()+" ต่อไปใช่ไหม ?";
+						   dialogCase = 2;
+					  }
+
+					  final int finalDialogCase = dialogCase;
+					  DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+						   @Override
+						   public void onClick(DialogInterface dialog, int which) {
+							   switch (which) {
+								   case DialogInterface.BUTTON_POSITIVE :
+
+									  if (finalDialogCase == 1) {
+										  Intent t = new Intent(InvoiceInfoActivity.this, CanvasActivity.class);
+										  startActivityForResult(t, IntentKeycode.RESULT_CANVAS);
+									  } else if (finalDialogCase == 2) {
+										  BarcodeWrapper wrapper = new BarcodeWrapper();
+										  wrapper.setBillPOJO(pojo);
+										  wrapper.setPosition(position);
+
+										  onBarCodeScan(wrapper);
+									  }
+									  break;
+								   case DialogInterface.BUTTON_NEGATIVE :
+									  //No button clicked
+									  break;
+							   }
+						   }
+				      };
+
+				      AlertDialog.Builder builder = new AlertDialog.Builder(InvoiceInfoActivity.this);
+				      builder.setMessage(dialogHeader).setPositiveButton("ตกลง", dialogClickListener)
+							    .setNegativeButton("ยกเลิก", dialogClickListener).show();
+
 				 } else {
 					  Log.e("Fatal Error", "Fragment invoice detail is null.");
 				 }
 			 } else if (data instanceof DataWrapper && ((DataWrapper) data).getStatus().equals("complete")) {
-
+				 if (fragmentInvoiceDetail != null) {
+					  int position = originalBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					  fragmentInvoiceDetail.removeByPosition(position);
+				 }
 			 } else {
 				 Log.e("Fatal Error", "No remaining services.");
 			 }
@@ -440,6 +487,12 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 			 fragmentInvoiceDetail.fixedLimited(PRE_RESTORE_LIMIT);
 
+			 if (this.originalBundle.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
+				  int position = this.originalBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+				  Log.e("MOVE_TO_POSITION", position+"");
+				  fragmentInvoiceDetail.goToPosition(position);
+			 }
+
 			 // fragmentInvoiceDetail.fixedLimited(Integer.parseInt(this.originalBundle.getString(InvoiceData.INVOICE_LIMIT)));
 
 			 //asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, this.originalBundle);
@@ -510,21 +563,25 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 					//if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
 
-					final BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
-					final int finalposition = position;
+					BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
 
 					if (pojo.getBILL_NO().trim().equals(result.trim())) {
 						 int counting = Integer.parseInt(pojo.getBILL_COUNT());
 						 counting+= 1;
 
+						 Clone cn = new Clone();
+
+						 final BillPOJO cloned = (BillPOJO) cn.cloneObject(pojo);
+
 						 // counting please
-						 // coun
-						 // c /c
-						 pojo.setBILL_COUNT(counting + "");
+						 // count
+						 // c /c.scan() => ?
+						 // why set this pojo then adapter's data changed ?
+						 // Oh I know that, you need to clone before change it
+						 cloned.setBILL_COUNT(counting + "");
 
 						 Bundle tempBundle = new Bundle();
-						 tempBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
-						 //tempBundle.putString();
+						 tempBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(cloned));
 
 						 asynchronous(RetrofitAbstract.RETROFIT_SET_BILL_COUNT, tempBundle);
 
@@ -601,6 +658,42 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					}
 					break;
 				case IntentKeycode.RESULT_CANVAS:
+
+					instanceBundle = data.getExtras();
+
+					if (this.originalBundle.containsKey(InvoiceData.BarcodeWrapper)) {
+						 position = this.originalBundle.getBundle(InvoiceData.BarcodeWrapper).getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					} else break;
+
+					// Set to main original bundle
+					// Important
+					this.originalBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
+
+					if (fragmentInvoiceDetail == null) {
+						 Log.e("Fatal Error", "III Fragment is null");
+						 break;
+					}
+
+					pojo = fragmentInvoiceDetail.getBILLPOJO(position);
+
+					Clone cn = new Clone();
+
+					BillPOJO Cloned = (BillPOJO) cn.cloneObject(pojo);
+
+					instanceBundle.putString(InvoiceData.BILL_NO, Cloned.getBILL_NO());
+					instanceBundle.putString(InvoiceData.BILL_COUNT, Cloned.BILL_COUNT);
+
+					// Put instance of Lat Lng
+					if (this.originalBundle.containsKey(InvoiceData.LATITUDE)) {
+						 instanceBundle.putString(InvoiceData.LATITUDE, this.originalBundle.getString(InvoiceData.LATITUDE));
+					} else { instanceBundle.putString(InvoiceData.LATITUDE, "0.00"); }
+
+					if (this.originalBundle.containsKey(InvoiceData.LONGITUDE)) {
+						 instanceBundle.putString(InvoiceData.LONGITUDE, this.originalBundle.getString(InvoiceData.LONGITUDE));
+					} else { instanceBundle.putString(InvoiceData.LONGITUDE, "0.00"); }
+
+					// required update that's complete bill
+					asynchronous(RetrofitAbstract.RETROFIT_SET_COMPLETE_BILL, instanceBundle);
 					break;
 /*
 					position = -1;
@@ -722,7 +815,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		int BILL_COUNT = instanceBundle.getInt(InvoiceData.BILL_COUNT);
 		int TOTAL_BOX = instanceBundle.getInt(InvoiceData.TOTAL_BOX);
 
-		if(BILL_COUNT >= TOTAL_BOX) {
+		if (BILL_COUNT >= TOTAL_BOX) {
 			// ...
 			t = new Intent(InvoiceInfoActivity.this, CanvasActivity.class);
 			startActivityForResult(t, IntentKeycode.RESULT_CANVAS);

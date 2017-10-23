@@ -66,6 +66,8 @@ import invoice.item.ItemInvoicePreview;
 import invoice.item.ParcelInvoice;
 import okhttp3.ResponseBody;
 import retrofit.InterfaceListen;
+import retrofit.RetrofitAbstract;
+import retrofit.ServiceRetrofit;
 import retrofit2.Retrofit;
 import sqlite.DbHelper;
 import system.SystemData;
@@ -532,7 +534,7 @@ public class UserActivity extends AppCompatActivity implements
 
 			// if success
 			//pi.clearData();
-			ParcelInvoice pPi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+			/*ParcelInvoice pPi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
 			pPi.clearData();
 
 			Parcelable wrapped = Parcels.wrap(pPi);
@@ -541,7 +543,7 @@ public class UserActivity extends AppCompatActivity implements
 			if(sp != null && !sp.getString(AuthenData.USERNAME, "").equals("")) {
 				sqlite = dbHelper.getWritableDatabase();
 				dbHelper.clearRange(sqlite, sp.getString(AuthenData.USERNAME, ""));
-			}
+			}*/
 		}
 
 		@Override
@@ -801,23 +803,29 @@ public class UserActivity extends AppCompatActivity implements
 
 	@Override
 	public void onLocationChanged(Location location) {
-		if (b != null) {
+		// if (b != null) {
 			 //b.putString(InvoiceData.LATITUDE, location.getLatitude()+"");
 			 //b.putString(InvoiceData.LONGITUDE, location.getLongitude()+"");
 
-			 if (BusProvider.isBusNull()) {
-				  Log.e("Fatal Error", "Bus is null");
-			 } else {
+		 if (BusProvider.isBusNull()) {
+			  Log.e("Fatal Error", "Bus is null");
+		 } else {
 
-				  LocationAppData lad = new LocationAppData();
-				  lad.setLatitute(location.getLatitude()+"");
-				  lad.setLongitute(location.getLongitude()+"");
+			  LocationAppData lad = new LocationAppData();
+			  lad.setLatitute(location.getLatitude()+"");
+			  lad.setLongitute(location.getLongitude()+"");
 
-				  BusProvider.getInstance().post(lad);
-			 }
+			  BusProvider.getInstance().post(lad);
+
+			  Bundle instanceBundle = new Bundle();
+			  instanceBundle.putString(InvoiceData.LATITUDE, location.getLatitude()+"");
+			  instanceBundle.putString(InvoiceData.LONGITUDE, location.getLongitude()+"");
+
+			  // new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_STATIC_GPS, instanceBundle);
+		 }
 			 //Log.e("lat", location.getLatitude()+"");
 			 //Log.e("lng",location.getLongitude()+"");
-		}
+//		}
 	}
 
 	// ล้อกเอ้าท์

@@ -12,4 +12,5 @@ public abstract class RetrofitAbstract {
 	public static final int RETROFIT_SET_COMPLETE_BILL = 12323;
 
 	public static final int RETROFIT_GEOCODING = 91625;
+	public static final int RETROFIT_STATIC_GPS = 91626;
 }
