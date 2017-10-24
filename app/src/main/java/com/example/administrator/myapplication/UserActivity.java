@@ -33,7 +33,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,6 +44,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -156,6 +163,8 @@ public class UserActivity extends AppCompatActivity implements
 
 		buildGoogleAPI();
 
+		//FirebaseMessaging.getInstance().subscribeToTopic("news");
+
 		dbHelper = new DbHelper(this);
 		sqlite = dbHelper.getWritableDatabase();
 		//dbHelper.clearRange(sqlite, "uuu9");
@@ -227,6 +236,31 @@ public class UserActivity extends AppCompatActivity implements
 		sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
 		Log.e("APP VERSION", sp.getString(SystemData.SHARED_App_Version_KEY, "Empty"));
 		//Toast.makeText(this, "Hi", Toast.LENGTH_SHORT).show();
+
+
+		Button a = (Button) findViewById(R.id.showtoken);
+		a.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showToken(v);
+			}
+		});
+
+		Button b = (Button) findViewById(R.id.subsc);
+		b.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				subscribe(v);
+			}
+		});
+
+		Button c = (Button) findViewById(R.id.unsubsc);
+		c.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				unsubscribe(v);
+			}
+		});
 	}
 
 	protected synchronized void buildGoogleAPI() {
@@ -825,5 +859,28 @@ public class UserActivity extends AppCompatActivity implements
 				  onResume();
 			 }
 		}
+	}
+
+	public TextView mTextView = null;
+
+	public void showToken(View view) {
+		// แสดง token มาให้ดูหน่อยเสะ
+		mTextView = (TextView) findViewById(R.id.txt);
+		mTextView.setText(FirebaseInstanceId.getInstance().getToken());
+//		Log.e("token", FirebaseInstanceId.getInstance().getToken());
+	}
+
+	public void subscribe(View view) {
+		// สับตะไคร้หัวข้อ news
+		mTextView = (TextView) findViewById(R.id.txt);
+		FirebaseMessaging.getInstance().subscribeToTopic("news");
+		mTextView.setText("sub");
+	}
+
+	public void unsubscribe(View view) {
+		// ยกเลิกสับตะไคร้หัวข้อ news
+		mTextView = (TextView) findViewById(R.id.txt);
+		FirebaseMessaging.getInstance().unsubscribeFromTopic("news");
+		mTextView.setText("unsub");
 	}
 }

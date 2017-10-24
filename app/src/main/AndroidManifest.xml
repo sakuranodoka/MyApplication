@@ -42,15 +42,10 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
-      <meta-data
-          android:name="com.google.android.geo.API_KEY"
-          android:value="@string/google_maps_key"/>
-
-      <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="default_channel_id" />
-
-      <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/ic_search" />
-
-      <meta-data android:name="com.google.firebase.messaging.default_notification_color" android:resource="@color/colorAccent" />
+      <!--<meta-data-->
+          <!--android:name="com.google.android.geo.API_KEY"-->
+          <!--android:value="@string/google_maps_key"/>-->
+      <!---->
 
       <service android:name=".MyFirebaseMessagingService">
          <intent-filter>
@@ -62,6 +57,17 @@
             <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
          </intent-filter>
       </service>
+
+      <!--<meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="default_channel_id" />-->
+
+      <!--<meta-data-->
+          <!--android:name="com.google.firebase.messaging.default_notification_icon"-->
+          <!--android:resource="@drawable/ic_search" />-->
+
+      <!--<meta-data-->
+          <!--android:name="com.google.firebase.messaging.default_notification_color"-->
+          <!--android:resource="@color/colorAccent" />-->
+
 
       <activity
           android:name=".MapsActivity"
@@ -90,6 +96,7 @@
       </activity>
       <activity android:name=".AppliedSearchActivity">
       </activity>
+
    </application>
 
 </manifest>
