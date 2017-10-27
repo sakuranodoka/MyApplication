@@ -116,45 +116,6 @@ public class ServiceRetrofit {
 				break;
 			case RetrofitAbstract.RETROFIT_PRE_INVOICE:
 				observable = ServiceBill.getBillList((Bundle) data, retrofit);
-//			   InterfaceInvoice interfacePreInvoice = retrofit.create(InterfaceInvoice.class);
-//				if(data instanceof Bundle) {
-//					Bundle b = (Bundle) data;
-//
-//					StringBuilder bill = new StringBuilder(128);
-//					StringBuilder timestack = new StringBuilder(128);
-//
-//					if(b.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
-//						ParcelQuery pq = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
-//						if(pq.getBill() != null)
-//							bill.append(pq.getBill());
-//						else bill.append("");
-//
-//						if(pq.getDatetime() != null)
-//							timestack.append(pq.getDatetime());
-//						else timestack.append("");
-//					} else {
-//						bill.append("");
-//						timestack.append("");
-//					}
-//
-//					StringBuilder limit = new StringBuilder(128);
-//					if(b.containsKey(InvoiceData.INVOICE_LIMIT)) {
-//						limit.append(b.getString(InvoiceData.INVOICE_LIMIT));
-//					} else {
-//						limit.append("0");
-//					}
-//
-//					Log.e("LIMIT", limit.toString());
-//
-//					//ParcelInvoice p = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-//					Observable<List<BillPOJO>> ex = interfacePreInvoice.getInvoiceInfo();
-//					/*Observable<List<InvoicePOJO>> ex = interfacePreInvoice.getInvoiceInfo(
-//							  p.getUsername(),
-//							  bill.toString(),
-//							  timestack.toString(),
-//							  limit.toString());*/
-//					observable = ex;
-//				}
 			   break;
 			case RetrofitAbstract.RETROFIT_SET_BILL_COUNT:
 				observable = ServiceBill.setBillCount((Bundle) data, retrofit);

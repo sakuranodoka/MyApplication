@@ -385,12 +385,6 @@ public class FragmentInvoiceDetail extends Fragment {
 	                 layout.setOnClickListener(new View.OnClickListener() {
 								@Override
 								public void onClick(View v) {
-								Bundle instanceBundle = new Bundle();
-
-//								instanceBundle.putString(InvoiceData.INVOICE_SCANNER_STRING, temp.getBILL_NO());
-//								instanceBundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(temp.getBILL_COUNT()));
-//								instanceBundle.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(temp.getTOTAL_BOX()));
-//								instanceBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
 
 								BarcodeWrapper wrapper = new BarcodeWrapper();
 								wrapper.setBillPOJO(temp);
@@ -400,10 +394,8 @@ public class FragmentInvoiceDetail extends Fragment {
 									 BusProvider.getInstance().post(wrapper);
 								}
 
-								//interfaceInvoiceInfo.onBarcodeScan(b);
 								}
 							});
-						//}
                 } else if(holder instanceof ProgressBarViewHolder) {
 	                ProgressBarViewHolder vh = (ProgressBarViewHolder) holder;
 	                vh.avi.smoothToShow();
@@ -438,10 +430,6 @@ public class FragmentInvoiceDetail extends Fragment {
     }
 
 	 protected void async() {
-		/*if(this.b != null) {
-			b.putString(InvoiceData.INVOICE_LIMIT, limited+"");
-			new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
-		}*/
 
 		Log.e("(Async)LIMIT ", limited+" (When pan down)");
 
@@ -494,6 +482,11 @@ public class FragmentInvoiceDetail extends Fragment {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void clearance() {
+		listItem.clear();
+		adapter.notifyDataSetChanged();
 	}
 
 	public void removeByPosition(int position) {

@@ -53,7 +53,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 	private FragmentInvoiceDetail fragmentInvoiceDetail = null;
 
-	private Bundle b = new Bundle();
+	//private Bundle b = new Bundle();
 
 	private Bundle originalBundle = new Bundle();
 
@@ -106,35 +106,20 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		fm.replace(R.id.layout_toolbar, fToolbar);
 		fm.commit();
 
-		/*Intent t = getIntent();
-		if(t.getExtras() == null) b = new Bundle();
-		else b = t.getExtras();*/
-
-		BusProvider.getInstance().register(this);
-
 		if (savedInstanceState == null) {
 			 //async();
+
+			 ParcelQuery pq = new ParcelQuery();
+			 if (getIntent() != null) {
+				  pq.setBill("");
+				  pq.setDatetime("");
+			 } else {
+				  pq = Parcels.unwrap(getIntent().getExtras().getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+			 }
+
+			 this.originalBundle.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+
 			 asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, null);
-		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	protected void async() {
-		SharedPreferences sp = getSharedPreferences(MainActivity._PREF_MODE, Context.MODE_PRIVATE);
-		if (this.b != null && sp != null) {
-
-			 String SHIP_NO = sp.getString(AuthenData.USERNAME, "");
-
-			 b.putString(InvoiceData.INVOICE_LIMIT, "0");
-			 b.putString(AuthenData.USERNAME, SHIP_NO);
-
-			 new ServiceRetrofit().callServer(interfaceListen, RetrofitAbstract.RETROFIT_PRE_INVOICE, b);
-		} else {
-			Log.e("Error", "Bundle is null or Unauthorized.");
 		}
 	}
 
@@ -170,16 +155,19 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 			if (!instanceBundle.containsKey(InvoiceData.INVOICE_LIMIT))
 				 instanceBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
 
+			if (!instanceBundle.containsKey(InvoiceData.INVOICE_PARCEL_QUERY))
+				 instanceBundle.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, this.originalBundle.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+
 			Log.e("LIMIT", instanceBundle.getString(InvoiceData.INVOICE_LIMIT));
 
-			new ServiceRetrofit().callServer(this.callback, RetrofitAbstractLayer, instanceBundle);
+			new ServiceRetrofit().callServer(this.await, RetrofitAbstractLayer, instanceBundle);
 
 		} catch (Exception err) {
 			Log.e("Fatal Error", err.getMessage());
 		}
 	}
 
-	private InterfaceListen callback = new InterfaceListen() {
+	private InterfaceListen await = new InterfaceListen() {
 		@Override
 		public void onResponse(Object data, Retrofit retrofit) {
 			 // Validate callback data
@@ -266,196 +254,13 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		public void onFailure(Throwable t) {}
 	};
 
-	private InterfaceInvoiceInfo interfaceInvoiceInfo = new InterfaceInvoiceInfo() {
-		@Override
-		public void onOptionalChange(String optionIDs) {
-			if(b != null) {
-				b.putString(InvoiceData.INVOICE_DAY_TAG, optionIDs);
-				async();
-			} else {
-				Log.e("Error", "Bundle is null.");
-			}
-		}
-
-		@Override
-		public void onBarcodeScan(Bundle clickeddata) {
-			Intent t = new Intent(getApplication(), CustomScannerActivity.class);
-
-			t.putExtras(clickeddata);
-
-			b.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION,  clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION));
-
-			int BILL_COUNT = clickeddata.getInt(InvoiceData.BILL_COUNT);
-			int TOTAL_BOX = clickeddata.getInt(InvoiceData.TOTAL_BOX);
-
-			if(BILL_COUNT >= TOTAL_BOX) {
-				// ...
-				t = new Intent(InvoiceInfoActivity.this, CanvasActivity.class);
-				startActivityForResult(t, IntentKeycode.RESULT_CANVAS);
-			} else {
-				startActivityForResult(t, IntentIntegrator.REQUEST_CODE);
-			}
-		}
-	};
-
-  	private final InterfaceListen interfaceListen = new InterfaceListen() {
-		@Override
-		public void onResponse(Object data, Retrofit retrofit) {
-
-				ParcelBill pb = new ParcelBill();
-
-				List<BillPOJO> pojoList = (List<BillPOJO>) data;
-
-				BillPOJO onceBill = new BillPOJO();
-
-				ArrayList<BillPOJO> list = new ArrayList<>();
-				int countingRound = 0;
-
-				for (BillPOJO i : pojoList) {
-					 BillPOJO temp = new BillPOJO();
-					 temp.setBILL_NO(i.getBILL_NO());
-					 temp.setBILL_DATE(i.getBILL_DATE());
-					 temp.setNET_AMOUNT(i.getNET_AMOUNT());
-					 temp.setTOTAL_BOX(i.getTOTAL_BOX());
-					 temp.setBILL_COUNT(i.getBILL_COUNT());
-
-					 if (countingRound == 0)
-						  onceBill = temp;
-
-					 countingRound++;
-
-					 list.add(temp);
-				}
-
-				ParcelQuery pq = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
-
-				if(pq.isIncreaseOne()) {
-
-					pq.setIncreaseOne(false);
-
-					b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
-
-					int counting = Integer.parseInt(onceBill.getBILL_COUNT());
-
-					if(counting >= Integer.parseInt(onceBill.getTOTAL_BOX())) {
-						// Prepare to drawing name
-
-						AlertDialog.Builder builder1 = new AlertDialog.Builder(InvoiceInfoActivity.this);
-						builder1.setMessage("หมายเลขบิลล์นี้สแกนครบทุกกล่องแล้ว แตะเพื่อเซ็นต์ชื่อรับสินค้า");
-						builder1.setCancelable(true);
-
-						builder1.setNegativeButton(
-								  "ปิด",
-								  new DialogInterface.OnClickListener() {
-									  public void onClick(DialogInterface dialog, int id) {
-										  dialog.cancel();
-									  }
-								  });
-
-						AlertDialog alert11 = builder1.create();
-						alert11.show();
-
-						pb.setListBill(list);
-						b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
-
-						fm = getSupportFragmentManager().beginTransaction();
-
-						fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
-						fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
-						fm.commit();
-
-					} else {
-
-						counting += 1;
-
-						onceBill.setBILL_COUNT(counting + "");
-
-						Bundle instanceBundle = new Bundle();
-						instanceBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(onceBill));
-
-						final int finalCounting = counting;
-						final BillPOJO finalOnceBill = onceBill;
-						final InterfaceListen updateInterface = new InterfaceListen() {
-							@Override
-							public void onResponse(Object data, Retrofit retrofit) {
-								// Set List in fragment update data XD
-								DataWrapper message = (DataWrapper) data;
-
-								async();
-
-
-							/*DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									switch (which) {
-										case DialogInterface.BUTTON_POSITIVE:
-											//Yes button clicked
-											Bundle bundle = new Bundl e();
-											bundle.putString(InvoiceData.INVOICE_SCANNER_STRING, finalOnceBill.getBILL_NO());
-											bundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(finalOnceBill.getBILL_COUNT()));
-											bundle.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(finalOnceBill.getTOTAL_BOX()));
-											interfaceInvoiceInfo.onBarcodeScan(bundle);
-											break;
-
-										case DialogInterface.BUTTON_NEGATIVE:
-											//No button clicked
-											break;
-									}
-								}
-							};*/
-
-							/*AlertDialog.Builder builder = new AlertDialog.Builder(InvoiceInfoActivity.this);
-							builder.setMessage("สแกนบิลล์นี้ต่อไปใช่ไหม ?").setPositiveButton("ตกลง", dialogClickListener)
-									  .setNegativeButton("ยกเลิก", dialogClickListener).show();*/
-							}
-
-							@Override
-							public void onBodyError(ResponseBody responseBodyError) {
-							}
-
-							@Override
-							public void onBodyErrorIsNull() {
-							}
-
-							@Override
-							public void onFailure(Throwable t) {
-							}
-						};
-
-						new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
-					}
-				} else {
-					Log.e("IncreaseOne", "+0");
-
-					pb.setListBill(list);
-					b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
-
-					fm = getSupportFragmentManager().beginTransaction();
-
-					fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
-					fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
-					fm.commit();
-				}
-		}
-
-		@Override
-		public void onBodyError(ResponseBody responseBodyError) {}
-
-		@Override
-		public void onBodyErrorIsNull() {}
-
-		@Override
-		public void onFailure(Throwable t) {}
-	};
-
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		if (this.originalBundle != null) {
-			 //this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
-
-			 ParcelBill pb = fragmentInvoiceDetail.getParcelBill();
-			 this.originalBundle.putParcelable(InvoiceData.BILL_PARCEL, Parcels.wrap(pb));
-
+			 if (fragmentInvoiceDetail != null) {
+				  ParcelBill pb = fragmentInvoiceDetail.getParcelBill();
+				  this.originalBundle.putParcelable(InvoiceData.BILL_PARCEL, Parcels.wrap(pb));
+			 }
 			 outState.putAll(this.originalBundle);
 		}
 		Log.e("onSaveInstanceState", "true");
@@ -472,36 +277,33 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 
 			 this.originalBundle = savedInstanceState;
 
-			 //this.originalBundle.putString(InvoiceData.INVOICE_LIMIT, "0");
+			 if (this.originalBundle.containsKey(InvoiceData.INVOICE_PARCEL_QUERY))
+			 	  Log.e("PARCEL QUERY", "IRU");
+			 else
+			     Log.e("PARCEL QUERY", "Fatal Error : Parcel Query is not defined.");
 
-			 ParcelBill pb = Parcels.unwrap(this.originalBundle.getParcelable(InvoiceData.BILL_PARCEL));
+			 if (this.originalBundle.containsKey(InvoiceData.BILL_PARCEL)) {
+				  ParcelBill pb = Parcels.unwrap(this.originalBundle.getParcelable(InvoiceData.BILL_PARCEL));
 
-			 int PRE_RESTORE_LIMIT = Integer.parseInt(this.originalBundle.getString(InvoiceData.INVOICE_LIMIT));
+				  int PRE_RESTORE_LIMIT = Integer.parseInt(this.originalBundle.getString(InvoiceData.INVOICE_LIMIT));
 
-			 fm = getSupportFragmentManager().beginTransaction();
+				  fm = getSupportFragmentManager().beginTransaction();
 
-			 // Now fragmentInvoiceDetail == null
-			 fragmentInvoiceDetail = new FragmentInvoiceDetail(pb);
-			 fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
-			 fm.commit();
+				  // Now fragmentInvoiceDetail == null
+				  fragmentInvoiceDetail = new FragmentInvoiceDetail(pb);
+				  fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
+				  fm.commit();
 
-			 fragmentInvoiceDetail.fixedLimited(PRE_RESTORE_LIMIT);
+				  fragmentInvoiceDetail.fixedLimited(PRE_RESTORE_LIMIT);
 
-			 if (this.originalBundle.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
-				  int position = this.originalBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
-				  Log.e("MOVE_TO_POSITION", position+"");
-				  fragmentInvoiceDetail.goToPosition(position);
+				  if (this.originalBundle.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
+					   int position = this.originalBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					   Log.e("MOVE_TO_POSITION", position + "");
+					   fragmentInvoiceDetail.goToPosition(position);
+				  }
+			 } else {
+				 Log.e("Fatal Error", "Re back with an error.");
 			 }
-
-			 // fragmentInvoiceDetail.fixedLimited(Integer.parseInt(this.originalBundle.getString(InvoiceData.INVOICE_LIMIT)));
-
-			 //asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, this.originalBundle);
-
-			 /*fm = getSupportFragmentManager().beginTransaction();
-			 fragmentInvoiceDetail = new FragmentInvoiceDetail(b, interfaceInvoiceInfo);
-			 fm.replace(R.id.blankFrameLayout, fragmentInvoiceDetail);
-			 fm.commit();*/
-
 		} else {
 			Log.e ("onRestoreInstanceState", "savedInstanceState is null");
 		}
@@ -511,141 +313,81 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.e("onActivityResult", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
-		if(resultCode == RESULT_OK) {
-			Bundle temp = null;
-			int position = -1;
-			switch(requestCode) {
-				case IntentKeycode.RESULT_INVOICE_SEARCH :
-					temp = data.getExtras();
-					if(temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
-						b.putString(InvoiceData.INVOICE_LIMIT, "0");
+		//Log.e("onActivityResult", "Result Code : "+resultCode+" | Request Code : "+requestCode+ " |Result OK : "+RESULT_OK);
+		if (resultCode == RESULT_OK) {
+			 Bundle temp = null;
+			 int position = -1;
+			 switch (requestCode) {
+				  case IntentKeycode.RESULT_INVOICE_SEARCH :
+				 	  temp = data.getExtras();
+					  if (temp.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
 
-						fragmentInvoiceDetail.setNewLimited();
+						   if (fragmentInvoiceDetail != null) {
+							    fragmentInvoiceDetail.clearance();
+						   }
+						   fragmentInvoiceDetail = null;
 
-						Log.e("SUCCESSFULLY", "WRAP BILL OR DATE FRPM APPLIED SEARCH ACTIVITY");
+						   LimitWrapper lw = new LimitWrapper();
+						   lw.setLimit(0);
+						   limitedOverwrite(lw);
 
-						// กำหนด บิลล์ และ วันที่ เรียบร้อยแล้ว
-						ParcelQuery pq = Parcels.unwrap(temp.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+						   ParcelQuery pq = Parcels.unwrap(temp.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
 
-						b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+						   originalBundle.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 
-						async();
-					}
-					break;
-				case IntentIntegrator.REQUEST_CODE :
-					temp = data.getExtras();
-					final Bundle finalTemp = temp;
+						   asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, originalBundle);
+					  }
+					  break;
+				  case IntentIntegrator.REQUEST_CODE :
+				 	  temp = data.getExtras();
+					  final Bundle finalTemp = temp;
 
-					// Below is set bill count ++ (in server and show message client)
-					String result = data.getExtras().getString("SCAN_RESULT");
+					  // Below is set bill count ++ (in server and show message client)
+					  String result = data.getExtras().getString("SCAN_RESULT");
 
-					/*if (b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
-						 position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
-					} else {
-						 break;
-					}*/
-					Bundle instanceBundle = new Bundle();
-					if (this.originalBundle.containsKey(InvoiceData.BarcodeWrapper)) {
-						 instanceBundle = this.originalBundle.getBundle(InvoiceData.BarcodeWrapper);
-					} else break;
+					  Bundle instanceBundle = new Bundle();
+					  if (this.originalBundle.containsKey(InvoiceData.BarcodeWrapper)) {
+						   instanceBundle = this.originalBundle.getBundle(InvoiceData.BarcodeWrapper);
+					  } else break;
 
-					position = instanceBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					  position = instanceBundle.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
 
-					// Set to main original bundle
-					// Important
-					this.originalBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
+					  // Set to main original bundle
+					  // Important
+					  this.originalBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
 
-					if (fragmentInvoiceDetail == null) {
-						 Log.e("Fatal Error", "III Fragment is null");
-						 break;
-					}
+					  if (fragmentInvoiceDetail == null) {
+						   Log.e("Fatal Error", "III Fragment is null");
+						   break;
+					  }
+					  BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
 
-					//if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
+					  if (pojo.getBILL_NO().trim().equals(result.trim())) {
+					  	   int counting = Integer.parseInt(pojo.getBILL_COUNT());
+						   counting+= 1;
 
-					BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
+						   Clone cn = new Clone();
 
-					if (pojo.getBILL_NO().trim().equals(result.trim())) {
-						 int counting = Integer.parseInt(pojo.getBILL_COUNT());
-						 counting+= 1;
+						   final BillPOJO cloned = (BillPOJO) cn.cloneObject(pojo);
 
-						 Clone cn = new Clone();
+						   // counting please
+						   // count
+						   // c /c.scan() => ?
+						   // why set this pojo then adapter's data changed ?
+						   // Oh I know that, you need to clone before change it
+						   cloned.setBILL_COUNT(counting + "");
 
-						 final BillPOJO cloned = (BillPOJO) cn.cloneObject(pojo);
+						   Bundle tempBundle = new Bundle();
+						   tempBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(cloned));
 
-						 // counting please
-						 // count
-						 // c /c.scan() => ?
-						 // why set this pojo then adapter's data changed ?
-						 // Oh I know that, you need to clone before change it
-						 cloned.setBILL_COUNT(counting + "");
+						   asynchronous(RetrofitAbstract.RETROFIT_SET_BILL_COUNT, tempBundle);
+					  } else {
 
-						 Bundle tempBundle = new Bundle();
-						 tempBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(cloned));
+						  AlertDialog.Builder builder1 = new AlertDialog.Builder(InvoiceInfoActivity.this);
+						  builder1.setMessage("หมายเลขบิลล์ข้างกล่อง ไม่ตรงกับหมายเลขบิลล์ในระบบ");
+						  builder1.setCancelable(true);
 
-						 asynchronous(RetrofitAbstract.RETROFIT_SET_BILL_COUNT, tempBundle);
-
-						 // set ++
-						 /*pojo.setBILL_COUNT(counting+"");
-
-						 Bundle instanceBundle = new Bundle();
-						 instanceBundle.putParcelable(InvoiceData.BILL_POJO, Parcels.wrap(pojo));
-
-						final int finalCounting = counting;
-						final InterfaceListen updateInterface = new InterfaceListen() {
-							@Override
-							public void onResponse(Object data, Retrofit retrofit) {
-								// Set List in fragment update data XD
-								DataWrapper message = (DataWrapper) data;
-								Log.e("MESSAGE", message.toString());
-
-								fragmentInvoiceDetail.increaseCounting(finalposition, finalCounting);
-
-								DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										switch (which) {
-											case DialogInterface.BUTTON_POSITIVE:
-												//Yes button clicked
-												Bundle bundle = new Bundle();
-												bundle.putString(InvoiceData.INVOICE_SCANNER_STRING, pojo.getBILL_NO());
-												bundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(pojo.getBILL_COUNT()));
-												bundle.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(pojo.getTOTAL_BOX()));
-												interfaceInvoiceInfo.onBarcodeScan(bundle);
-												break;
-
-											case DialogInterface.BUTTON_NEGATIVE:
-												//No button clicked
-												break;
-										}
-									}
-								};
-
-								AlertDialog.Builder builder = new AlertDialog.Builder(InvoiceInfoActivity.this);
-								builder.setMessage("สแกนบิลล์นี้ต่อไปใช่ไหม ?").setPositiveButton("ตกลง", dialogClickListener)
-										  .setNegativeButton("ยกเลิก", dialogClickListener).show();
-							}
-
-							@Override
-							public void onBodyError(ResponseBody responseBodyError) {}
-
-							@Override
-							public void onBodyErrorIsNull() {}
-
-							@Override
-							public void onFailure(Throwable t) {}
-						};
-
-						new ServiceRetrofit().callServer(updateInterface, RetrofitAbstract.RETROFIT_SET_BILL_COUNT, instanceBundle);
-
-						break;*/
-					} else {
-
-						AlertDialog.Builder builder1 = new AlertDialog.Builder(InvoiceInfoActivity.this);
-						builder1.setMessage("หมายเลขบิลล์ข้างกล่อง ไม่ตรงกับหมายเลขบิลล์ในระบบ");
-						builder1.setCancelable(true);
-
-						builder1.setNegativeButton(
+						  builder1.setNegativeButton(
 								  "ปิด",
 								  new DialogInterface.OnClickListener() {
 									  public void onClick(DialogInterface dialog, int id) {
@@ -653,130 +395,48 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 									  }
 								  });
 
-						AlertDialog alert11 = builder1.create();
-						alert11.show();
-					}
-					break;
-				case IntentKeycode.RESULT_CANVAS:
+						  AlertDialog alert11 = builder1.create();
+						  alert11.show();
+					  }
+					  break;
+				  case IntentKeycode.RESULT_CANVAS:
 
-					instanceBundle = data.getExtras();
+					  instanceBundle = data.getExtras();
 
-					if (this.originalBundle.containsKey(InvoiceData.BarcodeWrapper)) {
-						 position = this.originalBundle.getBundle(InvoiceData.BarcodeWrapper).getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
-					} else break;
+					  if (this.originalBundle.containsKey(InvoiceData.BarcodeWrapper)) {
+						   position = this.originalBundle.getBundle(InvoiceData.BarcodeWrapper).getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
+					  } else break;
 
-					// Set to main original bundle
-					// Important
-					this.originalBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
+					  // Set to main original bundle
+					  // Important
+					  this.originalBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, position);
 
-					if (fragmentInvoiceDetail == null) {
-						 Log.e("Fatal Error", "III Fragment is null");
-						 break;
-					}
+					  if (fragmentInvoiceDetail == null) {
+						   Log.e("Fatal Error", "III Fragment is null");
+						   break;
+					  }
 
-					pojo = fragmentInvoiceDetail.getBILLPOJO(position);
+					  pojo = fragmentInvoiceDetail.getBILLPOJO(position);
 
-					Clone cn = new Clone();
+					  Clone cn = new Clone();
 
-					BillPOJO Cloned = (BillPOJO) cn.cloneObject(pojo);
+					  BillPOJO Cloned = (BillPOJO) cn.cloneObject(pojo);
 
-					instanceBundle.putString(InvoiceData.BILL_NO, Cloned.getBILL_NO());
-					instanceBundle.putString(InvoiceData.BILL_COUNT, Cloned.BILL_COUNT);
+					  instanceBundle.putString(InvoiceData.BILL_NO, Cloned.getBILL_NO());
+					  instanceBundle.putString(InvoiceData.BILL_COUNT, Cloned.BILL_COUNT);
 
-					// Put instance of Lat Lng
-					if (this.originalBundle.containsKey(InvoiceData.LATITUDE)) {
-						 instanceBundle.putString(InvoiceData.LATITUDE, this.originalBundle.getString(InvoiceData.LATITUDE));
-					} else { instanceBundle.putString(InvoiceData.LATITUDE, "0.00"); }
+					  // Put instance of Lat Lng
+					  if (this.originalBundle.containsKey(InvoiceData.LATITUDE)) {
+						   instanceBundle.putString(InvoiceData.LATITUDE, this.originalBundle.getString(InvoiceData.LATITUDE));
+					  } else { instanceBundle.putString(InvoiceData.LATITUDE, "0.00"); }
 
-					if (this.originalBundle.containsKey(InvoiceData.LONGITUDE)) {
-						 instanceBundle.putString(InvoiceData.LONGITUDE, this.originalBundle.getString(InvoiceData.LONGITUDE));
-					} else { instanceBundle.putString(InvoiceData.LONGITUDE, "0.00"); }
+					  if (this.originalBundle.containsKey(InvoiceData.LONGITUDE)) {
+						   instanceBundle.putString(InvoiceData.LONGITUDE, this.originalBundle.getString(InvoiceData.LONGITUDE));
+					  } else { instanceBundle.putString(InvoiceData.LONGITUDE, "0.00"); }
 
-					// required update that's complete bill
-					asynchronous(RetrofitAbstract.RETROFIT_SET_COMPLETE_BILL, instanceBundle);
-					break;
-/*
-					position = -1;
-					if(b.containsKey(InvoiceData.SHARED_PREFERENCES_BILL_POSITION)) {
-						position = b.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION);
-					} else {
-						break;
-					}
-
-					final int removeposition = position;
-
-					if(fragmentInvoiceDetail.getBILLPOJO(position) == null) break;
-
-					final BillPOJO pojotemp = fragmentInvoiceDetail.getBILLPOJO(position);
-
-					Bundle instanceBundle = data.getExtras();
-
-					final int BILL_COUNT = Integer.parseInt(pojotemp.getBILL_COUNT());
-					final String BILL_NO = pojotemp.getBILL_NO();
-
-					final InterfaceListen setCompleteBillInterface = new InterfaceListen() {
-						@Override
-						public void onResponse(Object data, Retrofit retrofit) {
-							// ... complete 1 bill -.-
-							DataWrapper message = (DataWrapper) data;
-							Log.e("MESSAGE", message.toString());
-
-							// remove in position (fragment adapter's list)
-							fragmentInvoiceDetail.removeByPosition(removeposition);
-
-							// remove in bundle
-							ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-
-							ArrayList<BillPOJO> instancelistpojo = pb.getListBill();
-							int bundleindex = instancelistpojo.indexOf(pojotemp);
-
-							if( bundleindex != -1 ) {
-								 instancelistpojo.remove(bundleindex);
-								 pb.setListBill(instancelistpojo);
-								 b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
-							}
-
-							AlertDialog.Builder builder = new AlertDialog.Builder(InvoiceInfoActivity.this);
-							builder.setMessage("สแกนบิลล์ "+ BILL_NO + " เสร็จสิ้น");
-							builder.setCancelable(true);
-
-							builder.setNegativeButton(
-									  "ปิด",
-									  new DialogInterface.OnClickListener() {
-										  public void onClick(DialogInterface dialog, int id) {
-											  dialog.cancel();
-										  }
-									  });
-
-							AlertDialog dialog = builder.create();
-							dialog.show();
-						}
-
-						@Override
-						public void onBodyError(ResponseBody responseBodyError) {}
-
-						@Override
-						public void onBodyErrorIsNull() {}
-
-						@Override
-						public void onFailure(Throwable t) {}
-					};
-
-					instanceBundle.putString(InvoiceData.BILL_NO, BILL_NO);
-					instanceBundle.putString(InvoiceData.BILL_COUNT, BILL_COUNT+"");
-
-					// Put instance of Lat Lng
-					if (b.containsKey(InvoiceData.LATITUDE)) {
-						 instanceBundle.putString(InvoiceData.LATITUDE, b.getString(InvoiceData.LATITUDE));
-					} else { instanceBundle.putString(InvoiceData.LATITUDE, "0.00"); }
-
-					if (b.containsKey(InvoiceData.LONGITUDE)) {
-						 instanceBundle.putString(InvoiceData.LONGITUDE, b.getString(InvoiceData.LONGITUDE));
-					} else { instanceBundle.putString(InvoiceData.LONGITUDE, "0.00"); }
-
-					// required update that's complete bill
-					new ServiceRetrofit().callServer(setCompleteBillInterface, RetrofitAbstract.RETROFIT_SET_COMPLETE_BILL, instanceBundle);
-					break;*/
+					  // required update that's complete bill
+					  asynchronous(RetrofitAbstract.RETROFIT_SET_COMPLETE_BILL, instanceBundle);
+					  break;
 			}
 		} else {
 			Log.e("STATE", "PRESSED BACK");
@@ -810,8 +470,6 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 		// Just do it. Learn and alive.
 		this.originalBundle.putBundle(InvoiceData.BarcodeWrapper, instanceBundle);
 
-		//b.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION,  clickeddata.getInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION));
-
 		int BILL_COUNT = instanceBundle.getInt(InvoiceData.BILL_COUNT);
 		int TOTAL_BOX = instanceBundle.getInt(InvoiceData.TOTAL_BOX);
 
@@ -831,14 +489,15 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		BusProvider.getInstance().register(this);
+	}
+
+	@Override
 	protected void onStop() {
 		super.onStop();
 		if (!BusProvider.isBusNull())
 			 BusProvider.getInstance().unregister(this);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 }
