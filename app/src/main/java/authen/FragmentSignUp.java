@@ -20,8 +20,8 @@ import com.example.administrator.myapplication.R;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+//import butterknife.ButterKnife;
+//import butterknife.InjectView;
 import fragment.FragmentScope;
 import fragment.InterfaceReplace;
 import okhttp3.ResponseBody;
@@ -83,7 +83,7 @@ public class FragmentSignUp extends Fragment {
 	 @Override
 	 public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.layout_sign_up, container, false);
-			ButterKnife.inject(rootView);
+	//		ButterKnife.inject(rootView);
 			if(savedInstanceState != null)
 				instanceState = savedInstanceState;
 			else

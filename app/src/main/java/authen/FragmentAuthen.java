@@ -25,8 +25,8 @@ import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import butterknife.ButterKnife;
-import butterknife.InjectView;
+//import butterknife.ButterKnife;
+//import butterknife.InjectView;
 import fragment.FragmentScope;
 import fragment.InterfaceReplace;
 import okhttp3.ResponseBody;
@@ -77,7 +77,7 @@ public class FragmentAuthen extends Fragment {
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.activity_authen, container, false);
 
-		ButterKnife.inject(rootView);
+		//ButterKnife.inject(rootView);
 
 		rootView.findViewById(R.id.btn_login).setOnClickListener(new View.OnClickListener() {
 		@Override

@@ -375,14 +375,18 @@ public class UserActivity extends AppCompatActivity implements
 
 					Intent t = new Intent();
 					String d = "";
-					String sc = data.getExtras().getString("SCAN_RESULT");
+					//String sc =
+					StringBuilder sc = new StringBuilder(128);
+					sc.append(data.getExtras().getString("SCAN_RESULT"));
 
 					ParcelQuery pq = new ParcelQuery();
-					pq.setBill(sc);
+					pq.setBill(sc.toString());
 					pq.setDatetime(d);
 					pq.setIncreaseOne(true);
 
 					temp.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
+
+					Log.e("Parcel Query AS" , pq.getBill()+" | "+pq.getDatetime());
 
 					interfaceUser.onIntentCallback(InvoiceInfoActivity.class, temp);
 				}
@@ -613,10 +617,15 @@ public class UserActivity extends AppCompatActivity implements
 			//if(target.equals(InvoiceInfoActivity.class))
 				//b.putInt(InvoiceData.INVOICE_INFO_TAG, callbackState.getInt(InvoiceData.INVOICE_INFO_TAG));
 
-			if(callbackState.containsKey(InvoiceData.INVOICE_PARCEL_QUERY))
-				b.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, callbackState.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+			Bundle instanceBundle = new Bundle();
 
-			t.putExtras(b);
+			if (callbackState.containsKey(InvoiceData.INVOICE_PARCEL_QUERY)) {
+				 ParcelQuery pq = Parcels.unwrap(callbackState.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+				 Log.e("Parcel Query BS" , pq.getBill()+" | "+pq.getDatetime());
+			}
+				 //instanceBundle.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, callbackState.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+
+			t.putExtras(callbackState);
 			startActivity(t);
 		}
 	};

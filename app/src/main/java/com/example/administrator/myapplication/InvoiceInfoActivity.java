@@ -110,13 +110,16 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 			 //async();
 
 			 ParcelQuery pq = new ParcelQuery();
-			 if (getIntent() != null) {
+			 if (getIntent().getExtras() == null) {
 				  pq.setBill("");
 				  pq.setDatetime("");
 			 } else {
+				  // Scan for seaching
+				  // Set increase by one
+				  // ... How ?
 				  pq = Parcels.unwrap(getIntent().getExtras().getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+				  Log.e("Parcel Query Last" , pq.getBill()+" | "+pq.getDatetime());
 			 }
-
 			 this.originalBundle.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 
 			 asynchronous(RetrofitAbstract.RETROFIT_PRE_INVOICE, null);
@@ -182,6 +185,42 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					   fm.commit();
 				 } else {
 					   fragmentInvoiceDetail.setData(pb);
+				 }
+
+				 ParcelQuery pq = Parcels.unwrap(originalBundle.getParcelable(InvoiceData.INVOICE_PARCEL_QUERY));
+				 if (pq != null) {
+					  if (pq.isIncreaseOne() && pb.listBill.size() > 0 ) {
+						   pq.setIncreaseOne(false);
+
+						   BillPOJO pojo = pb.getListBill().get(0);
+
+						   // Automatic clicked data
+						   Bundle instanceBundle = new Bundle();
+						   instanceBundle.putString(InvoiceData.INVOICE_SCANNER_STRING, pojo.getBILL_NO());
+						   instanceBundle.putInt(InvoiceData.BILL_COUNT, Integer.parseInt(pojo.getBILL_COUNT()));
+						   instanceBundle.putInt(InvoiceData.TOTAL_BOX, Integer.parseInt(pojo.getTOTAL_BOX()));
+						   instanceBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, 0);
+
+						   BarcodeWrapper wrapper = new BarcodeWrapper();
+						   wrapper.setBillPOJO(pojo);
+						   wrapper.setPosition(0);
+
+						   Bundle extra = new Bundle();
+						   extra.putBundle(InvoiceData.BarcodeWrapper, instanceBundle);
+						   extra.putString("SCAN_RESULT", pojo.getBILL_NO());
+
+							Intent t = new Intent();
+							t.putExtras(extra);
+
+							originalBundle.putBundle(InvoiceData.BarcodeWrapper, instanceBundle);
+						   originalBundle.putInt(InvoiceData.SHARED_PREFERENCES_BILL_POSITION, 0);
+
+						   Log.e("ISITTRUELY", pq.isIncreaseOne()+"|||xx||"+pb.listBill.size());
+
+						   onActivityResult(IntentIntegrator.REQUEST_CODE, RESULT_OK, t);
+					  }
+
+					  originalBundle.putParcelable(InvoiceData.INVOICE_PARCEL_QUERY, Parcels.wrap(pq));
 				 }
 			 } else if (data instanceof DataWrapper && ((DataWrapper) data).getStatus().equals("update")) {
 				 if (fragmentInvoiceDetail != null) {
@@ -362,6 +401,8 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 					  }
 					  BillPOJO pojo = fragmentInvoiceDetail.getBILLPOJO(position);
 
+					  //Log.e("SCAN_RESULT", result+ " ||| "+pojo.getBILL_NO());
+
 					  if (pojo.getBILL_NO().trim().equals(result.trim())) {
 					  	   int counting = Integer.parseInt(pojo.getBILL_COUNT());
 						   counting+= 1;
@@ -446,6 +487,7 @@ public class InvoiceInfoActivity extends AppCompatActivity {
 	@Subscribe
 	public void getLocation(LocationAppData lad) {
 		if (this.originalBundle != null) {
+			 Log.e("Location",  lad.getLatitute() + " : " + lad.getLongitute());
 			 this.originalBundle.putString(InvoiceData.LATITUDE, lad.getLatitute());
 			 this.originalBundle.putString(InvoiceData.LONGITUDE, lad.getLongitute());
 		} else {
