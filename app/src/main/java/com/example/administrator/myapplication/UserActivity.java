@@ -218,7 +218,6 @@ public class UserActivity extends AppCompatActivity implements
 		itemMenu.setImageSource(R.drawable.ic_list_24);
 		itemMenu.setMenuName("รายการบิลล์ที่ต้องสแกน");
 		itemMenu.setImageResourceColor( ContextCompat.getColor(getApplicationContext(), R.color.lemon_light_fortune));
-		//itemMenu.setDetailName("แสดงใบสั่งสินค้าทั้งหมดที่ท่านได้บันทึกไปแล้ว");
 		itemMenu.setDetailName("แสดงบิลล์ที่รอการสแกนทั้งหมด");
 		userBaseItems.add(itemMenu);
 
@@ -252,121 +251,121 @@ public class UserActivity extends AppCompatActivity implements
 		System.gc();
 		Log.e("Intent ended", "true | " + requestCode);
 		if(resultCode == RESULT_OK) {
-			/*if(requestCode == IntentIntegrator.REQUEST_CODE) {
-				// ยิงบาร์โค้ด หรือ QR Code
-				IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-
-				if(scanningResult != null) {
-					String scanContent = scanningResult.getContents();
-					String scanFormat = scanningResult.getFormatName();
-
-					if(b != null && b.containsKey(InvoiceData.INVOICE_CASE)) {
-						Parcelable wrapped = null;
-
-						int mode = b.getInt(InvoiceData.INVOICE_CASE);
-						ParcelInvoice pPi;
-						switch(mode) {
-							default:
-							case InvoiceData.INVOICE_CASE_INVOICE_PREVIEW :
-								// ผลลัพธ์จากการสแกน ใบสั่งสินค้า
-								Toast toast = Toast.makeText(getApplicationContext(),
-								"สแกนใบสั่งสินค้า " + scanContent + " เสร็จสิ้น", Toast.LENGTH_LONG);
-								toast.show();
-
-								pPi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-
-								SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-								Calendar c = Calendar.getInstance();
-
-								format.format(c.getTime());
-
-								ItemInvoicePreview el = new ItemInvoicePreview();
-								el.setInvoicePreview(scanContent.trim());
-								el.setInvoiceDate(format.format(c.getTime()));
-								//el.setInvoiceLat(pPi.getLatitude());
-								//el.setInvoiceLng(pPi.getLongitude());
-								if(b.containsKey(InvoiceData.LATITUDE))
-									el.setInvoiceLat(b.getString(InvoiceData.LATITUDE));
-								else
-									el.setInvoiceLat("0.00");
-
-								if(b.containsKey(InvoiceData.LONGITUDE))
-									el.setInvoiceLng(b.getString(InvoiceData.LONGITUDE));
-								else el.setInvoiceLng("0.00");
-
-								String usrName = "";
-								if(sp != null && !sp.getString(AuthenData.USERNAME, "").equals("")) {
-									usrName = sp.getString(AuthenData.USERNAME, "");
-								} else usrName = "-";
-
-								// Put it into the sqlite
-								sqlite = dbHelper.getWritableDatabase();
-								sqlite.execSQL("INSERT INTO " + dbHelper.TABLE_NAME +
-								   "(" + dbHelper.COL_INVOICE +
-								   "," + dbHelper.COL_LATITUDE +
-									"," + dbHelper.COL_LONGITUDE +
-								   "," + dbHelper.COL_TIME +
-									"," + dbHelper.COL_EMPLOYEE +" ) VALUES (" +
-									"'" + scanContent + "'," +
-								   "'" + el.getInvoiceLat() + "'," +
-									"'" + el.getInvoiceLng() + "'," +
-								   "'" + format.format(c.getTime()) + "'," +
-									"'" + usrName + "')");
-
-								ArrayList<ItemInvoicePreview> aList = null;
-								if(pPi.getListInvoice() == null)
-									aList = new ArrayList<>();
-								else
-									aList = pPi.getListInvoice();
-
-								aList.add(el);
-								pPi.setListInvoice(aList);
-								wrapped = Parcels.wrap(pPi);
-								b.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
-
-								// Create dialog tag
-								b.putInt(DialogFragmentData.DIALOG_FRAGMENT_TAG, DialogFragmentData.DIALOG_FRAGMENT_TAG_INVOICE);
-								try {
-									showInvoiceSwitchDialogFragment(b);
-								} catch( IllegalStateException ignored ) {
-									Log.e("error","open dialog catch true");
-									// There's no way to avoid getting this if saveInstanceState has already been called.
-								}
-								break;
-						case InvoiceData.INVOICE_CASE_INVOICE_USER_ID :
-							// ผลลัพธ์จากการสแกน รหัสพนักงาน
-							if(b != null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
-								pPi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-								if(pPi != null) {
-									pPi.setUserID(scanContent.trim());
-									if(sp != null && !sp.getString(AuthenData.USERNAME, "").equals(""))
-										pPi.setUsername(sp.getString(AuthenData.USERNAME, ""));
-									else
-										pPi.setUsername(InvoiceData.NON_VALUES);
-									wrapped = Parcels.wrap(pPi);
-									b.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
-								}
-							}
-
-							ParcelInvoice temp = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
-							for(ItemInvoicePreview i : temp.getListInvoice()) {
-								Log.e("Invoice Preview", i.getInvoicePreview());
-								Log.e("Invoice Date", i.getInvoiceDate());
-								Log.e("Invoice Lat", i.getInvoiceLat());
-								Log.e("Invoice Lng", i.getInvoiceLng());
-							}
-							Log.e("Invoice Image Path", temp.getBitmap());
-//							Log.e("Invoice Lat", temp.getLatitude());
-//							Log.e("Invoice Lng", temp.getLongitude());
-							Log.e("Invoice User Id", temp.getUserID());
+//			if(requestCode == IntentIntegrator.REQUEST_CODE) {
+//				// ยิงบาร์โค้ด หรือ QR Code
+//				IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 //
-							async();
-							Toast.makeText(UserActivity.this, "บันทึกข้อมูลเสร็จสิ้น", Toast.LENGTH_LONG).show();
-							break;
-						}
-					}
-				}
-			} else */
+//				if(scanningResult != null) {
+//					String scanContent = scanningResult.getContents();
+//					String scanFormat = scanningResult.getFormatName();
+//
+//					if(b != null && b.containsKey(InvoiceData.INVOICE_CASE)) {
+//						Parcelable wrapped = null;
+//
+//						int mode = b.getInt(InvoiceData.INVOICE_CASE);
+//						ParcelInvoice pPi;
+//						switch(mode) {
+//							default:
+//							case InvoiceData.INVOICE_CASE_INVOICE_PREVIEW :
+//								// ผลลัพธ์จากการสแกน ใบสั่งสินค้า
+//								Toast toast = Toast.makeText(getApplicationContext(),
+//								"สแกนใบสั่งสินค้า " + scanContent + " เสร็จสิ้น", Toast.LENGTH_LONG);
+//								toast.show();
+//
+//								pPi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+//
+//								SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//								Calendar c = Calendar.getInstance();
+//
+//								format.format(c.getTime());
+//
+//								ItemInvoicePreview el = new ItemInvoicePreview();
+//								el.setInvoicePreview(scanContent.trim());
+//								el.setInvoiceDate(format.format(c.getTime()));
+//								//el.setInvoiceLat(pPi.getLatitude());
+//								//el.setInvoiceLng(pPi.getLongitude());
+//								if(b.containsKey(InvoiceData.LATITUDE))
+//									el.setInvoiceLat(b.getString(InvoiceData.LATITUDE));
+//								else
+//									el.setInvoiceLat("0.00");
+//
+//								if(b.containsKey(InvoiceData.LONGITUDE))
+//									el.setInvoiceLng(b.getString(InvoiceData.LONGITUDE));
+//								else el.setInvoiceLng("0.00");
+//
+//								String usrName = "";
+//								if(sp != null && !sp.getString(AuthenData.USERNAME, "").equals("")) {
+//									usrName = sp.getString(AuthenData.USERNAME, "");
+//								} else usrName = "-";
+//
+//								// Put it into the sqlite
+//								sqlite = dbHelper.getWritableDatabase();
+//								sqlite.execSQL("INSERT INTO " + dbHelper.TABLE_NAME +
+//								   "(" + dbHelper.COL_INVOICE +
+//								   "," + dbHelper.COL_LATITUDE +
+//									"," + dbHelper.COL_LONGITUDE +
+//								   "," + dbHelper.COL_TIME +
+//									"," + dbHelper.COL_EMPLOYEE +" ) VALUES (" +
+//									"'" + scanContent + "'," +
+//								   "'" + el.getInvoiceLat() + "'," +
+//									"'" + el.getInvoiceLng() + "'," +
+//								   "'" + format.format(c.getTime()) + "'," +
+//									"'" + usrName + "')");
+//
+//								ArrayList<ItemInvoicePreview> aList = null;
+//								if(pPi.getListInvoice() == null)
+//									aList = new ArrayList<>();
+//								else
+//									aList = pPi.getListInvoice();
+//
+//								aList.add(el);
+//								pPi.setListInvoice(aList);
+//								wrapped = Parcels.wrap(pPi);
+//								b.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
+//
+//								// Create dialog tag
+//								b.putInt(DialogFragmentData.DIALOG_FRAGMENT_TAG, DialogFragmentData.DIALOG_FRAGMENT_TAG_INVOICE);
+//								try {
+//									showInvoiceSwitchDialogFragment(b);
+//								} catch( IllegalStateException ignored ) {
+//									Log.e("error","open dialog catch true");
+//									// There's no way to avoid getting this if saveInstanceState has already been called.
+//								}
+//								break;
+//						case InvoiceData.INVOICE_CASE_INVOICE_USER_ID :
+//							// ผลลัพธ์จากการสแกน รหัสพนักงาน
+//							if(b != null && b.containsKey(InvoiceData.INVOICE_PARCEL)) {
+//								pPi = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+//								if(pPi != null) {
+//									pPi.setUserID(scanContent.trim());
+//									if(sp != null && !sp.getString(AuthenData.USERNAME, "").equals(""))
+//										pPi.setUsername(sp.getString(AuthenData.USERNAME, ""));
+//									else
+//										pPi.setUsername(InvoiceData.NON_VALUES);
+//									wrapped = Parcels.wrap(pPi);
+//									b.putParcelable(InvoiceData.INVOICE_PARCEL, wrapped);
+//								}
+//							}
+//
+//							ParcelInvoice temp = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL));
+//							for(ItemInvoicePreview i : temp.getListInvoice()) {
+//								Log.e("Invoice Preview", i.getInvoicePreview());
+//								Log.e("Invoice Date", i.getInvoiceDate());
+//								Log.e("Invoice Lat", i.getInvoiceLat());
+//								Log.e("Invoice Lng", i.getInvoiceLng());
+//							}
+//							Log.e("Invoice Image Path", temp.getBitmap());
+////							Log.e("Invoice Lat", temp.getLatitude());
+////							Log.e("Invoice Lng", temp.getLongitude());
+//							Log.e("Invoice User Id", temp.getUserID());
+////
+//							async();
+//							Toast.makeText(UserActivity.this, "บันทึกข้อมูลเสร็จสิ้น", Toast.LENGTH_LONG).show();
+//							break;
+//						}
+//					}
+//				}
+//			} else
 			if(requestCode == IntentIntegrator.REQUEST_CODE) {
 				if(b != null) {
 					// Scan 1 Bill (Fixed)

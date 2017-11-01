@@ -51,91 +51,11 @@ public class FragmentInvoiceDetail extends Fragment {
 	// let inside data
 	private List<InvoiceBaseItem> listItem = new ArrayList<>();
 
-   private Bundle b = null;
-
 	private ParcelBill pb = null;
-
-	private InterfaceInvoiceInfo interfaceInvoiceInfo = null;
-
-	private final InterfaceListen interfaceListen = new InterfaceListen() {
-		@Override
-		public void onResponse(Object data, Retrofit retrofit) {
-
-			if (listItem.size() != 0) {
-				 listItem.remove(listItem.size() - 1);
-				 adapter.notifyDataSetChanged();
-			}
-			canloadmore = true;
-
-			ParcelBill pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-
-			ArrayList<BillPOJO> listbill = pb.getListBill();
-
-			List<BillPOJO> pojoList = (List<BillPOJO>) data;
-
-			for (BillPOJO i : pojoList) {
-				BillPOJO temp = new BillPOJO();
-
-				temp.setBILL_NO(i.getBILL_NO());
-				temp.setBILL_DATE(i.getBILL_DATE());
-				temp.setNET_AMOUNT(i.getNET_AMOUNT());
-				temp.setTOTAL_BOX(i.getTOTAL_BOX());
-				temp.setBILL_COUNT(i.getBILL_COUNT());
-
-				ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-				item.setBillPOJO(temp);
-
-				listItem.add(item);
-			}
-
-			listbill.addAll((pojoList));
-			pb.setListBill(listbill);
-
-			b.putParcelable(InvoiceData.INVOICE_PARCEL_CONTENT, Parcels.wrap(pb));
-
-			adapter.notifyDataSetChanged();
-		}
-
-		@Override
-		public void onBodyError(ResponseBody responseBodyError) {}
-
-		@Override
-		public void onBodyErrorIsNull() {}
-
-		@Override
-		public void onFailure(Throwable t) {}
-	};
 
    public FragmentInvoiceDetail() {
        super();
    }
-
-   public FragmentInvoiceDetail(Bundle b, InterfaceInvoiceInfo interfaceInvoiceInfo) {
-		 super();
-
-	    // Set Load more
-	    this.canloadmore = true;
-
-		 this.b = b;
-
-		 this.interfaceInvoiceInfo = interfaceInvoiceInfo;
-
-	    listItem = new ArrayList<>();
-
-	    ParcelBill pb = null;
-	    if(b.containsKey(InvoiceData.INVOICE_PARCEL_CONTENT)) {
-		    pb = Parcels.unwrap(b.getParcelable(InvoiceData.INVOICE_PARCEL_CONTENT));
-	    }
-
-	    if(pb != null) {
-		    for (BillPOJO o : pb.getListBill()) {
-			    ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
-			    item.setBillPOJO(o);
-
-			    listItem.add(item);
-		    }
-	    }
-    }
 
 	public FragmentInvoiceDetail(ParcelBill pb) {
 		super();
@@ -144,7 +64,6 @@ public class FragmentInvoiceDetail extends Fragment {
 		listItem = new ArrayList<>();
 
 		if (pb != null) {
-
 			 for (BillPOJO o : pb.getListBill()) {
 				 ItemInvoice item = new ItemInvoice(INVOICE_CONTENT_VIEW);
 				 item.setBillPOJO(o);
@@ -184,7 +103,6 @@ public class FragmentInvoiceDetail extends Fragment {
 			  // Remove preloader
 			  if (listItem.size() != 0) {
 				   listItem.remove(listItem.size() - 1);
-				   //adapter.notifyDataSetChanged();
 			  }
 
 			  this.canloadmore = true;
@@ -211,7 +129,7 @@ public class FragmentInvoiceDetail extends Fragment {
         recyclerView.setAdapter(adapter);
 
         int orientation = this.getResources().getConfiguration().orientation;
-        if( orientation == Configuration.ORIENTATION_PORTRAIT ) {
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             //code for portrait mode (แนวตั้ง)
 	         LinearLayoutManager lm = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(lm);
@@ -303,13 +221,13 @@ public class FragmentInvoiceDetail extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            if(viewType == INVOICE_CONTENT_HEADER) {
+            if (viewType == INVOICE_CONTENT_HEADER) {
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.view_invoice_header, parent, false);
                 return new InvoiceHeaderViewHolder(view);
-            } else if(viewType == INVOICE_CONTENT_VIEW) {
+            } else if (viewType == INVOICE_CONTENT_VIEW) {
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.view_invoice_info, parent, false);
                 return new InvoiceContentViewHolder(view);
-            } else if(viewType == INVOICE_CONTENT_LOADER) {
+            } else if (viewType == INVOICE_CONTENT_LOADER) {
 	            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_progressbar, parent, false);
 	            return new ProgressBarViewHolder(view);
             }
@@ -318,45 +236,45 @@ public class FragmentInvoiceDetail extends Fragment {
 
        @Override
        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-            if(!listItem.isEmpty()) {
-                /*if(holder instanceof InvoiceHeaderViewHolder) {
-
-                    final ItemInvoiceDateDropdown item = (ItemInvoiceDateDropdown) listItem.get(position);
-                    final InvoiceHeaderViewHolder vh = (InvoiceHeaderViewHolder) holder;
-
-	                 if(b != null && b.containsKey(InvoiceData.INVOICE_DAY_TAG)) {
-		                 for(ItemInvoiceDateDAO daoItem : item.getDateTag()) {
-		                     if(b.getString(InvoiceData.INVOICE_DAY_TAG).equals( daoItem.getId())) {
-			                     vh.dropdownCustomDate.setText(daoItem.getTitle());
-			                     break;
-		                     }
-		                 }
-	                 }
-
-                    ArrayAdapter<ItemInvoiceDateDAO> dropdownData = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice, item.getDateTag());
-                    vh.dropdownCustomDate.setAdapter(dropdownData);
-                    vh.dropdownCustomDate.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            vh.dropdownCustomDate.showDropDown();
-                        }
-                    });
-
-	                vh.dropdownCustomDate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                         @Override
-                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//	                         int size = listItem.size();
-//	                         if (size > 0) {
-//		                         for (int i = 0; i < size; i++) {
-//			                         listItem.remove(0);
-//		                         }
-//		                         notifyItemRangeRemoved(0, size);
-//	                         }
-	                        interfaceInvoiceInfo.onOptionalChange(item.getDateTag().get(position).getId());
-                         }
-	                });
-
-                } else */
+            if (!listItem.isEmpty()) {
+//                if(holder instanceof InvoiceHeaderViewHolder) {
+//
+//                    final ItemInvoiceDateDropdown item = (ItemInvoiceDateDropdown) listItem.get(position);
+//                    final InvoiceHeaderViewHolder vh = (InvoiceHeaderViewHolder) holder;
+//
+//	                 if(b != null && b.containsKey(InvoiceData.INVOICE_DAY_TAG)) {
+//		                 for(ItemInvoiceDateDAO daoItem : item.getDateTag()) {
+//		                     if(b.getString(InvoiceData.INVOICE_DAY_TAG).equals( daoItem.getId())) {
+//			                     vh.dropdownCustomDate.setText(daoItem.getTitle());
+//			                     break;
+//		                     }
+//		                 }
+//	                 }
+//
+//                    ArrayAdapter<ItemInvoiceDateDAO> dropdownData = new ArrayAdapter<>(getContext(), android.R.layout.select_dialog_singlechoice, item.getDateTag());
+//                    vh.dropdownCustomDate.setAdapter(dropdownData);
+//                    vh.dropdownCustomDate.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            vh.dropdownCustomDate.showDropDown();
+//                        }
+//                    });
+//
+//	                vh.dropdownCustomDate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                         @Override
+//                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////	                         int size = listItem.size();
+////	                         if (size > 0) {
+////		                         for (int i = 0; i < size; i++) {
+////			                         listItem.remove(0);
+////		                         }
+////		                         notifyItemRangeRemoved(0, size);
+////	                         }
+//	                        interfaceInvoiceInfo.onOptionalChange(item.getDateTag().get(position).getId());
+//                         }
+//	                });
+//
+//                } else
                 if (holder instanceof InvoiceContentViewHolder) {
 	                 final ItemInvoice item = (ItemInvoice) listItem.get(position);
 
@@ -396,7 +314,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 								}
 							});
-                } else if(holder instanceof ProgressBarViewHolder) {
+                } else if (holder instanceof ProgressBarViewHolder) {
 	                ProgressBarViewHolder vh = (ProgressBarViewHolder) holder;
 	                vh.avi.smoothToShow();
                 }
@@ -405,7 +323,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 	    @Override
         public int getItemCount() {
-            if(this.listItem != null) {
+            if (this.listItem != null) {
                 return this.listItem.size();
             } else {
                 return 0;
@@ -420,13 +338,6 @@ public class FragmentInvoiceDetail extends Fragment {
                 return 0;
             }
         }
-
-        public BillPOJO getPOJO(int position) {
-	        if (this.listItem != null) {
-		         ItemInvoice item = (ItemInvoice) listItem.get(position);
-		         return item.getBillPOJO();
-	        } else return null;
-        }
     }
 
 	 protected void async() {
@@ -437,6 +348,7 @@ public class FragmentInvoiceDetail extends Fragment {
 
 		instanceBundle.putString(InvoiceData.INVOICE_LIMIT, limited+"");
 
+		// Set limit wrapper
 	   if (!BusProvider.isBusNull()) {
 		    LimitWrapper limitWrapper = new LimitWrapper();
 		    limitWrapper.setLimit(limited);
@@ -448,6 +360,8 @@ public class FragmentInvoiceDetail extends Fragment {
 		wrapper.setRetrofitAbstractLayer(RetrofitAbstract.RETROFIT_PRE_INVOICE);
 		wrapper.setInstanceBundle(instanceBundle);
 
+		// Call services update back-end data
+		// Update the interface if statement was successful
 		if (!BusProvider.isBusNull()) {
 			 BusProvider.getInstance().post(wrapper);
 		}
@@ -490,6 +404,7 @@ public class FragmentInvoiceDetail extends Fragment {
 	}
 
 	public void removeByPosition(int position) {
+
 		try {
 
 			ArrayList<InvoiceBaseItem> copy = new ArrayList<InvoiceBaseItem>(listItem);
@@ -505,21 +420,12 @@ public class FragmentInvoiceDetail extends Fragment {
 	}
 
 	public BillPOJO getBILLPOJO(int position) {
-
-		//if (this.adapter == null) {
-			// please set new adapter, the old adapter was เดี้ยงไปแล้ว
+		 // please set new adapter, the old adapter was เดี้ยงไปแล้ว
 		 if (this.listItem != null) {
 			 Log.e("AfterScanPositionBBB", position+"");
 			  ItemInvoice item = (ItemInvoice) listItem.get(position);
 			  return item.getBillPOJO();
 		 } else return null;
-		/*} else {
-			if (this.listItem != null) {
-				ItemInvoice item = (ItemInvoice) listItem.get(position);
-				return item.getBillPOJO();
-			} else return null;
-		}*/
-		//else return this.adapter.getPOJO(position);
 	}
 
 	public ParcelBill getParcelBill() {
@@ -536,9 +442,5 @@ public class FragmentInvoiceDetail extends Fragment {
 		}
 		genereatedP.setListBill(listBill);
 		return genereatedP;
-	}
-
-	public void setNewLimited() {
-		limited = 0;
 	}
 }
